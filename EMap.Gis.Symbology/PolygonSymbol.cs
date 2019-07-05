@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
+using SixLabors.Shapes;
 
 namespace EMap.Gis.Symbology
 {
@@ -18,13 +19,25 @@ namespace EMap.Gis.Symbology
             PolygonSymbolType = polygonSymbolType;
         }
 
-        public void Draw(Image<Rgba32> image, PointF[] polygon, float scale)
+        public void DrawPath(Image<Rgba32> image, PointF[] points, float scale)
         {
-            IBrush<Rgba32> brush = ToBrush();
-            image.Mutate(x => x.FillPolygon(brush, polygon));
+            if (UseOutLine)
+            {
+                IPath path = points.ToPath();
+                OutLineSymbolizer.DrawPath(image, path, scale);
+            }
         }
 
-        public virtual IBrush<Rgba32> ToBrush()
+        public void FillPath(Image<Rgba32> image, PointF[] points)
+        {
+            IBrush<Rgba32> brush = GetBrush();
+            if (brush != null)
+            {
+                image.Mutate(x => x.FillPolygon(brush, points));
+            }
+        }
+
+        public virtual IBrush<Rgba32> GetBrush()
         {
             IBrush<Rgba32> brush = new SolidBrush<Rgba32>(Color);
             return brush;

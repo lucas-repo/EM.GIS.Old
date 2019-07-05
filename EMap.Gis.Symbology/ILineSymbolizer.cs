@@ -11,6 +11,6 @@ namespace EMap.Gis.Symbology
     public interface ILineSymbolizer:IFeatureSymbolizer
     {
         IList<ILineSymbol> Strokes { get; set; }
-        void DrawPath(Image<Rgba32> image, IPath path, double scaleWidth);
+        void DrawPath(Image<Rgba32> image, IPath path, double scale);
     }
 }

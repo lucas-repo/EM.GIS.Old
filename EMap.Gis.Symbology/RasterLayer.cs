@@ -1,6 +1,7 @@
 ﻿using OSGeo.GDAL;
 using OSGeo.OGR;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
@@ -312,6 +313,7 @@ namespace EMap.Gis.Symbology
             {
                 for (int row = 0; row < height; row++)
                 {
+                    Span<Rgba32> pixelRowSpan = result.GetPixelRowSpan(row);
                     bufferIndex = row * width;
                     for (int col = 0; col < width; col++)
                     {
@@ -323,7 +325,7 @@ namespace EMap.Gis.Symbology
                         {
                             aValue = 0;
                         }
-                        result[col, row] = new Rgba32(rValue, gValue, bValue, aValue);
+                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue); 
                         bufferIndex++;
                     }
                 }

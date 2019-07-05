@@ -4,7 +4,7 @@
     {
         Simple,
         Gradient,
-        Line,
+        Hatch,
         Marker,
         Picture
     }

@@ -9,7 +9,8 @@ namespace EMap.Gis.Symbology
     {
         PolygonSymbolType PolygonSymbolType { get; }
         RectangleF Bounds { get; set; }
-        void Draw(Image<Rgba32> image, PointF[] polygon, float scale);
-        IBrush<Rgba32> ToBrush();
+        void DrawPath(Image<Rgba32> image, PointF[] points, float scale);
+        void FillPath(Image<Rgba32> image, PointF[] points);
+        IBrush<Rgba32> GetBrush();
     }
 }
