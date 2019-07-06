@@ -13,6 +13,11 @@ namespace EMap.Gis.Symbology
         { }
         protected LineSimpleSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         { }
+        public LineSimpleSymbol(float width, Rgba32 color) : this()
+        {
+            Width = width;
+            Color = color;
+        }
         public virtual DashStyle DashStyle { get; set; }
         
         public override IPen<Rgba32> ToPen(float scale)

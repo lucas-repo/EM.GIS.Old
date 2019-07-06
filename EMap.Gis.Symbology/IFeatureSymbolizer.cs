@@ -6,7 +6,6 @@ namespace EMap.Gis.Symbology
 {
     public interface IFeatureSymbolizer:ISymbolizer
     {
-        IFeatureSymbol FeatureSymbol { get; set; }
         ScaleMode ScaleMode { get; set; }
     }
 }

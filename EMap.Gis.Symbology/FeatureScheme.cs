@@ -23,6 +23,9 @@ namespace EMap.Gis.Symbology
                 base.EditorSettings = value;
             }
         }
+
+        public new CategoryCollection<IFeatureCategory> Categories { get; }
+
         private static List<Break> GetUniqueValues(string fieldName, DataTable table)
         {
             HashSet<object> lst = new HashSet<object>();
@@ -44,7 +47,7 @@ namespace EMap.Gis.Symbology
             if (containsNull) result.Add(new Break("[NULL]"));
             foreach (object item in lst.OrderBy(o => o))
             {
-                result.Add(new Break(string.Format( "{0}", item))); 
+                result.Add(new Break(string.Format("{0}", item)));
             }
 
             return result;
@@ -53,13 +56,18 @@ namespace EMap.Gis.Symbology
         {
             return table.Columns[fieldName].DataType == typeof(string);
         }
+        protected Rgba32 CreateRandomColor()
+        {
+            Random rnd = new Random(DateTime.Now.Millisecond);
+            return CreateRandomColor(rnd);
+        }
         private void CreateUniqueCategories(string fieldName, DataTable table)
         {
             Breaks = GetUniqueValues(fieldName, table);
-            List<double> sizeRamp = GetSizeSet(Breaks.Count);
+            List<float> sizeRamp = GetSizeSet(Breaks.Count);
             List<Rgba32> colorRamp = GetColorSet(Breaks.Count);
             string fieldExpression = "[" + fieldName.ToUpper() + "]";
-            ClearCategories();
+            Categories.Clear();
 
             bool isStringField = CheckFieldType(fieldName, table);
 
@@ -69,7 +77,7 @@ namespace EMap.Gis.Symbology
             {
                 // get the color for the category
                 Rgba32 randomColor = colorRamp[colorIndex];
-                double size = sizeRamp[colorIndex];
+                float size = sizeRamp[colorIndex];
                 IFeatureCategory cat = CreateNewCategory(randomColor, size) as IFeatureCategory;
 
                 if (cat != null)
@@ -90,7 +98,7 @@ namespace EMap.Gis.Symbology
                         }
                     }
 
-                    AddCategory(cat);
+                    Categories.Add(cat);
                 }
 
                 colorIndex++;
@@ -122,7 +130,7 @@ namespace EMap.Gis.Symbology
                     CreateBreakCategories();
                 }
             }
-            
+
             LegendText = fieldName;
         }
         public void GetValues(DataTable table)

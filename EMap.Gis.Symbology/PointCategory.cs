@@ -16,6 +16,12 @@ namespace EMap.Gis.Symbology
             Symbolizer = new PointSymbolizer();
             SelectionSymbolizer = new PointSymbolizer(true);
         }
+        public PointCategory(IPointSymbolizer pointSymbolizer)
+        {
+            Symbolizer = pointSymbolizer;
+            SelectionSymbolizer = pointSymbolizer.Clone() as IPointSymbolizer;
+            SelectionSymbolizer.Symbols[0].Color = Rgba32.Cyan;
+        }
 
         public override void Draw(Image<Rgba32> image, Rectangle rectangle)
         {

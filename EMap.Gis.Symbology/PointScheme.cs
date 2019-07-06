@@ -7,62 +7,47 @@ using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
-    //todo 待修改
-    public class PointScheme:FeatureScheme, IPointScheme
+    public class PointScheme : FeatureScheme, IPointScheme
     {
-        public override int NumCategories => throw new NotImplementedException();
-        #region Properties
+        public new CategoryCollection<IPointCategory> Categories { get; }
 
-        /// <summary>
-        /// Gets or sets the list of scheme categories belonging to this scheme.
-        /// </summary>
-        PointCategoryCollection Categories { get; set; }
-
-        public override void AddCategory(ICategory category)
+        public PointScheme()
         {
-            throw new NotImplementedException();
+            Categories = new CategoryCollection<IPointCategory>(this);
+            PointCategory category = new PointCategory();
+            Categories.Add(category);
         }
 
-        public override void ClearCategories()
+        public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
         {
-            throw new NotImplementedException();
-        }
-
-        public override ICategory CreateNewCategory(Rgba32 fillColor, double size)
-        {
-            throw new NotImplementedException();
+            IPointSymbolizer ps = EditorSettings.TemplateSymbolizer.Clone() as IPointSymbolizer ?? new PointSymbolizer(fillColor, PointShape.Ellipse, size);
+            ps.Symbols[0].Color = fillColor;
+            SizeF oSize = ps.Size;
+            float rat = size / Math.Max(oSize.Width, oSize.Height);
+            ps.Size=new SizeF(rat * oSize.Width, rat * oSize.Height);
+            return new PointCategory(ps);
         }
 
         public override IFeatureCategory CreateRandomCategory(string filterExpression)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
-        {
-            throw new NotImplementedException();
+            PointCategory result = new PointCategory();
+            var fillColor = CreateRandomColor();
+            result.Symbolizer = new PointSymbolizer(fillColor, PointShape.Ellipse, 10);
+            result.FilterExpression = filterExpression;
+            result.LegendText = filterExpression;
+            return result;
         }
 
         public override IEnumerable<IFeatureCategory> GetCategories()
         {
-            throw new NotImplementedException();
+            return Categories;
         }
 
-        public override ICategory GetCategory(int index)
+
+        public override void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds)
         {
-            throw new NotImplementedException();
+            Categories[index].Symbolizer.Draw(image, bounds);
         }
 
-        public override void InsertCategory(int index, ICategory category)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void RemoveCategory(ICategory category)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }

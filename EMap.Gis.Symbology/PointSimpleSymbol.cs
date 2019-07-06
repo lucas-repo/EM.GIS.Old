@@ -15,6 +15,20 @@ namespace EMap.Gis.Symbology
         {
             PointShape = PointShape.Ellipse;
         }
+        public PointSimpleSymbol(Rgba32 color)
+           : this()
+        {
+            Color = color;
+        }
+        public PointSimpleSymbol(Rgba32 color, PointShape shape):this(color)
+        {
+            PointShape = shape;
+        }
+
+        public PointSimpleSymbol(Rgba32 color, PointShape shape, float size) : this(color, shape)
+        {
+            Size = new SizeF(size, size);
+        }
 
         public PointShape PointShape { get; set; }
 

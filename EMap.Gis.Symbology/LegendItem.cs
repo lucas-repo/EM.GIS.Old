@@ -27,6 +27,7 @@ namespace EMap.Gis.Symbology
             return _legendSymbolSize;
         }
 
-        public abstract void Draw(Image<Rgba32> image, Rectangle rectangle);
+        public virtual void Draw(Image<Rgba32> image, Rectangle rectangle)
+        { }
     }
 }

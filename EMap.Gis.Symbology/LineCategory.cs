@@ -16,6 +16,17 @@ namespace EMap.Gis.Symbology
             Symbolizer = new LineSymbolizer();
             SelectionSymbolizer = new LineSymbolizer(true); 
         }
+        public LineCategory(ILineSymbolizer lineSymbolizer)
+        {
+            Symbolizer = lineSymbolizer;
+            ILineSymbolizer select = lineSymbolizer.Clone() as ILineSymbolizer;
+            SelectionSymbolizer = select;
+            if (select.Symbols != null && select.Symbols.Count > 0)
+            {
+                var ss = select.Symbols[select.Symbols.Count - 1] as ILineSimpleSymbol;
+                if (ss != null) ss.Color = Rgba32.Cyan;
+            }
+        }
 
         public override void Draw(Image<Rgba32> image, Rectangle rectangle)
         {

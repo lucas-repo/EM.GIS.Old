@@ -62,6 +62,13 @@ namespace EMap.Gis.Symbology
                 Symbols.Add(item);
             }
         }
+
+        public PointSymbolizer(Rgba32 color, PointShape shape, float size)
+        {
+            IPointSymbol ss = new PointSimpleSymbol(color, shape, size);
+            Symbols.Add(ss);
+        }
+
         private void Configure()
         {
             IPointSimpleSymbol ss = new PointSimpleSymbol

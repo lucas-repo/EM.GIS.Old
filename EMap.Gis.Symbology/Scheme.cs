@@ -1,4 +1,6 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 
@@ -6,19 +8,15 @@ namespace EMap.Gis.Symbology
 {
     public abstract class Scheme : LegendItem, IScheme
     {
-        public abstract int NumCategories { get; }
         public EditorSettings EditorSettings { get; set; }
         public Statistics Statistics { get; protected set; } = new Statistics();
         public List<double> Values { get; protected set; }
         protected List<Break> Breaks { get; set; }
-        public abstract void AddCategory(ICategory category);
-        public abstract void ClearCategories();
-        public abstract ICategory GetCategory(int index);
-        public abstract void InsertCategory(int index, ICategory category);
-        public abstract void RemoveCategory(ICategory category);
-        protected virtual List<double> GetSizeSet(int count)
+        public CategoryCollection<ICategory> Categories { get; }
+
+        protected virtual List<float> GetSizeSet(int count)
         {
-            var result = new List<double>();
+            var result = new List<float>();
             for (var i = 0; i < count; i++)
             {
                 result.Add(20);
@@ -180,7 +178,7 @@ namespace EMap.Gis.Symbology
             SetBreakNames(Breaks);
             var colorRamp = GetColorSet(count);
             var sizeRamp = GetSizeSet(count);
-            ClearCategories();
+            Categories.Clear();
             var colorIndex = 0;
             Break prevBreak = null;
             foreach (var brk in Breaks)
@@ -198,7 +196,7 @@ namespace EMap.Gis.Symbology
                     cat.Maximum = brk.Maximum;
                     cat.Range.MaxIsInclusive = true;
                     cat.ApplyMinMax(EditorSettings);
-                    AddCategory(cat);
+                    Categories.Add(cat);
                 }
 
                 prevBreak = brk;
@@ -311,7 +309,8 @@ namespace EMap.Gis.Symbology
             return colorRamp;
         }
 
-        public abstract ICategory CreateNewCategory(Rgba32 fillColor, double size);
+        public abstract ICategory CreateNewCategory(Rgba32 fillColor, float size);
+        public abstract void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds);
     }
 
 }
