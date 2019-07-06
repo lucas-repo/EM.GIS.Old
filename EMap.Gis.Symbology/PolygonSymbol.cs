@@ -18,16 +18,7 @@ namespace EMap.Gis.Symbology
         {
             PolygonSymbolType = polygonSymbolType;
         }
-
-        public void DrawPath(Image<Rgba32> image, PointF[] points, float scale)
-        {
-            if (UseOutLine)
-            {
-                IPath path = points.ToPath();
-                OutLineSymbolizer.DrawPath(image, path, scale);
-            }
-        }
-
+        
         public void FillPath(Image<Rgba32> image, PointF[] points)
         {
             IBrush<Rgba32> brush = GetBrush();

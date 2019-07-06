@@ -58,7 +58,6 @@ namespace EMap.Gis.Symbology
             float dx = scale * Size.Width / 2;
             float dy = scale * Size.Height / 2;
             RectangleF rectangle = new RectangleF(-dx, -dy, width, height);
-            IPath path = rectangle.ToPath();
             if (Image != null)
             {
                 using (Image<Rgba32> tmpImage = Image.Clone())
@@ -71,7 +70,8 @@ namespace EMap.Gis.Symbology
                     image.Mutate(x => x.DrawImage(tmpImage, 1));
                 }
             }
-            DrawOutLine(image, path, scale);
+            PointF[] points = rectangle.ToPoints();
+            DrawPath(image, scale, points);
         }
         private static Image<Rgba32> MakeTransparent(Image<Rgba32> image, float opacity)
         {

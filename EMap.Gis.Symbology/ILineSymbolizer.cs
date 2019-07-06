@@ -10,7 +10,7 @@ namespace EMap.Gis.Symbology
 {
     public interface ILineSymbolizer:IFeatureSymbolizer
     {
-        IList<ILineSymbol> Strokes { get; set; }
-        void DrawPath(Image<Rgba32> image, IPath path, double scale);
+        IList<ILineSymbol> Strokes { get;}
+        void DrawPath(Image<Rgba32> image, float scale, PointF[] points);
     }
 }

@@ -19,6 +19,5 @@ namespace EMap.Gis.Symbology
             PointSymbolType = pointSymbolType;
         }
         public abstract void Draw(Image<Rgba32> image, float scale);
-
     }
 }

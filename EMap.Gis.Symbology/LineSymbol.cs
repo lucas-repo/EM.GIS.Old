@@ -25,12 +25,12 @@ namespace EMap.Gis.Symbology
                 Color =new Rgba32(Color.R, Color.G, Color.B, (byte)(val * 255));
             }
         }
-        public LineSymbol(LineSymbolType lineSymbolType)
+        protected LineSymbol(LineSymbolType lineSymbolType)
         {
             LineSymbolType = lineSymbolType;
         }
 
-        public  void DrawPath(Image<Rgba32> image, float scale, params PointF[] points)
+        public  void DrawPath(Image<Rgba32> image, float scale, PointF[] points)
         {
             IPen<Rgba32> pen = ToPen(scale); 
             image.Mutate(x => x.DrawLines(pen, points));

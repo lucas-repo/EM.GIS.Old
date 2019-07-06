@@ -6,6 +6,6 @@ namespace EMap.Gis.Symbology
 {
     public interface IPolygonSymbolizer:IFeatureSymbolizer
     {
-        IList<IPolygonSymbol> Patterns { get; set; }
+        IList<IPolygonSymbol> Symbols { get;}
     }
 }

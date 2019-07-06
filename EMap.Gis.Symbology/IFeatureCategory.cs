@@ -8,7 +8,6 @@ namespace EMap.Gis.Symbology
     {
         string FilterExpression { get; set; }
         IFeatureSymbolizer SelectionSymbolizer { get; set; }
-
         IFeatureSymbolizer Symbolizer { get; set; }
     }
 }

@@ -57,8 +57,8 @@ namespace EMap.Gis.Symbology
             float y = -bounds.Height / 2;
             PointF location = new PointF(x, y);
             image.Mutate(p => p.DrawText(text, font, Color, location));
-            IPath path= bounds.ToPath();
-            DrawOutLine(image, path, scale);
+            PointF[] points = bounds.ToPoints();
+            DrawPath(image, scale, points);
         }
         protected override void OnRandomize(Random generator)
         {

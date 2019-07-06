@@ -25,36 +25,35 @@ namespace EMap.Gis.Symbology
 
             SizeF size = new SizeF(scale * Size.Width, scale * Size.Height);
             IPen<Rgba32> pen = new Pen<Rgba32>(Color, Size.Width);
-            IPath path = null;
+            PointF[] points = null;
             IBrush<Rgba32> fillBrush = new SolidBrush<Rgba32>(Color);
             switch (PointShape)
             {
                 case PointShape.Diamond:
-                    path = size.ToRegularPolyPath(4);
+                    points = size.ToRegularPoints(4);
                     break;
                 case PointShape.Ellipse:
-                    path = size.ToEllipsePolygon();
+                    points = size.ToEllipsePoints();
                     break;
                 case PointShape.Hexagon:
-                    path = size.ToRegularPolyPath(6);
+                    points = size.ToRegularPoints(6);
                     break;
                 case PointShape.Pentagon:
-                    path = size.ToRegularPolyPath(5);
+                    points = size.ToRegularPoints(5);
                     break;
                 case PointShape.Rectangle:
-                    path = size.ToPath();
+                    points = size.ToPoints();
                     break;
                 case PointShape.Star:
-                    path = size.ToStarsPath();
+                    points = size.ToStarsPoints();
                     break;
                 case PointShape.Triangle:
-                    path = size.ToRegularPolyPath(3);
+                    points = size.ToRegularPoints(3);
                     break;
             }
+            IPath path = points.ToPath();
             image.Mutate(x => x.Fill(Color, path));
-            DrawOutLine(image, path, scale);
+            DrawPath(image, scale, points);
         }
-
-
     }
 }

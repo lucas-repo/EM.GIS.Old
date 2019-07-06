@@ -1,0 +1,263 @@
+﻿using EMap.Gis.Data;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading;
+
+namespace EMap.Gis.Symbology
+{
+    public abstract class FeatureScheme : Scheme, IFeatureScheme
+    {
+        public override IEnumerable<ILegendItem> LegendItems => GetCategories();
+        public new FeatureEditorSettings EditorSettings
+        {
+            get
+            {
+                return base.EditorSettings as FeatureEditorSettings;
+            }
+            set
+            {
+                base.EditorSettings = value;
+            }
+        }
+        private static List<Break> GetUniqueValues(string fieldName, DataTable table)
+        {
+            HashSet<object> lst = new HashSet<object>();
+            bool containsNull = false;
+            foreach (DataRow dr in table.Rows)
+            {
+                object val = dr[fieldName];
+                if (val == null || dr[fieldName] is DBNull || val.ToString() == string.Empty)
+                {
+                    containsNull = true;
+                }
+                else if (!lst.Contains(val))
+                {
+                    lst.Add(val);
+                }
+            }
+
+            List<Break> result = new List<Break>();
+            if (containsNull) result.Add(new Break("[NULL]"));
+            foreach (object item in lst.OrderBy(o => o))
+            {
+                result.Add(new Break(string.Format( "{0}", item))); 
+            }
+
+            return result;
+        }
+        private static bool CheckFieldType(string fieldName, DataTable table)
+        {
+            return table.Columns[fieldName].DataType == typeof(string);
+        }
+        private void CreateUniqueCategories(string fieldName, DataTable table)
+        {
+            Breaks = GetUniqueValues(fieldName, table);
+            List<double> sizeRamp = GetSizeSet(Breaks.Count);
+            List<Rgba32> colorRamp = GetColorSet(Breaks.Count);
+            string fieldExpression = "[" + fieldName.ToUpper() + "]";
+            ClearCategories();
+
+            bool isStringField = CheckFieldType(fieldName, table);
+
+            int colorIndex = 0;
+
+            foreach (Break brk in Breaks)
+            {
+                // get the color for the category
+                Rgba32 randomColor = colorRamp[colorIndex];
+                double size = sizeRamp[colorIndex];
+                IFeatureCategory cat = CreateNewCategory(randomColor, size) as IFeatureCategory;
+
+                if (cat != null)
+                {
+                    cat.LegendText = brk.Name;
+
+                    if (isStringField) cat.FilterExpression = fieldExpression + "= '" + brk.Name.Replace("'", "''") + "'";
+                    else cat.FilterExpression = fieldExpression + "=" + brk.Name;
+                    if (cat.FilterExpression != null)
+                    {
+                        if (cat.FilterExpression.Contains("=[NULL]"))
+                        {
+                            cat.FilterExpression = cat.FilterExpression.Replace("=[NULL]", " is NULL");
+                        }
+                        else if (cat.FilterExpression.Contains("= '[NULL]'"))
+                        {
+                            cat.FilterExpression = cat.FilterExpression.Replace("= '[NULL]'", " is NULL");
+                        }
+                    }
+
+                    AddCategory(cat);
+                }
+
+                colorIndex++;
+            }
+        }
+        public void CreateCategories(DataTable table)
+        {
+            string fieldName = EditorSettings.FieldName;
+            if (EditorSettings.ClassificationType == ClassificationType.Custom) return;
+
+            if (EditorSettings.ClassificationType == ClassificationType.UniqueValues)
+            {
+                CreateUniqueCategories(fieldName, table);
+            }
+            else
+            {
+                if (table.Columns[fieldName].DataType == typeof(string))
+                {
+                    return;
+                }
+
+                if (GetUniqueValues(fieldName, table).Count <= EditorSettings.NumBreaks)
+                {
+                    CreateUniqueCategories(fieldName, table);
+                }
+                else
+                {
+                    GetValues(table);
+                    CreateBreakCategories();
+                }
+            }
+            
+            LegendText = fieldName;
+        }
+        public void GetValues(DataTable table)
+        {
+            Values = new List<double>();
+            string normField = EditorSettings.NormField;
+            string fieldName = EditorSettings.FieldName;
+            if (!string.IsNullOrEmpty(EditorSettings.ExcludeExpression))
+            {
+                DataRow[] rows = table.Select("NOT (" + EditorSettings.ExcludeExpression + ")");
+                foreach (DataRow row in rows)
+                {
+                    if (rows.Length < EditorSettings.MaxSampleCount)
+                    {
+                        double val;
+                        if (!double.TryParse(row[fieldName].ToString(), out val)) continue;
+                        if (double.IsNaN(val)) continue;
+
+                        if (normField != null)
+                        {
+                            double norm;
+                            if (!double.TryParse(row[normField].ToString(), out norm) || double.IsNaN(val)) continue;
+
+                            Values.Add(val / norm);
+                            continue;
+                        }
+
+                        Values.Add(val);
+                    }
+                    else
+                    {
+                        Dictionary<int, double> randomValues = new Dictionary<int, double>();
+                        int count = EditorSettings.MaxSampleCount;
+                        int max = rows.Length;
+
+                        // Specified seed is required for consistently recreating the break values
+                        Random rnd = new Random(9999);
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            double val;
+                            double norm = 1;
+                            int index;
+                            bool failed = false;
+                            do
+                            {
+                                index = rnd.Next(max);
+                                if (!double.TryParse(rows[index][fieldName].ToString(), out val)) failed = true;
+                                if (normField == null) continue;
+
+                                if (!double.TryParse(rows[index][normField].ToString(), out norm)) failed = true;
+                            }
+                            while (randomValues.ContainsKey(index) || double.IsNaN(val) || failed);
+
+                            if (normField != null)
+                            {
+                                Values.Add(val / norm);
+                            }
+                            else
+                            {
+                                Values.Add(val);
+                            }
+
+                            randomValues.Add(index, val);
+                        }
+                    }
+                }
+
+                Values.Sort();
+                Statistics.Calculate(Values);
+                return;
+            }
+
+            if (table.Rows.Count < EditorSettings.MaxSampleCount)
+            {
+                // Simply grab all the values
+                foreach (DataRow row in table.Rows)
+                {
+                    double val;
+                    if (!double.TryParse(row[fieldName].ToString(), out val)) continue;
+                    if (double.IsNaN(val)) continue;
+
+                    if (normField == null)
+                    {
+                        Values.Add(val);
+                        continue;
+                    }
+
+                    double norm;
+                    if (!double.TryParse(row[normField].ToString(), out norm) || double.IsNaN(val)) continue;
+
+                    Values.Add(val / norm);
+                }
+            }
+            else
+            {
+                // Grab random samples
+                Dictionary<int, double> randomValues = new Dictionary<int, double>();
+                int count = EditorSettings.MaxSampleCount;
+                int max = table.Rows.Count;
+
+                // Specified seed is required for consistently recreating the break values
+                Random rnd = new Random(9999);
+                for (int i = 0; i < count; i++)
+                {
+                    double val;
+                    double norm = 1;
+                    int index;
+                    bool failed = false;
+                    do
+                    {
+                        index = rnd.Next(max);
+                        if (!double.TryParse(table.Rows[index][fieldName].ToString(), out val)) failed = true;
+                        if (normField == null) continue;
+
+                        if (!double.TryParse(table.Rows[index][normField].ToString(), out norm)) failed = true;
+                    }
+                    while (randomValues.ContainsKey(index) || double.IsNaN(val) || failed);
+
+                    if (normField != null)
+                    {
+                        Values.Add(val / norm);
+                    }
+                    else
+                    {
+                        Values.Add(val);
+                    }
+
+                    randomValues.Add(index, val);
+                }
+            }
+
+            Values.Sort();
+        }
+        public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
+        public abstract IEnumerable<IFeatureCategory> GetCategories();
+    }
+}

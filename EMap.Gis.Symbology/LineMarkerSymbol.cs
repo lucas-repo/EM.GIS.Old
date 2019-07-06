@@ -25,7 +25,7 @@ namespace EMap.Gis.Symbology
             }
             else
             {
-                SizeF size = Marker.GetSize();
+                SizeF size = Marker.Size;
                 int imgWidth = (int)Math.Ceiling(size.Width);
                 int imgHeight= (int)Math.Ceiling(size.Height);
                 Image<Rgba32> image = new Image<Rgba32>(imgWidth,imgHeight);

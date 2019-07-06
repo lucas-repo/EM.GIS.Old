@@ -7,8 +7,7 @@ using System.Text;
 
 namespace EMap.Gis.Symbology
 {
-    public interface ISymbolizer : IDisposable,ICloneable
+    public interface ISymbolizer : ILegendItem
     {
-        void Draw(Image<Rgba32> image, Rectangle rectangle);
     }
 }

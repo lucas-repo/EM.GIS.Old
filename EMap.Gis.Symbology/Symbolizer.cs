@@ -4,8 +4,7 @@ using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
-    public abstract class Symbolizer : CopyBase, ISymbolizer
+    public abstract class Symbolizer : LegendItem, ISymbolizer
     {
-        public abstract void Draw(Image<Rgba32> image, Rectangle rectangle);
     }
 }

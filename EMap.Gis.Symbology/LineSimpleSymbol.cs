@@ -11,7 +11,7 @@ namespace EMap.Gis.Symbology
 
         public LineSimpleSymbol() : this(LineSymbolType.Simple)
         { }
-        public LineSimpleSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
+        protected LineSimpleSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         { }
         public virtual DashStyle DashStyle { get; set; }
         

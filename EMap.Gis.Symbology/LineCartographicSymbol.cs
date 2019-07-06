@@ -36,7 +36,7 @@ namespace EMap.Gis.Symbology
         }
         public LineCartographicSymbol() : this(LineSymbolType.Cartographic)
         { }
-        public LineCartographicSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
+        protected LineCartographicSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         {
         }
         public override IPen<Rgba32> ToPen(float scale)
