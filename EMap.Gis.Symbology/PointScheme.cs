@@ -9,11 +9,13 @@ namespace EMap.Gis.Symbology
 {
     public class PointScheme : FeatureScheme, IPointScheme
     {
+        public new CategoryCollection<IPointCategory> Categories { get; }
 
         public PointScheme()
         {
+            Categories = new CategoryCollection<IPointCategory>(this);
             PointCategory category = new PointCategory();
-            LegendItems.Add(category);
+            Categories.Add(category);
         }
 
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
@@ -34,6 +36,17 @@ namespace EMap.Gis.Symbology
             result.FilterExpression = filterExpression;
             result.LegendText = filterExpression;
             return result;
+        }
+
+        public override IEnumerable<IFeatureCategory> GetCategories()
+        {
+            return Categories;
+        }
+
+
+        public override void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds)
+        {
+            Categories[index].Symbolizer.Draw(image, bounds);
         }
 
     }

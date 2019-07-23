@@ -23,9 +23,9 @@ namespace EMap.Gis.Symbology
             SelectionSymbolizer.Symbols[0].Color = Rgba32.Cyan;
         }
 
-        public override void LegendSymbolPainted(Image<Rgba32> image, Rectangle rectangle)
+        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
         {
-            Symbolizer?.LegendSymbolPainted(image, rectangle);
+            Symbolizer?.Draw(image, rectangle);
         }
     }
 }

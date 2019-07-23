@@ -2,7 +2,6 @@
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
 namespace EMap.Gis.Symbology
@@ -53,17 +52,13 @@ namespace EMap.Gis.Symbology
             {
                 dataset = Gdal.Open(dataPath, Access.GA_Update);
             }
-            catch(Exception e)
+            catch
             {
-                Debug.WriteLine($"openwrite raster failed:{dataPath},{e.Message}");
                 try
                 {
                     dataset = Gdal.Open(dataPath, Access.GA_ReadOnly);
                 }
-                catch (Exception exc)
-                {
-                    Debug.WriteLine($"openwrite raster failed:{dataPath},{exc.Message}");
-                }
+                catch { }
             }
             return dataset;
         }

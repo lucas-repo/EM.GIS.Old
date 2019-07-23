@@ -12,26 +12,7 @@ namespace EMap.Gis.Symbology
         public PolygonSymbolizer():this(false)
         {
         }
-        public PolygonSymbolizer(Rgba32 fillColor, Rgba32 outlineColor)
-           : this(fillColor, outlineColor, 1)
-        {
-        }
-        public PolygonSymbolizer(Rgba32 fillColor, Rgba32 outlineColor, float outlineWidth)
-        {
-            var symbol = new PolygonSimpleSymbol(fillColor);
-            symbol.OutLineSymbolizer = new LineSymbolizer(outlineColor, outlineWidth);
-            Symbols.Add(symbol);
-        }
-        public PolygonSymbolizer(Rgba32 startColor, Rgba32 endColor, double angle, GradientType style, Rgba32 outlineColor, float outlineWidth)
-            : this(startColor, endColor, angle, style)
-        {
-            Symbols[0].OutLineSymbolizer = new LineSymbolizer(outlineColor, outlineWidth);
-        }
-        public PolygonSymbolizer(Rgba32 startColor, Rgba32 endColor, double angle, GradientType style)
-        {
-            IPolygonSymbol symbol = new PolygonGradientSymbol(startColor, endColor, angle, style);
-            Symbols.Add(symbol);
-        }
+
         public PolygonSymbolizer(bool selected)
         {
             IPolygonSymbol polygonSymbol = new PolygonSimpleSymbol();
@@ -41,7 +22,7 @@ namespace EMap.Gis.Symbology
             }
             Symbols.Add(polygonSymbol);
         }
-        public override void LegendSymbolPainted(Image<Rgba32> image, Rectangle rectangle)
+        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {

@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis", "EMap.Gis\EMap.Gis.csproj", "{0AECE5DB-2A4B-46E8-A31B-25AA8B5BB51E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis.Data", "EMap.Gis.Data\EMap.Gis.Data.csproj", "{BB54A451-8094-461B-847A-428FD0D0D90A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis.Symbology", "EMap.Gis.Symbology\EMap.Gis.Symbology.csproj", "{35158FA5-0E1D-4DB0-BF4A-CB29E7E53708}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMap.Gis.Test", "EMap.Gis.Test\EMap.Gis.Test.csproj", "{4CA59A4E-0B36-412B-ADC9-55FD38AE3775}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{35158FA5-0E1D-4DB0-BF4A-CB29E7E53708}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35158FA5-0E1D-4DB0-BF4A-CB29E7E53708}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35158FA5-0E1D-4DB0-BF4A-CB29E7E53708}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CA59A4E-0B36-412B-ADC9-55FD38AE3775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CA59A4E-0B36-412B-ADC9-55FD38AE3775}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CA59A4E-0B36-412B-ADC9-55FD38AE3775}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CA59A4E-0B36-412B-ADC9-55FD38AE3775}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
