@@ -28,9 +28,9 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void LegendSymbolPainted(Image<Rgba32> image, Rectangle rectangle)
         {
-            Symbolizer?.Draw(image, rectangle);
+            Symbolizer?.LegendSymbolPainted(image, rectangle);
         }
     }
 }

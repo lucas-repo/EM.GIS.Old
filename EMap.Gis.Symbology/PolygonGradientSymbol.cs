@@ -13,7 +13,15 @@ namespace EMap.Gis.Symbology
     {
         public PolygonGradientSymbol() : base(PolygonSymbolType.Gradient)
         { }
-
+        public PolygonGradientSymbol(Rgba32 startColor, Rgba32 endColor, double angle, GradientType style):this()
+        {
+            Colors = new  Rgba32[2];
+            Colors[0] = startColor;
+            Colors[1] = endColor;
+            Positions = new[] { 0F, 1F };
+            Angle = angle;
+            GradientType = style;
+        }
         public double Angle { get; set; }
         public Rgba32[] Colors { get; set; }
         public GradientType GradientType { get; set; }

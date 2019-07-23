@@ -9,7 +9,6 @@ namespace EMap.Gis.Symbology
     {
         new FeatureEditorSettings EditorSettings { get; set; }
         void CreateCategories(DataTable table);
-        IEnumerable<IFeatureCategory> GetCategories();
         IFeatureCategory CreateRandomCategory(string filterExpression);
 
     }

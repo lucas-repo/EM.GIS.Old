@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -55,7 +56,7 @@ namespace EMap.Gis.Symbology
             return image;
         }
 
-        private void DrawGraphics(Image<Rgba32> image, Envelope envelope, Rectangle rectangle) 
+        private void DrawGraphics(Image<Rgba32> image, Envelope envelope, Rectangle rectangle)
         {
             if (Bands.Length == 0)
             {
@@ -122,7 +123,7 @@ namespace EMap.Gis.Symbology
                 using (Band firstOverview = FirstBand.GetOverview(0))
                 {
                     xRatio = (float)firstOverview.XSize / FirstBand.XSize;
-                    yRatio = (float)firstOverview.YSize / FirstBand.XSize;
+                    yRatio = (float)firstOverview.YSize / FirstBand.YSize;
                 }
             }
             if (m11 > xRatio || m22 > yRatio)
@@ -155,7 +156,7 @@ namespace EMap.Gis.Symbology
             Matrix3x2 matrix = new Matrix3x2(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift);
             affineTransformBuilder.AppendMatrix(matrix);
 
-            image.Mutate(x => x.Transform(affineTransformBuilder));
+            //image.Mutate(x => x.Transform(affineTransformBuilder));
 
             int blockXsize, blockYsize;
 
@@ -227,15 +228,17 @@ namespace EMap.Gis.Symbology
                     {
                         if (childImage != null)
                         {
+                            childImage.Mutate(x => x.Transform(affineTransformBuilder));
                             Point location = new Point(xOffsetI, yOffsetI);
-                            image.Mutate(x => x.DrawImage(childImage, location, 1));
+                            location= Point.Transform(location,matrix);
+                            image.Mutate(x => x.DrawImage(childImage, location,1));
                         }
                     }
                 }
             }
         }
 
-        private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize) 
+        private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize)
         {
             Image<Rgba32> result = null;
             Action action = new Action(() =>
@@ -278,7 +281,7 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        private Image<Rgba32> ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize) 
+        private Image<Rgba32> ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize)
         {
             Band firstBand;
             var disposeBand = false;
@@ -301,7 +304,7 @@ namespace EMap.Gis.Symbology
             Image<Rgba32> result = GetImage(width, height, rBuffer, rBuffer, rBuffer);
             return result;
         }
-        private Image<Rgba32> GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null) 
+        private Image<Rgba32> GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null)
         {
             if (width <= 0 || height <= 0)
             {
@@ -325,7 +328,7 @@ namespace EMap.Gis.Symbology
                         {
                             aValue = 0;
                         }
-                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue); 
+                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue);
                         bufferIndex++;
                     }
                 }
@@ -444,7 +447,7 @@ namespace EMap.Gis.Symbology
 
             if (ct.GetPaletteInterpretation() != PaletteInterp.GPI_RGB)
             {
-                 return null;
+                return null;
             }
 
             int count = ct.GetCount();
@@ -709,7 +712,7 @@ namespace EMap.Gis.Symbology
                 Dataset?.Dispose();
                 Symbology?.Dispose();
                 Dataset = null;
-                Symbology.Dispose();
+                Symbology = null;
             }
             base.Dispose(disposing);
         }

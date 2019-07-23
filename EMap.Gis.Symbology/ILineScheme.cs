@@ -2,6 +2,5 @@
 {
     public interface ILineScheme:IFeatureScheme
     {
-        new CategoryCollection<ILineCategory> Categories { get; }
     }
 }

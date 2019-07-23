@@ -9,7 +9,6 @@ namespace EMap.Gis.Symbology
 {
     public interface IScheme:ILegendItem
     {
-        CategoryCollection<ICategory> Categories { get; }
         EditorSettings EditorSettings { get; set; }
         Statistics Statistics { get; }
         void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds);

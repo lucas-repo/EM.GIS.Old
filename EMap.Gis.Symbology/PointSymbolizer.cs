@@ -80,7 +80,7 @@ namespace EMap.Gis.Symbology
             Symbols.Add(ss);
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void LegendSymbolPainted(Image<Rgba32> image, Rectangle rectangle)
         {
             float scaleH = rectangle.Width / Size.Width;
             float scaleV = rectangle.Height / Size.Height;

@@ -12,5 +12,9 @@ namespace EMap.Gis.Symbology
     {
         public PolygonSimpleSymbol() : base(PolygonSymbolType.Simple)
         { }
+        public PolygonSimpleSymbol(Rgba32 color):this()
+        {
+            Color = color;
+        }
     }
 }

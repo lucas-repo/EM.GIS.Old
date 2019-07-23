@@ -12,7 +12,6 @@ namespace EMap.Gis.Symbology
         public Statistics Statistics { get; protected set; } = new Statistics();
         public List<double> Values { get; protected set; }
         protected List<Break> Breaks { get; set; }
-        public CategoryCollection<ICategory> Categories { get; }
 
         protected virtual List<float> GetSizeSet(int count)
         {
@@ -178,7 +177,7 @@ namespace EMap.Gis.Symbology
             SetBreakNames(Breaks);
             var colorRamp = GetColorSet(count);
             var sizeRamp = GetSizeSet(count);
-            Categories.Clear();
+            LegendItems.Clear();
             var colorIndex = 0;
             Break prevBreak = null;
             foreach (var brk in Breaks)
@@ -196,7 +195,7 @@ namespace EMap.Gis.Symbology
                     cat.Maximum = brk.Maximum;
                     cat.Range.MaxIsInclusive = true;
                     cat.ApplyMinMax(EditorSettings);
-                    Categories.Add(cat);
+                    LegendItems.Add(cat);
                 }
 
                 prevBreak = brk;

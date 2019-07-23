@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,10 @@ namespace EMap.Gis.Symbology
 {
     public class LineScheme:FeatureScheme,ILineScheme
     {
-        public new CategoryCollection<ILineCategory> Categories { get; }
-
         public LineScheme()
         {
-            Categories = new CategoryCollection<ILineCategory>(this);
             LineCategory category = new LineCategory();
-            Categories.Add(category);
+            LegendItems.Add(category);
         }
 
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
@@ -43,15 +41,5 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public override IEnumerable<IFeatureCategory> GetCategories()
-        {
-            return Categories;
-        }
-
-        public override void DrawCategory(int index, SixLabors.ImageSharp.Image<Rgba32> image, Rectangle bounds)
-        {
-            Categories[index].Symbolizer.Draw(image, bounds);
-        }
-        
     }
 }

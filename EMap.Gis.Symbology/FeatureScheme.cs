@@ -1,17 +1,15 @@
-﻿using EMap.Gis.Data;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.Primitives;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 
 namespace EMap.Gis.Symbology
 {
     public abstract class FeatureScheme : Scheme, IFeatureScheme
     {
-        public override IEnumerable<ILegendItem> LegendItems => GetCategories();
         public new FeatureEditorSettings EditorSettings
         {
             get
@@ -24,7 +22,6 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public new CategoryCollection<IFeatureCategory> Categories { get; }
 
         private static List<Break> GetUniqueValues(string fieldName, DataTable table)
         {
@@ -67,7 +64,7 @@ namespace EMap.Gis.Symbology
             List<float> sizeRamp = GetSizeSet(Breaks.Count);
             List<Rgba32> colorRamp = GetColorSet(Breaks.Count);
             string fieldExpression = "[" + fieldName.ToUpper() + "]";
-            Categories.Clear();
+            LegendItems.Clear();
 
             bool isStringField = CheckFieldType(fieldName, table);
 
@@ -98,7 +95,7 @@ namespace EMap.Gis.Symbology
                         }
                     }
 
-                    Categories.Add(cat);
+                    LegendItems.Add(cat);
                 }
 
                 colorIndex++;
@@ -266,6 +263,10 @@ namespace EMap.Gis.Symbology
             Values.Sort();
         }
         public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
-        public abstract IEnumerable<IFeatureCategory> GetCategories();
+        public override void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds)
+        {
+            IFeatureCategory featureCategory = LegendItems[index] as IFeatureCategory;
+            featureCategory.Symbolizer.LegendSymbolPainted(image, bounds);
+        }
     }
 }

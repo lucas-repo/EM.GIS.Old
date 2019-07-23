@@ -80,7 +80,7 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void LegendSymbolPainted(Image<Rgba32> image, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {

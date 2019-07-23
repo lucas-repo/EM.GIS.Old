@@ -41,18 +41,13 @@ namespace EMap.Gis.Symbology
         }
 
         public FontStyle Style { get; set; }
-        public static RectangleF MeasureText(string text, Font fnt)
-        {
-            RendererOptions rendererOptions = new RendererOptions(fnt);
-            IPathCollection paths = TextBuilder.GenerateGlyphs(text, rendererOptions);
-            return paths.Bounds;
-        }
+
         public override void Draw(Image<Rgba32> image, float scale)
         {
             string text = new string(new[] { Character });
             float fontPointSize = Size.Height * scale;
             Font font = new Font(FontFamily, fontPointSize, Style);
-            RectangleF bounds = MeasureText(text, font);
+            RectangleF bounds = text.MeasureText(font);
             float x = -bounds.Width / 2;
             float y = -bounds.Height / 2;
             PointF location = new PointF(x, y);
