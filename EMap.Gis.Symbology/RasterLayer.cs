@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -17,6 +18,11 @@ namespace EMap.Gis.Symbology
         private int _overviewCount;
         private ColorInterp _colorInterp;
         public Dataset Dataset { get; set; }
+        /// <summary>
+        /// 仿射六参数：0:左上角x坐标，1:X轴分辨率，2:Y轴旋转角，3:左上角y坐标，4:X轴旋转角，5:Y轴分辨率.
+        ///  x = Affine[0] + Affine[1] * col + Affine[2] * row;
+        ///  y = Affine[3] + Affine[4] * col + Affine[5] * row;
+        /// </summary>
         public double[] Affine { get; set; }
         public int RasterXSize { get => Dataset.RasterXSize; }
         public int RasterYSize { get => Dataset.RasterYSize; }
@@ -55,17 +61,17 @@ namespace EMap.Gis.Symbology
             return image;
         }
 
-        private void DrawGraphics(Image<Rgba32> image, Envelope envelope, Rectangle rectangle) 
+        private void DrawGraphics(Image<Rgba32> image, Envelope envelope, Rectangle rectangle)
         {
             if (Bands.Length == 0)
             {
                 return;
             }
             // Gets the scaling factor for converting from geographic to pixel coordinates
-            double width = envelope.MaxX - envelope.MinX;
-            double height = envelope.MaxY - envelope.MinY;
-            double dx = rectangle.Width / width;
-            double dy = rectangle.Height / height;
+            double width = envelope.MaxX - envelope.MinX;//范围宽
+            double height = envelope.MaxY - envelope.MinY;//范围高
+            double dx = rectangle.Width / width;//x分辨率倒数
+            double dy = rectangle.Height / height;//y分辨率倒数
 
             double[] a = Affine;
 
@@ -107,12 +113,14 @@ namespace EMap.Gis.Symbology
             if (bRy < 0) bRy = 0;
 
             // gets the affine scaling factors.
-            float m11 = Convert.ToSingle(a[1] * dx);
-            float m22 = Convert.ToSingle(a[5] * -dy);
-            float m21 = Convert.ToSingle(a[2] * dx);
-            float m12 = Convert.ToSingle(a[4] * -dy);
-            double l = a[0] - (.5 * (a[1] + a[2])); // Left of top left pixel
-            double t = a[3] - (.5 * (a[4] + a[5])); // top of top left pixel
+            float m11 = Convert.ToSingle(a[1] * dx);//x缩放值
+            float m22 = Convert.ToSingle(a[5] * -dy);//y缩放值
+            float m21 = Convert.ToSingle(a[2] * dx);//旋转值
+            float m12 = Convert.ToSingle(a[4] * -dy);//旋转值
+            //double l = a[0] - (.5 * (a[1] + a[2])); // Left of top left pixel
+            //double t = a[3] - (.5 * (a[4] + a[5])); // top of top left pixel
+            double l = a[0]; // Left of top left pixel
+            double t = a[3]; // top of top left pixel
             float xShift = (float)((l - envelope.MinX) * dx);
             float yShift = (float)((envelope.MaxY - t) * dy);
 
@@ -122,7 +130,7 @@ namespace EMap.Gis.Symbology
                 using (Band firstOverview = FirstBand.GetOverview(0))
                 {
                     xRatio = (float)firstOverview.XSize / FirstBand.XSize;
-                    yRatio = (float)firstOverview.YSize / FirstBand.XSize;
+                    yRatio = (float)firstOverview.YSize / FirstBand.YSize;
                 }
             }
             if (m11 > xRatio || m22 > yRatio)
@@ -151,14 +159,10 @@ namespace EMap.Gis.Symbology
             // witdh and height of the image
             var w = (bRx - tLx) / overviewPow;
             var h = (bRy - tLy) / overviewPow;
-            AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder();
             Matrix3x2 matrix = new Matrix3x2(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift);
-            affineTransformBuilder.AppendMatrix(matrix);
 
-            image.Mutate(x => x.Transform(affineTransformBuilder));
-
+            //image.Mutate(x => x.Transform(affineTransformBuilder));
             int blockXsize, blockYsize;
-
             // get the optimal block size to request gdal.
             // if the image is stored line by line then ask for a 100px stripe.
             if (_overview >= 0 && _overviewCount > 0)
@@ -216,26 +220,37 @@ namespace EMap.Gis.Symbology
             {
                 for (var j = 0; j < nbY; j++)
                 {
-                    // The +1 is to remove the white stripes artifacts
                     double xOffsetD = (tLx / overviewPow) + (i * blockXsize);
                     double yOffsetD = (tLy / overviewPow) + (j * blockYsize);
                     int xOffsetI = (int)Math.Floor(xOffsetD);
                     int yOffsetI = (int)Math.Floor(yOffsetD);
+                    // The +1 is to remove the white stripes artifacts
                     int xSize = blockXsize + 1;
                     int ySize = blockYsize + 1;
-                    using (Image<Rgba32> childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
+                    try
                     {
-                        if (childImage != null)
+                        using (Image<Rgba32> childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
                         {
-                            Point location = new Point(xOffsetI, yOffsetI);
-                            image.Mutate(x => x.DrawImage(childImage, location, 1));
+                            if (childImage != null)
+                            {
+                                AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder();
+                                PointF pointF = new PointF(xOffsetI, yOffsetI);
+                                affineTransformBuilder.AppendTranslation(pointF);
+                                affineTransformBuilder.AppendMatrix(matrix);
+                                childImage.Mutate(x => x.Transform(affineTransformBuilder));
+                                image.Mutate(x => x.DrawImage(childImage, 1));
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine($"获取图片失败：{e.Message}");
                     }
                 }
             }
         }
 
-        private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize) 
+        private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize)
         {
             Image<Rgba32> result = null;
             Action action = new Action(() =>
@@ -278,7 +293,7 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        private Image<Rgba32> ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize) 
+        private Image<Rgba32> ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize)
         {
             Band firstBand;
             var disposeBand = false;
@@ -301,7 +316,7 @@ namespace EMap.Gis.Symbology
             Image<Rgba32> result = GetImage(width, height, rBuffer, rBuffer, rBuffer);
             return result;
         }
-        private Image<Rgba32> GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null) 
+        private Image<Rgba32> GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null)
         {
             if (width <= 0 || height <= 0)
             {
@@ -325,7 +340,7 @@ namespace EMap.Gis.Symbology
                         {
                             aValue = 0;
                         }
-                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue); 
+                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue);
                         bufferIndex++;
                     }
                 }
@@ -444,7 +459,7 @@ namespace EMap.Gis.Symbology
 
             if (ct.GetPaletteInterpretation() != PaletteInterp.GPI_RGB)
             {
-                 return null;
+                return null;
             }
 
             int count = ct.GetCount();
@@ -709,7 +724,7 @@ namespace EMap.Gis.Symbology
                 Dataset?.Dispose();
                 Symbology?.Dispose();
                 Dataset = null;
-                Symbology.Dispose();
+                Symbology = null;
             }
             base.Dispose(disposing);
         }
