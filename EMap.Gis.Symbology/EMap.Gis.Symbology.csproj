@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.1</Version>
+    <Version>1.0.0-beta0002</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
@@ -18,22 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EMap" Version="1.0.0" />
+    <PackageReference Include="EMap" Version="1.0.0-alpha0001" />
     <PackageReference Include="Gdal.Core" Version="1.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
     <PackageReference Include="SixLabors.Shapes.Text" Version="1.0.0-beta0008" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\EMap.Gis.Data\EMap.Gis.Data.csproj" />
-    <ProjectReference Include="..\EMap.Gis\EMap.Gis.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="EMap">
-      <HintPath>..\..\EMap\Bin\Debug\netstandard2.0\EMap.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

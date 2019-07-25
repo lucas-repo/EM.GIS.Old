@@ -1,11 +1,8 @@
-﻿using EMap.Gis.Data;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 
 namespace EMap.Gis.Symbology
 {
