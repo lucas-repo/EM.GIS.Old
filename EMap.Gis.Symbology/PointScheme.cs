@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
     public class PointScheme : FeatureScheme, IPointScheme
     {
-        public new CategoryCollection<IPointCategory> Categories { get; }
+        public new IPointCategoryCollection Categories { get => base.Categories as IPointCategoryCollection; set => base.Categories = value; }
+
+        public override int Count => Categories.Count;
 
         public PointScheme()
         {
-            Categories = new CategoryCollection<IPointCategory>(this);
-            PointCategory category = new PointCategory();
-            Categories.Add(category);
+            Categories = new PointCategoryCollection(this);
+            //PointCategory category = new PointCategory();//todo 添加默认
+            //Categories.Add(category);
         }
 
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
@@ -24,7 +27,7 @@ namespace EMap.Gis.Symbology
             ps.Symbols[0].Color = fillColor;
             SizeF oSize = ps.Size;
             float rat = size / Math.Max(oSize.Width, oSize.Height);
-            ps.Size=new SizeF(rat * oSize.Width, rat * oSize.Height);
+            ps.Size = new SizeF(rat * oSize.Width, rat * oSize.Height);
             return new PointCategory(ps);
         }
 
@@ -38,16 +41,61 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public override IEnumerable<IFeatureCategory> GetCategories()
+
+        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
         {
-            return Categories;
+            Categories[index].Symbolizer.DrawLegend(context, bounds);
         }
 
-
-        public override void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds)
+        public override void Add(ICategory item)
         {
-            Categories[index].Symbolizer.Draw(image, bounds);
+            if (item is IPointCategory pointCategory)
+            {
+                Categories.Add(pointCategory);
+            }
         }
 
+        public override void Clear()
+        {
+            Categories.Clear();
+        }
+
+        public override bool Contains(ICategory item)
+        {
+            if (item is IPointCategory pointCategory)
+            {
+                return Categories.Contains(pointCategory);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public override void CopyTo(ICategory[] array, int arrayIndex)
+        {
+            int k = 0;
+            for (int i = arrayIndex; i < Categories.Count; i++)
+            {
+                array[i] = Categories[i];
+                k++;
+            }
+        }
+
+        public override bool Remove(ICategory item)
+        {
+            return  Categories.Remove(item as IPointCategory);
+        }
+
+        public override IEnumerator<ICategory> GetEnumerator()
+        {
+            return Categories.GetEnumerator();
+        }
+
+        public override void Move(int oldIndex, int newIndex)
+        {
+            Categories.Move(oldIndex, newIndex);
+        }
     }
 }

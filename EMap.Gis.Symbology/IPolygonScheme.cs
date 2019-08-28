@@ -2,5 +2,6 @@
 {
     public interface IPolygonScheme:IFeatureScheme
     {
+        new IPolygonCategoryCollection Categories { get; set; }
     }
 }

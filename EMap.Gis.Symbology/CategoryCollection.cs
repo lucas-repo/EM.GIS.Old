@@ -6,81 +6,21 @@ using System.Linq;
 
 namespace EMap.Gis.Symbology
 {
-    public class CategoryCollection<T>: ObservableCollection<T>where T:ICategory
+    public class CategoryCollection : LegendItemCollection, ICategoryCollection
     {
-        private IScheme _scheme;
-        public IScheme Scheme
-        {
-            get
-            {
-                return _scheme;
-            }
-            set
-            {
-                _scheme = value;
-                UpdateItemParentPointers();
-            }
-        }
-        public CategoryCollection(IScheme scheme)
-        {
-            Scheme = scheme;
-            CollectionChanged += CategoryCollection_CollectionChanged;
-        }
+       public new ICategory this[int index] { get => base[index] as ICategory; set => base[index]=value; }
 
-        private void CategoryCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            Action setOldItemsAction = new Action(() =>
-              {
-                  foreach (var item in e.OldItems)
-                  {
-                      if (item is T t)
-                      {
-                          t.Parent = null;
-                      }
-                  }
-              });
-            Action setNewItemsAction = new Action(() =>
-              {
-                  foreach (var item in e.NewItems)
-                  {
-                      if (item is T t)
-                      {
-                          t.Parent = Scheme;
-                      }
-                  }
-              });
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    setNewItemsAction.Invoke();
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    setOldItemsAction.Invoke();
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    setOldItemsAction.Invoke();
-                    setNewItemsAction.Invoke();
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    setOldItemsAction.Invoke();
-                    break;
-            }
-        }
+        public new IScheme Parent { get => base.Parent as IScheme; set => base.Parent = value; }
 
-        private void UpdateItemParentPointers()
+        public CategoryCollection()
+        { }
+        public CategoryCollection(IScheme parent) : base(parent)
+        { }
+        public new IEnumerator<ICategory> GetEnumerator()
         {
-            foreach (var item in this)
+            foreach (var item in Items)
             {
-                if (_scheme == null)
-                {
-                    item.Parent = null;
-                }
-                else
-                {
-                    item.Parent = Scheme;
-                }
+                yield return item as ICategory;
             }
         }
     }

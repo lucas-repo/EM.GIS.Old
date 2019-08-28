@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace EMap.Gis.Symbology
         bool IsVisible { get; set; }
         bool IsExpanded { get; set; }
         bool IsSelected { get; set; }
-        IEnumerable<ILegendItem> LegendItems { get; }
+        ILegendItemCollection Items { get;  }
         bool LegendItemVisible { get; set; }
         string LegendText { get; set; }
         Size GetLegendSymbolSize();
-        void Draw(Image<Rgba32> image, Rectangle rectangle);
+        void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle);
     }
 }

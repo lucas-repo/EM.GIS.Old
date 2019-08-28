@@ -3,12 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
     public class PolygonScheme : FeatureScheme, IPolygonScheme
     {
+        public new IPolygonCategoryCollection Categories { get => base.Categories as IPolygonCategoryCollection; set => base.Categories = value; }
+
+        public override int Count => Categories.Count;
+
+        public PolygonScheme()
+        {
+            Categories = new PolygonCategoryCollection(this);
+            var category = new PolygonCategory();//todo 添加默认
+            Categories.Add(category);
+        }
+
+
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
         {
             throw new NotImplementedException();
@@ -19,15 +32,61 @@ namespace EMap.Gis.Symbology
             throw new NotImplementedException();
         }
 
-        public override void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds)
+
+        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
         {
-            throw new NotImplementedException();
+            Categories[index].Symbolizer.DrawLegend(context, bounds);
         }
 
-        public override IEnumerable<IFeatureCategory> GetCategories()
+        public override void Add(ICategory item)
         {
-            throw new NotImplementedException();
+            if (item is IPolygonCategory polygonCategory)
+            {
+                Categories.Add(polygonCategory);
+            }
         }
 
+        public override void Clear()
+        {
+            Categories.Clear();
+        }
+
+        public override bool Contains(ICategory item)
+        {
+            if (item is IPolygonCategory polygonCategory)
+            {
+                return Categories.Contains(polygonCategory);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public override void CopyTo(ICategory[] array, int arrayIndex)
+        {
+            int k = 0;
+            for (int i = arrayIndex; i < Categories.Count; i++)
+            {
+                array[i] = Categories[i];
+                k++;
+            }
+        }
+
+        public override bool Remove(ICategory item)
+        {
+            return Categories.Remove(item as IPolygonCategory );
+        }
+
+        public override IEnumerator<ICategory> GetEnumerator()
+        {
+            return Categories.GetEnumerator();
+        }
+
+        public override void Move(int oldIndex, int newIndex)
+        {
+            Categories.Move(oldIndex, newIndex);
+        }
     }
 }

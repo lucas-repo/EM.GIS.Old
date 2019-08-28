@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using SixLabors.Shapes;
 using System;
@@ -12,7 +13,7 @@ namespace EMap.Gis.Symbology
     {
         Rgba32 Color { get; set; }
         float Width { get; set; }
-        IList<ILineSymbol> Symbols { get;}
-        void DrawPath(Image<Rgba32> image, float scale, PointF[] points);
+        new ILineSymbolCollection Symbols { get; set; }
+        void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
     }
 }

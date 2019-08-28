@@ -51,28 +51,7 @@ namespace EMap.Gis.Symbology
 
         public PointPictureSymbol() : base(PointSymbolType.Picture)
         { }
-        public override void Draw(Image<Rgba32> image, float scale)
-        {
-            float width = scale * Size.Width;
-            float height = scale * Size.Height;
-            float dx = scale * Size.Width / 2;
-            float dy = scale * Size.Height / 2;
-            RectangleF rectangle = new RectangleF(-dx, -dy, width, height);
-            if (Image != null)
-            {
-                using (Image<Rgba32> tmpImage = Image.Clone())
-                {
-                    PointF position = new PointF(Size.Width / 2, Size.Height / 2);
-                    AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder()
-                        .AppendScale(scale)
-                        .AppendTranslation(position);
-                    tmpImage.Mutate(x => x.Transform(affineTransformBuilder));
-                    image.Mutate(x => x.DrawImage(tmpImage, 1));
-                }
-            }
-            PointF[] points = rectangle.ToPoints();
-            DrawPath(image, scale, points);
-        }
+
         private static Image<Rgba32> MakeTransparent(Image<Rgba32> image, float opacity)
         {
             Image<Rgba32> destImage = null;
@@ -80,6 +59,37 @@ namespace EMap.Gis.Symbology
             destImage = new Image<Rgba32>(image.Width, image.Height);
             destImage.Mutate(x => x.DrawImage(image, opacity));
             return destImage;
+        }
+
+        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        {
+            float width = scale * Size.Width;
+            float height = scale * Size.Height;
+            float x = point.X - scale * Size.Width / 2;
+            float y = point.Y - scale * Size.Height / 2;
+            RectangleF rectangle = new RectangleF(x, y, width, height);
+            if (Image != null)
+            {
+                PointF position = new PointF(Size.Width / 2, Size.Height / 2);
+                AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder()
+                    .AppendScale(scale)
+                    .AppendTranslation(new PointF(rectangle.X, rectangle.Y));
+                //using (Image<Rgba32> tmpImage = Image.Clone())
+                //{
+                //    tmpImage.Mutate(processing =>
+                //    {
+                //        processing.Transform(affineTransformBuilder);
+                //        context.DrawImage(tmpImage, 1);
+                //    });
+                //}
+                Image.Mutate(processing =>
+                {
+                    processing.Transform(affineTransformBuilder);
+                    context.DrawImage(Image, 1);
+                });
+            }
+            PointF[] points = rectangle.ToPoints();
+            DrawOutLine(context, scale, points);
         }
     }
 }

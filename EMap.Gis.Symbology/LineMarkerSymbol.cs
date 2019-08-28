@@ -30,7 +30,7 @@ namespace EMap.Gis.Symbology
                 int imgHeight= (int)Math.Ceiling(size.Height);
                 Image<Rgba32> image = new Image<Rgba32>(imgWidth,imgHeight);
                 Rectangle rectangle = new Rectangle(0, 0, imgWidth, imgHeight);
-                Marker.Draw(image, rectangle);
+                image.Mutate(x => Marker.DrawLegend(x, rectangle));
                 IBrush<Rgba32> brush = new ImageBrush<Rgba32>(image);
                 pen = new Pen<Rgba32>(brush, width, Pattern);
             }

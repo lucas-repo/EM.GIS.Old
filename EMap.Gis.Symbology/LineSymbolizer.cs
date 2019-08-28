@@ -1,14 +1,15 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using SixLabors.Shapes;
+using System;
 using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
 {
-    internal class LineSymbolizer : FeatureSymbolizer, ILineSymbolizer
+    public class LineSymbolizer : FeatureSymbolizer, ILineSymbolizer
     {
-        public IList<ILineSymbol> Symbols { get; set; } = new List<ILineSymbol>();
         public Rgba32 Color
         {
             get
@@ -53,41 +54,65 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public LineSymbolizer() : this(false)
+        public new ILineSymbolCollection Symbols { get => base.Symbols as ILineSymbolCollection; set => base.Symbols = value; }
+
+        public LineSymbolizer()
         {
+            var symbol = new LineSimpleSymbol();
+            Symbols = new LineSymbolCollection
+            {
+                symbol
+            };
+        }
+        public LineSymbolizer(Rgba32 color)
+        {
+            var symbol = new LineSimpleSymbol(color);
+            Symbols = new LineSymbolCollection
+            {
+                symbol
+            };
         }
         public LineSymbolizer(Rgba32 color, float width)
         {
-            var symbol = new LineSimpleSymbol(width, color);
-            Symbols.Add(symbol);
+            var symbol = new LineSimpleSymbol(color, width);
+            Symbols = new LineSymbolCollection
+            {
+                symbol
+            };
         }
         public LineSymbolizer(bool selected)
         {
-            ILineSymbol lineSymbol = new LineSimpleSymbol();
+            ILineSymbol symbol = null;
             if (selected)
             {
-                lineSymbol.Color = Rgba32.Cyan;
+                symbol= new LineSimpleSymbol(Rgba32.Cyan);
             }
-            Symbols.Add(lineSymbol);
-        }
-
-        public void DrawPath(Image<Rgba32> image, float scale, PointF[] points)
-        {
-            foreach (var stroke in Symbols)
+            else
             {
-                var p = stroke.ToPen(scale);
-                stroke.DrawPath(image, scale, points);
+                symbol = new LineSimpleSymbol();
             }
+            Symbols = new LineSymbolCollection
+            {
+                symbol
+            };
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
                 new PointF(rectangle.X, rectangle.Y + (rectangle.Height / 2)),
                 new PointF(rectangle.Right, rectangle.Y + (rectangle.Height / 2))
             };
-            DrawPath(image, 1, points);
+            DrawLine(context, 1, points);
+        }
+
+        public void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        {
+            foreach (var symbol in Symbols)
+            {
+                symbol.DrawLine(context, scale, points);
+            }
         }
     }
 }

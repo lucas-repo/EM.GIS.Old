@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -18,13 +19,36 @@ namespace EMap.Gis.Symbology
         {
             PolygonSymbolType = polygonSymbolType;
         }
-        
-        public void FillPath(Image<Rgba32> image, PointF[] points)
+
+        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
         {
-            IBrush<Rgba32> brush = GetBrush();
-            if (brush != null)
+            if (context == null || polygon == null )
             {
-                image.Mutate(x => x.FillPolygon(brush, points));
+                return;
+            }
+            IBrush<Rgba32> brush = GetBrush();
+            if (brush == null)
+            {
+                return;
+            }
+            //List<ILineSegment> lineSegments = new List<ILineSegment>();
+            //foreach (var points in polygons)
+            //{
+            //    if (points.Length > 2)
+            //    {
+            //        ILineSegment lineSegment = new LinearLineSegment(points); 
+            //        lineSegments.Add(lineSegment);
+            //    }
+            //}
+            //if (lineSegments.Count == 0)
+            //{
+            //    return;
+            //}
+            //Polygon polygon = new Polygon(lineSegments); 
+            context.Fill(brush, polygon); 
+            foreach (var lineSegment in polygon.LineSegments)
+            {
+                DrawOutLine(context, scale, lineSegment.Flatten().ToArray());
             }
         }
 

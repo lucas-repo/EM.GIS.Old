@@ -1,6 +1,6 @@
 ﻿namespace EMap.Gis.Symbology
 {
-    internal interface IPolygonCategory
+    public interface IPolygonCategory:IFeatureCategory
     {
     }
 }

@@ -8,8 +8,12 @@ namespace EMap.Gis.Symbology
 {
     public abstract class OutLineSymbol : FeatureSymbol, IOutlineSymbol
     {
-        public bool UseOutLine { get; set; }
+        public bool UseOutLine { get; set; } = true;
         public ILineSymbolizer OutLineSymbolizer { get; set; }
+        public OutLineSymbol()
+        {
+            OutLineSymbolizer = new LineSymbolizer();
+        }
 
         public void CopyOutLine(IOutlineSymbol outlineSymbol)
         {
@@ -17,11 +21,11 @@ namespace EMap.Gis.Symbology
             OutLineSymbolizer = outlineSymbol.OutLineSymbolizer.Clone() as ILineSymbolizer;
         }
 
-        public void DrawPath(Image<Rgba32> image, float scale, PointF[] points)
+        public void DrawOutLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
         {
-            if (UseOutLine && OutLineSymbolizer != null)
+            if (UseOutLine && OutLineSymbolizer != null && points.Length > 1)
             {
-                OutLineSymbolizer.DrawPath(image,  scale, points);
+                OutLineSymbolizer.DrawLine(context, scale, points);
             }
         }
     }

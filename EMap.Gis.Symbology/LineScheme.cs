@@ -1,4 +1,5 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,13 @@ namespace EMap.Gis.Symbology
 {
     public class LineScheme:FeatureScheme,ILineScheme
     {
-        public new CategoryCollection<ILineCategory> Categories { get; }
+        public new ILineCategoryCollection Categories { get => base.Categories as ILineCategoryCollection; set => base.Categories = value; }
+
+        public override int Count => Categories.Count;
 
         public LineScheme()
         {
-            Categories = new CategoryCollection<ILineCategory>(this);
+            Categories = new LineCategoryCollection(this);
             LineCategory category = new LineCategory();
             Categories.Add(category);
         }
@@ -43,15 +46,59 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public override IEnumerable<IFeatureCategory> GetCategories()
+        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
         {
-            return Categories;
+            Categories[index].Symbolizer.DrawLegend(context, bounds);
         }
 
-        public override void DrawCategory(int index, SixLabors.ImageSharp.Image<Rgba32> image, Rectangle bounds)
+        public override void Add(ICategory item)
         {
-            Categories[index].Symbolizer.Draw(image, bounds);
+            if (item is ILineCategory lineCategory)
+            {
+                Categories.Add(lineCategory);
+            }
         }
-        
+
+        public override void Clear()
+        {
+            Categories.Clear();
+        }
+
+        public override bool Contains(ICategory item)
+        {
+            if (item is ILineCategory lineCategory)
+            {
+                return Categories.Contains(lineCategory);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void CopyTo(ICategory[] array, int arrayIndex)
+        {
+            int k = 0;
+            for (int i = arrayIndex; i < Categories.Count; i++)
+            {
+                array[i] = Categories[i];
+                k++;
+            }
+        }
+
+        public override bool Remove(ICategory item)
+        {
+            return Categories.Remove(item as ILineCategory);
+        }
+
+        public override IEnumerator<ICategory> GetEnumerator()
+        {
+            return Categories.GetEnumerator();
+        }
+
+        public override void Move(int oldIndex, int newIndex)
+        {
+            Categories.Move(oldIndex, newIndex);
+        }
     }
 }

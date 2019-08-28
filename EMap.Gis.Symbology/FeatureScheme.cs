@@ -1,4 +1,8 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using OSGeo.OGR;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +12,6 @@ namespace EMap.Gis.Symbology
 {
     public abstract class FeatureScheme : Scheme, IFeatureScheme
     {
-        public override IEnumerable<ILegendItem> LegendItems => GetCategories();
         public new FeatureEditorSettings EditorSettings
         {
             get
@@ -21,7 +24,8 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public new CategoryCollection<IFeatureCategory> Categories { get; }
+        public new IFeatureLayer Parent { get => base.Parent as IFeatureLayer; set => base.Parent = value; }
+        public new IFeatureCategoryCollection Categories { get => base.Categories as IFeatureCategoryCollection; set => base.Categories = value; }
 
         private static List<Break> GetUniqueValues(string fieldName, DataTable table)
         {
@@ -64,7 +68,7 @@ namespace EMap.Gis.Symbology
             List<float> sizeRamp = GetSizeSet(Breaks.Count);
             List<Rgba32> colorRamp = GetColorSet(Breaks.Count);
             string fieldExpression = "[" + fieldName.ToUpper() + "]";
-            Categories.Clear();
+            Clear();
 
             bool isStringField = CheckFieldType(fieldName, table);
 
@@ -95,7 +99,7 @@ namespace EMap.Gis.Symbology
                         }
                     }
 
-                    Categories.Add(cat);
+                    Add(cat);
                 }
 
                 colorIndex++;
@@ -263,6 +267,10 @@ namespace EMap.Gis.Symbology
             Values.Sort();
         }
         public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
-        public abstract IEnumerable<IFeatureCategory> GetCategories();
+
+        public void Draw(IImageProcessingContext<Rgba32> context, Envelope envelope, Rectangle rectangle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,20 +1,26 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
+using SixLabors.Shapes;
 using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
 {
-    internal class PolygonSymbolizer :FeatureSymbolizer, IPolygonSymbolizer
+    internal class PolygonSymbolizer : FeatureSymbolizer, IPolygonSymbolizer
     {
-        public IList<IPolygonSymbol> Symbols { get; } = new List<IPolygonSymbol>();
-
-        public PolygonSymbolizer():this(false)
+        public new IPolygonSymbolCollection Symbols { get => base.Symbols as IPolygonSymbolCollection; set => base.Symbols = value; }
+      
+        public PolygonSymbolizer()
         {
+            Symbols = new PolygonSymbolCollection();
+            PolygonSimpleSymbol polygonSymbol = new PolygonSimpleSymbol();
+            Symbols.Add(polygonSymbol);
         }
 
-        public PolygonSymbolizer(bool selected)
+        public PolygonSymbolizer(bool selected) 
         {
+            Symbols = new PolygonSymbolCollection();
             IPolygonSymbol polygonSymbol = new PolygonSimpleSymbol();
             if (selected)
             {
@@ -22,7 +28,7 @@ namespace EMap.Gis.Symbology
             }
             Symbols.Add(polygonSymbol);
         }
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
@@ -32,15 +38,14 @@ namespace EMap.Gis.Symbology
                 new PointF(rectangle.Right,rectangle.Top),
                 new PointF(rectangle.Left,rectangle.Top)
             };
+            DrawPolygon(context, 1, points.ToPolygon());
+        }
+        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
+        {
             foreach (var symbol in Symbols)
             {
-                symbol.FillPath(image, points);
-            }
-            foreach (var symbol in Symbols)
-            {
-                symbol.DrawPath(image,1, points);
+                symbol.DrawPolygon(context, scale, polygon);
             }
         }
-        
     }
 }

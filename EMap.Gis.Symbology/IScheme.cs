@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
 using System.Collections;
@@ -7,13 +8,14 @@ using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
 {
-    public interface IScheme:ILegendItem
+    public interface IScheme : ILegendItem
     {
-        CategoryCollection<ICategory> Categories { get; }
+        ICategoryCollection Categories { get; set; }
         EditorSettings EditorSettings { get; set; }
         Statistics Statistics { get; }
-        void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds);
+        void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds);
         ICategory CreateNewCategory(Rgba32 fillColor, float size);
         List<double> Values { get; }
+        void Move(int oldIndex, int newIndex);
     }
 }

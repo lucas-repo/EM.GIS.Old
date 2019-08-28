@@ -13,17 +13,18 @@ namespace EMap.Gis.Symbology
         { }
         protected LineSimpleSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         { }
-        public LineSimpleSymbol(float width, Rgba32 color) : this()
+        public LineSimpleSymbol(Rgba32 color) : base(color, LineSymbolType.Simple)
         {
-            Width = width;
-            Color = color;
+        }
+        public LineSimpleSymbol(Rgba32 color, float width) : base(color, width, LineSymbolType.Simple)
+        {
         }
         public virtual DashStyle DashStyle { get; set; }
-        
+
         public override IPen<Rgba32> ToPen(float scale)
         {
             float width = scale * Width;
-            IPen<Rgba32> pen =null; 
+            IPen<Rgba32> pen = null;
             switch (DashStyle)
             {
                 case DashStyle.Solid:

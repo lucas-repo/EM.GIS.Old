@@ -3,7 +3,7 @@ using System;
 
 namespace EMap.Gis.Symbology
 {
-    public static class RandomExt
+    public static class RandomExtension
     {
         #region Methods
 
@@ -26,11 +26,11 @@ namespace EMap.Gis.Symbology
 
         public static Rgba32 NextColor(this Random generator)
         {
-            byte a = (byte)generator.Next(0, 255);
+            //byte a = (byte)generator.Next(0, 255);
             byte r = (byte)generator.Next(0, 255);
             byte g = (byte)generator.Next(0, 255);
             byte b = (byte)generator.Next(0, 255);
-            Rgba32 rgba32 = new Rgba32(a, r, g, b);
+            Rgba32 rgba32 = new Rgba32( r, g, b);
             return rgba32;
         }
 

@@ -47,19 +47,6 @@ namespace EMap.Gis.Symbology
             IPathCollection paths = TextBuilder.GenerateGlyphs(text, rendererOptions);
             return paths.Bounds;
         }
-        public override void Draw(Image<Rgba32> image, float scale)
-        {
-            string text = new string(new[] { Character });
-            float fontPointSize = Size.Height * scale;
-            Font font = new Font(FontFamily, fontPointSize, Style);
-            RectangleF bounds = MeasureText(text, font);
-            float x = -bounds.Width / 2;
-            float y = -bounds.Height / 2;
-            PointF location = new PointF(x, y);
-            image.Mutate(p => p.DrawText(text, font, Color, location));
-            PointF[] points = bounds.ToPoints();
-            DrawPath(image, scale, points);
-        }
         protected override void OnRandomize(Random generator)
         {
             Color = generator.NextColor();
@@ -69,6 +56,20 @@ namespace EMap.Gis.Symbology
             FontFamilyName = SystemFonts.Families.ElementAt(generator.Next(0, fontCount - 1)).Name;
             Style = generator.NextEnum<FontStyle>();
             base.OnRandomize(generator);
+        }
+
+        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        {
+            string text = new string(new[] { Character });
+            float fontPointSize = Size.Height * scale;
+            Font font = new Font(FontFamily, fontPointSize, Style);
+            RectangleF bounds = MeasureText(text, font);
+            float x = point.X - bounds.Width / 2;
+            float y = point.Y - bounds.Height / 2;
+            PointF location = new PointF(x, y);
+            context.DrawText(text, font, Color, location);
+            PointF[] points = bounds.ToPoints();
+            DrawOutLine(context, scale, points);
         }
     }
 }

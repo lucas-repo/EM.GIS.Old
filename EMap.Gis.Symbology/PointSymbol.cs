@@ -18,6 +18,6 @@ namespace EMap.Gis.Symbology
         {
             PointSymbolType = pointSymbolType;
         }
-        public abstract void Draw(Image<Rgba32> image, float scale);
+        public abstract void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point);
     }
 }

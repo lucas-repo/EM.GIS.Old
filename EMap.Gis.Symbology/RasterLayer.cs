@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace EMap.Gis.Symbology
 {
@@ -54,201 +55,68 @@ namespace EMap.Gis.Symbology
         }
 
         public new IRasterScheme Symbology { get => base.Symbology as IRasterScheme; set => base.Symbology = value; }
-        public override Image<Rgba32> GetImage(Envelope envelope, Rectangle rectangle)
+        private Envelope _extents;
+        public override Envelope Extents
         {
-            Image<Rgba32> image = new Image<Rgba32>(rectangle.Width, rectangle.Height);
-            DrawGraphics(image, envelope, rectangle);
-            return image;
-        }
-
-        private void DrawGraphics(Image<Rgba32> image, Envelope envelope, Rectangle rectangle)
-        {
-            if (Bands.Length == 0)
+            get
             {
-                return;
-            }
-            // Gets the scaling factor for converting from geographic to pixel coordinates
-            double width = envelope.MaxX - envelope.MinX;//范围宽
-            double height = envelope.MaxY - envelope.MinY;//范围高
-            double dx = rectangle.Width / width;//x分辨率倒数
-            double dy = rectangle.Height / height;//y分辨率倒数
-
-            double[] a = Affine;
-
-            // calculate inverse
-            double p = 1 / ((a[1] * a[5]) - (a[2] * a[4]));
-            double[] aInv = new double[4];
-            aInv[0] = a[5] * p;
-            aInv[1] = -a[2] * p;
-            aInv[2] = -a[4] * p;
-            aInv[3] = a[1] * p;
-
-            // estimate rectangle coordinates
-            double tlx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
-            double tly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
-            double trx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
-            double trY = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
-            double blx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
-            double bly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
-            double brx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
-            double bry = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
-
-            // get absolute maximum and minimum coordinates to make a rectangle on projected coordinates
-            // that overlaps all the visible area.
-            double tLx = Math.Min(Math.Min(Math.Min(tlx, trx), blx), brx);
-            double tLy = Math.Min(Math.Min(Math.Min(tly, trY), bly), bry);
-            double bRx = Math.Max(Math.Max(Math.Max(tlx, trx), blx), brx);
-            double bRy = Math.Max(Math.Max(Math.Max(tly, trY), bly), bry);
-
-            // limit it to the available image
-            // todo: why we compare NumColumns\Rows and X,Y coordinates??
-            if (tLx > RasterXSize) tLx = RasterXSize;
-            if (tLy > RasterYSize) tLy = RasterYSize;
-            if (bRx > RasterXSize) bRx = RasterXSize;
-            if (bRy > RasterYSize) bRy = RasterYSize;
-
-            if (tLx < 0) tLx = 0;
-            if (tLy < 0) tLy = 0;
-            if (bRx < 0) bRx = 0;
-            if (bRy < 0) bRy = 0;
-
-            // gets the affine scaling factors.
-            float m11 = Convert.ToSingle(a[1] * dx);//x缩放值
-            float m22 = Convert.ToSingle(a[5] * -dy);//y缩放值
-            float m21 = Convert.ToSingle(a[2] * dx);//旋转值
-            float m12 = Convert.ToSingle(a[4] * -dy);//旋转值
-            //double l = a[0] - (.5 * (a[1] + a[2])); // Left of top left pixel
-            //double t = a[3] - (.5 * (a[4] + a[5])); // top of top left pixel
-            double l = a[0]; // Left of top left pixel
-            double t = a[3]; // top of top left pixel
-            float xShift = (float)((l - envelope.MinX) * dx);
-            float yShift = (float)((envelope.MaxY - t) * dy);
-
-            float xRatio = 1, yRatio = 1;
-            if (_overviewCount > 0)
-            {
-                using (Band firstOverview = FirstBand.GetOverview(0))
+                if (_extents == null)
                 {
-                    xRatio = (float)firstOverview.XSize / FirstBand.XSize;
-                    yRatio = (float)firstOverview.YSize / FirstBand.YSize;
+                    _extents = new Envelope();
                 }
-            }
-            if (m11 > xRatio || m22 > yRatio)
-            {
-                _overview = -1; // don't use overviews when zooming behind the max res.
-            }
-            else
-            {
-                // estimate the pyramids that we need.
-                // when using unreferenced images m11 or m22 can be negative resulting on inf logarithm.
-                // so the Math.abs
-                _overview = (int)Math.Min(Math.Log(Math.Abs(1 / m11), 2), Math.Log(Math.Abs(1 / m22), 2));
-
-                // limit it to the available pyramids
-                _overview = Math.Min(_overview, _overviewCount - 1);
-
-                // additional test but probably not needed
-                if (_overview < 0)
-                {
-                    _overview = -1;
-                }
-            }
-
-            var overviewPow = Math.Pow(2, _overview + 1);
-
-            // witdh and height of the image
-            var w = (bRx - tLx) / overviewPow;
-            var h = (bRy - tLy) / overviewPow;
-            Matrix3x2 matrix = new Matrix3x2(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift);
-
-            //image.Mutate(x => x.Transform(affineTransformBuilder));
-            int blockXsize, blockYsize;
-            // get the optimal block size to request gdal.
-            // if the image is stored line by line then ask for a 100px stripe.
-            if (_overview >= 0 && _overviewCount > 0)
-            {
-                using (var overview = FirstBand.GetOverview(_overview))
-                {
-                    overview.GetBlockSize(out blockXsize, out blockYsize);
-                    if (blockYsize == 1)
-                    {
-                        blockYsize = Math.Min(100, overview.YSize);
-                    }
-                }
-            }
-            else
-            {
-                FirstBand.GetBlockSize(out blockXsize, out blockYsize);
-                if (blockYsize == 1)
-                {
-                    blockYsize = Math.Min(100, FirstBand.YSize);
-                }
-            }
-
-            int nbX, nbY;
-
-            // limit the block size to the viewable image.
-            if (w < blockXsize)
-            {
-                blockXsize = (int)Math.Ceiling(w);
-                nbX = 1;
-            }
-            else if (w == blockXsize)
-            {
-                nbX = 1;
-            }
-            else
-            {
-                nbX = (int)Math.Ceiling(w / blockXsize);
-            }
-
-            if (h < blockYsize)
-            {
-                blockYsize = (int)Math.Ceiling(h);
-                nbY = 1;
-            }
-            else if (h == blockYsize)
-            {
-                nbY = 1;
-            }
-            else
-            {
-                nbY = (int)Math.Ceiling(h / blockYsize);
-            }
-
-            for (var i = 0; i < nbX; i++)
-            {
-                for (var j = 0; j < nbY; j++)
-                {
-                    double xOffsetD = (tLx / overviewPow) + (i * blockXsize);
-                    double yOffsetD = (tLy / overviewPow) + (j * blockYsize);
-                    int xOffsetI = (int)Math.Floor(xOffsetD);
-                    int yOffsetI = (int)Math.Floor(yOffsetD);
-                    // The +1 is to remove the white stripes artifacts
-                    int xSize = blockXsize + 1;
-                    int ySize = blockYsize + 1;
-                    try
-                    {
-                        using (Image<Rgba32> childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
-                        {
-                            if (childImage != null)
-                            {
-                                AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder();
-                                PointF pointF = new PointF(xOffsetI, yOffsetI);
-                                affineTransformBuilder.AppendTranslation(pointF);
-                                affineTransformBuilder.AppendMatrix(matrix);
-                                childImage.Mutate(x => x.Transform(affineTransformBuilder));
-                                image.Mutate(x => x.DrawImage(childImage, 1));
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine($"获取图片失败：{e.Message}");
-                    }
-                }
+                _extents.MinX = GetXMin();
+                _extents.MinY = GetYMin();
+                _extents.MaxX = GetXMax();
+                _extents.MaxY = GetYMax();
+                return _extents;
             }
         }
+        private double GetXMin()
+        {
+            double xMin = double.MaxValue;
+            double[] affine = Affine; // in case this is an overridden property
+            double nr = RasterYSize;
+            double nc = RasterXSize;
+
+            // Because these coefficients can be negative, we can't make assumptions about what corner is furthest left.
+            if (affine[0] < xMin) xMin = affine[0]; // TopLeft;
+            if (affine[0] + (nc * affine[1]) < xMin) xMin = affine[0] + (nc * affine[1]); // TopRight;
+            if (affine[0] + (nr * affine[2]) < xMin) xMin = affine[0] + (nr * affine[2]); // BottomLeft;
+            if (affine[0] + (nc * affine[1]) + (nr * affine[2]) < xMin) xMin = affine[0] + (nc * affine[1]) + (nr * affine[2]); // BottomRight
+
+            // the coordinate thus far is the center of the cell. The actual left is half a cell further left.
+            xMin = xMin - (Math.Abs(affine[1]) / 2) - (Math.Abs(affine[2]) / 2);
+            return xMin;
+        }
+        private double GetYMax()
+        {
+            double yMax = double.MinValue;
+            double[] affine = Affine; // in case this is an overridden property
+            double nr = RasterYSize;
+            double nc = RasterXSize;
+
+            // Because these coefficients can be negative, we can't make assumptions about what corner is furthest left.
+            if (affine[3] > yMax) yMax = affine[3]; // TopLeft;
+            if (affine[3] + (nc * affine[4]) > yMax) yMax = affine[3] + (nc * affine[4]); // TopRight;
+            if (affine[3] + (nr * affine[5]) > yMax) yMax = affine[3] + (nr * affine[5]); // BottomLeft;
+            if (affine[3] + (nc * affine[4]) + (nr * affine[5]) > yMax) yMax = affine[3] + (nc * affine[4]) + (nr * affine[5]); // BottomRight
+
+            // the value thus far is at the center of the cell. Return a value half a cell further
+            return yMax + (Math.Abs(affine[4]) / 2) + (Math.Abs(affine[5]) / 2);
+        }
+        public double GetXMax()
+        {
+            double width= (RasterXSize * Math.Abs(Affine[1])) + (RasterYSize * Math.Abs(Affine[2]));
+            double xMax = GetXMin() + width;
+            return xMax;
+        }
+        public double GetYMin()
+        {
+            double height = (Math.Abs(Affine[4]) * RasterXSize) + (Math.Abs(Affine[5]) * RasterYSize);
+            double yMin = GetYMax() - height;
+            return yMin;
+        }
+       
 
         private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize)
         {
@@ -721,12 +589,219 @@ namespace EMap.Gis.Symbology
         {
             if (disposing)
             {
+                if (Bands != null)
+                {
+                    foreach (var band in Bands)
+                    {
+                        band?.Dispose();
+                    }
+                }
                 Dataset?.Dispose();
                 Symbology?.Dispose();
                 Dataset = null;
                 Symbology = null;
             }
             base.Dispose(disposing);
+        }
+
+        public override void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
+        {
+            if (Bands.Length == 0)
+            {
+                return;
+            }
+            if (rectangle.Width == 0 || rectangle.Height == 0 || envelope == null )
+            {
+                throw new Exception("参数错误");
+            }
+            if (selected||cancellationTokenSource?.IsCancellationRequested == true)
+            {
+                return;
+            }
+            BufferImgage = new Image<Rgba32>(rectangle.Width, rectangle.Height);
+            // Gets the scaling factor for converting from geographic to pixel coordinates
+            double width = envelope.MaxX - envelope.MinX;//范围宽
+            double height = envelope.MaxY - envelope.MinY;//范围高
+            double dx = rectangle.Width / width;//x分辨率倒数
+            double dy = rectangle.Height / height;//y分辨率倒数
+
+            double[] a = Affine;
+
+            // calculate inverse
+            double p = 1 / ((a[1] * a[5]) - (a[2] * a[4]));
+            double[] aInv = new double[4];
+            aInv[0] = a[5] * p;
+            aInv[1] = -a[2] * p;
+            aInv[2] = -a[4] * p;
+            aInv[3] = a[1] * p;
+
+            // estimate rectangle coordinates
+            double tlx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
+            double tly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
+            double trx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
+            double trY = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
+            double blx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
+            double bly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
+            double brx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
+            double bry = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
+
+            // get absolute maximum and minimum coordinates to make a rectangle on projected coordinates
+            // that overlaps all the visible area.
+            double tLx = Math.Min(Math.Min(Math.Min(tlx, trx), blx), brx);
+            double tLy = Math.Min(Math.Min(Math.Min(tly, trY), bly), bry);
+            double bRx = Math.Max(Math.Max(Math.Max(tlx, trx), blx), brx);
+            double bRy = Math.Max(Math.Max(Math.Max(tly, trY), bly), bry);
+
+            // limit it to the available image
+            // todo: why we compare NumColumns\Rows and X,Y coordinates??
+            if (tLx > RasterXSize) tLx = RasterXSize;
+            if (tLy > RasterYSize) tLy = RasterYSize;
+            if (bRx > RasterXSize) bRx = RasterXSize;
+            if (bRy > RasterYSize) bRy = RasterYSize;
+
+            if (tLx < 0) tLx = 0;
+            if (tLy < 0) tLy = 0;
+            if (bRx < 0) bRx = 0;
+            if (bRy < 0) bRy = 0;
+
+            // gets the affine scaling factors.
+            float m11 = Convert.ToSingle(a[1] * dx);//x缩放值
+            float m22 = Convert.ToSingle(a[5] * -dy);//y缩放值
+            float m21 = Convert.ToSingle(a[2] * dx);//旋转值
+            float m12 = Convert.ToSingle(a[4] * -dy);//旋转值
+            //double l = a[0] - (.5 * (a[1] + a[2])); // Left of top left pixel
+            //double t = a[3] - (.5 * (a[4] + a[5])); // top of top left pixel
+            double l = a[0]; // Left of top left pixel
+            double t = a[3]; // top of top left pixel
+            float xShift = (float)((l - envelope.MinX) * dx);
+            float yShift = (float)((envelope.MaxY - t) * dy);
+
+            float xRatio = 1, yRatio = 1;
+            if (_overviewCount > 0)
+            {
+                using (Band firstOverview = FirstBand.GetOverview(0))
+                {
+                    xRatio = (float)firstOverview.XSize / FirstBand.XSize;
+                    yRatio = (float)firstOverview.YSize / FirstBand.YSize;
+                }
+            }
+            if (m11 > xRatio || m22 > yRatio)
+            {
+                _overview = -1; // don't use overviews when zooming behind the max res.
+            }
+            else
+            {
+                // estimate the pyramids that we need.
+                // when using unreferenced images m11 or m22 can be negative resulting on inf logarithm.
+                // so the Math.abs
+                _overview = (int)Math.Min(Math.Log(Math.Abs(1 / m11), 2), Math.Log(Math.Abs(1 / m22), 2));
+
+                // limit it to the available pyramids
+                _overview = Math.Min(_overview, _overviewCount - 1);
+
+                // additional test but probably not needed
+                if (_overview < 0)
+                {
+                    _overview = -1;
+                }
+            }
+
+            var overviewPow = Math.Pow(2, _overview + 1);
+
+            // witdh and height of the image
+            var w = (bRx - tLx) / overviewPow;
+            var h = (bRy - tLy) / overviewPow;
+            Matrix3x2 matrix = new Matrix3x2(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift);
+
+            //image.Mutate(x => x.Transform(affineTransformBuilder));
+            int blockXsize, blockYsize;
+            // get the optimal block size to request gdal.
+            // if the image is stored line by line then ask for a 100px stripe.
+            if (_overview >= 0 && _overviewCount > 0)
+            {
+                using (var overview = FirstBand.GetOverview(_overview))
+                {
+                    overview.GetBlockSize(out blockXsize, out blockYsize);
+                    if (blockYsize == 1)
+                    {
+                        blockYsize = Math.Min(100, overview.YSize);
+                    }
+                }
+            }
+            else
+            {
+                FirstBand.GetBlockSize(out blockXsize, out blockYsize);
+                if (blockYsize == 1)
+                {
+                    blockYsize = Math.Min(100, FirstBand.YSize);
+                }
+            }
+
+            int nbX, nbY;
+
+            // limit the block size to the viewable image.
+            if (w < blockXsize)
+            {
+                blockXsize = (int)Math.Ceiling(w);
+                nbX = 1;
+            }
+            else if (w == blockXsize)
+            {
+                nbX = 1;
+            }
+            else
+            {
+                nbX = (int)Math.Ceiling(w / blockXsize);
+            }
+
+            if (h < blockYsize)
+            {
+                blockYsize = (int)Math.Ceiling(h);
+                nbY = 1;
+            }
+            else if (h == blockYsize)
+            {
+                nbY = 1;
+            }
+            else
+            {
+                nbY = (int)Math.Ceiling(h / blockYsize);
+            }
+            BufferImgage.Mutate(context =>
+            {
+                for (var i = 0; i < nbX; i++)
+                {
+                    for (var j = 0; j < nbY; j++)
+                    {
+                        double xOffsetD = (tLx / overviewPow) + (i * blockXsize);
+                        double yOffsetD = (tLy / overviewPow) + (j * blockYsize);
+                        int xOffsetI = (int)Math.Floor(xOffsetD);
+                        int yOffsetI = (int)Math.Floor(yOffsetD);
+                        // The +1 is to remove the white stripes artifacts
+                        int xSize = blockXsize + 1;
+                        int ySize = blockYsize + 1;
+                        try
+                        {
+                            using (Image<Rgba32> childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
+                            {
+                                if (childImage != null)
+                                {
+                                    AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder();
+                                    PointF pointF = new PointF(xOffsetI, yOffsetI);
+                                    affineTransformBuilder.AppendTranslation(pointF);
+                                    affineTransformBuilder.AppendMatrix(matrix);
+                                    childImage.Mutate(x => x.Transform(affineTransformBuilder));
+                                    context.DrawImage(childImage, 1);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine($"获取图片失败：{e.Message}");
+                        }
+                    }
+                }
+            });
         }
     }
 }

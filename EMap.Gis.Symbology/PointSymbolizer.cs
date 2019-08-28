@@ -9,7 +9,6 @@ namespace EMap.Gis.Symbology
 {
     public class PointSymbolizer : FeatureSymbolizer, IPointSymbolizer
     {
-        public IList<IPointSymbol> Symbols { get; } = new List<IPointSymbol>();
         public SizeF Size
         {
             get
@@ -35,14 +34,15 @@ namespace EMap.Gis.Symbology
                 }
             }
         }
-        
+
+        public new IPointSymbolCollection Symbols { get => base.Symbols as IPointSymbolCollection; set => base.Symbols = value; }
+
         public PointSymbolizer()
         {
             Configure();
         }
-        public PointSymbolizer(bool selected)
+        public PointSymbolizer(bool selected) : this()
         {
-            Configure();
             if (!selected) return;
 
             IPointSymbol pointSymbol = Symbols[0];
@@ -51,11 +51,11 @@ namespace EMap.Gis.Symbology
                 pointSymbol.Color = Rgba32.Cyan;
             }
         }
-        public PointSymbolizer(IPointSymbol symbol)
+        public PointSymbolizer(IPointSymbol symbol) : this()
         {
             Symbols.Add(symbol);
         }
-        public PointSymbolizer(IEnumerable<IPointSymbol> symbols)
+        public PointSymbolizer(IEnumerable<IPointSymbol> symbols) : this()
         {
             foreach (var item in symbols)
             {
@@ -63,7 +63,7 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public PointSymbolizer(Rgba32 color, PointShape shape, float size)
+        public PointSymbolizer(Rgba32 color, PointShape shape, float size) : this()
         {
             IPointSymbol ss = new PointSimpleSymbol(color, shape, size);
             Symbols.Add(ss);
@@ -71,6 +71,7 @@ namespace EMap.Gis.Symbology
 
         private void Configure()
         {
+            Symbols = new PointSymbolCollection();
             IPointSimpleSymbol ss = new PointSimpleSymbol
             {
                 Color = SymbologyGlobal.RandomColor(),
@@ -80,25 +81,22 @@ namespace EMap.Gis.Symbology
             Symbols.Add(ss);
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
         {
             float scaleH = rectangle.Width / Size.Width;
             float scaleV = rectangle.Height / Size.Height;
             float scale = Math.Min(scaleH, scaleV);
             float dx = rectangle.X + (rectangle.Width / 2);
             float dy = rectangle.Y + (rectangle.Height / 2);
-            AffineTransformBuilder atb = new AffineTransformBuilder().AppendTranslation(new PointF(dx, dy));
-            AffineTransformBuilder atbInverse = new AffineTransformBuilder().AppendTranslation(new PointF(-dx, -dy));
-            image.Mutate(x => x.Transform(atb));
-            Draw(image, scale);
-            image.Mutate(x => x.Transform(atbInverse));
+            PointF point = new PointF(dx, dy);
+            DrawPoint(context, scale, point);
         }
 
-        public void Draw(Image<Rgba32> image, float scale)
+        public void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
         {
             foreach (var symbol in Symbols)
             {
-                symbol.Draw(image, scale);
+                symbol.DrawPoint(context, scale, point);
             }
         }
     }

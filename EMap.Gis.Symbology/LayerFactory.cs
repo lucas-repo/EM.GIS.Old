@@ -2,6 +2,7 @@
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace EMap.Gis.Symbology
@@ -45,37 +46,29 @@ namespace EMap.Gis.Symbology
             }
             return baseLayer;
         }
-        public static Dataset OpenDataset(string dataPath)
+        public static Dataset OpenDataset(string dataPath, int update = 0)
         {
             Dataset dataset = null;
             try
             {
-                dataset = Gdal.Open(dataPath, Access.GA_Update);
+                dataset = Gdal.Open(dataPath, (Access)update);
             }
-            catch
+            catch(Exception e)
             {
-                try
-                {
-                    dataset = Gdal.Open(dataPath, Access.GA_ReadOnly);
-                }
-                catch { }
+                Debug.WriteLine(e.Message);
             }
             return dataset;
         }
-        public static DataSource OpenDataSource(string dataPath)
+        public static DataSource OpenDataSource(string dataPath,int update=0)
         {
             DataSource dataSource = null;
             try
             {
-                dataSource = Ogr.Open(dataPath, 1);
+                dataSource = Ogr.Open(dataPath, update);
             }
-            catch
+            catch (Exception e)
             {
-                try
-                {
-                    dataSource = Ogr.Open(dataPath, 0);
-                }
-                catch { }
+                Debug.WriteLine(e.Message);
             }
             return dataSource;
         }

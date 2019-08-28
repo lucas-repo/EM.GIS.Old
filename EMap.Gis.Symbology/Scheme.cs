@@ -1,7 +1,9 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
@@ -12,7 +14,9 @@ namespace EMap.Gis.Symbology
         public Statistics Statistics { get; protected set; } = new Statistics();
         public List<double> Values { get; protected set; }
         protected List<Break> Breaks { get; set; }
-        public CategoryCollection<ICategory> Categories { get; }
+        public abstract int Count { get; }
+        public bool IsReadOnly { get; } = false;
+        public ICategoryCollection Categories { get; set; }
 
         protected virtual List<float> GetSizeSet(int count)
         {
@@ -178,7 +182,7 @@ namespace EMap.Gis.Symbology
             SetBreakNames(Breaks);
             var colorRamp = GetColorSet(count);
             var sizeRamp = GetSizeSet(count);
-            Categories.Clear();
+            Clear();
             var colorIndex = 0;
             Break prevBreak = null;
             foreach (var brk in Breaks)
@@ -196,7 +200,7 @@ namespace EMap.Gis.Symbology
                     cat.Maximum = brk.Maximum;
                     cat.Range.MaxIsInclusive = true;
                     cat.ApplyMinMax(EditorSettings);
-                    Categories.Add(cat);
+                    Add(cat);
                 }
 
                 prevBreak = brk;
@@ -310,7 +314,14 @@ namespace EMap.Gis.Symbology
         }
 
         public abstract ICategory CreateNewCategory(Rgba32 fillColor, float size);
-        public abstract void DrawCategory(int index, Image<Rgba32> image, Rectangle bounds);
+        public abstract void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds);
+        public abstract void Add(ICategory item);
+        public abstract void Clear();
+        public abstract bool Contains(ICategory item);
+        public abstract void CopyTo(ICategory[] array, int arrayIndex);
+        public abstract bool Remove(ICategory item);
+        public abstract IEnumerator<ICategory> GetEnumerator();
+        public abstract void Move(int oldIndex, int newIndex);
     }
 
 }

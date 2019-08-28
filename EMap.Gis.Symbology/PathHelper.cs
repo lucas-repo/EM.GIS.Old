@@ -84,6 +84,17 @@ namespace EMap.Gis.Symbology
             path = new Path(lineSegment);
             return path;
         }
+        public static Polygon ToPolygon(this PointF[] points)
+        {
+            Polygon polygon = null;
+            if (points == null || points.Length < 3)
+            {
+                return polygon;
+            }
+            ILineSegment lineSegment = new LinearLineSegment(points);
+            polygon = new Polygon(lineSegment);
+            return polygon;
+        }
         public static IPath ToPath(this Point[] points)
         {
             PointF[] pointFs = new PointF[points.Length];
@@ -110,11 +121,26 @@ namespace EMap.Gis.Symbology
             }
             return points.ToArray();
         }
+        public static PointF[] ToEllipsePoints(this RectangleF rectangle)
+        {
+            PointF upperLeft = new PointF(rectangle.X - rectangle.Width / 2, rectangle.Y - rectangle.Height / 2);
+            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft.X, upperLeft.Y, rectangle.Width, rectangle.Height);
+            var pathes = ellipsePolygon.Flatten();
+            List<PointF> points = new List<PointF>();
+            foreach (var path in pathes)
+            {
+                foreach (var point in path.Points)
+                {
+                    points.Add(point);
+                }
+            }
+            return points.ToArray();
+        }
         public static EllipsePolygon ToEllipsePolygon(this SizeF scaledSize)
         {
             PointF upperLeft = new PointF(-scaledSize.Width / 2, -scaledSize.Height / 2);
             RectangleF destRect = new RectangleF(upperLeft, scaledSize);
-            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft, scaledSize); 
+            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft, scaledSize);
             return ellipsePolygon;
         }
         public static PointF[] ToRegularPoints(this SizeF scaledSize, int numSides)
@@ -123,8 +149,22 @@ namespace EMap.Gis.Symbology
             for (int i = 0; i <= numSides; i++)
             {
                 double ang = i * (2 * Math.PI) / numSides;
-                float x = Convert.ToSingle(Math.Cos(ang)) * scaledSize.Width / 2f;
+                float x = Convert.ToSingle(Math.Cos(ang)) * scaledSize.Width / 2f;//todo 待测试
                 float y = Convert.ToSingle(Math.Sin(ang)) * scaledSize.Height / 2f;
+                polyPoints[i] = new PointF(x, y);
+            }
+            return polyPoints;
+        }
+        public static PointF[] ToRegularPoints(this RectangleF rectangle, int numSides)//todo 待测试
+        {
+            PointF[] polyPoints = new PointF[numSides + 1];
+            float centerX = rectangle.X + rectangle.Width / 2f;
+            float centerY = rectangle.Y + rectangle.Height / 2f;
+            for (int i = 0; i <= numSides; i++)
+            {
+                double ang = i * (2 * Math.PI) / numSides;
+                float x = Convert.ToSingle(Math.Cos(ang)) * centerX;
+                float y = Convert.ToSingle(Math.Sin(ang)) * centerY;
                 polyPoints[i] = new PointF(x, y);
             }
             return polyPoints;
@@ -143,6 +183,25 @@ namespace EMap.Gis.Symbology
                 double ang = i * Math.PI / 5;
                 float x = Convert.ToSingle(Math.Cos(ang)) * scaledSize.Width / 2f;
                 float y = Convert.ToSingle(Math.Sin(ang)) * scaledSize.Height / 2f;
+                if (i % 2 == 0)
+                {
+                    x /= 2; // the shorter radius points of the star
+                    y /= 2;
+                }
+                polyPoints[i] = new PointF(x, y);
+            }
+            return polyPoints;
+        }
+        public static PointF[] ToStarsPoints(this RectangleF rectangle)
+        {
+            PointF[] polyPoints = new PointF[11];
+            float centerX = rectangle.X + rectangle.Width / 2f;
+            float centerY = rectangle.Y + rectangle.Height / 2f;
+            for (int i = 0; i <= 10; i++)
+            {
+                double ang = i * Math.PI / 5;
+                float x = Convert.ToSingle(Math.Cos(ang)) * centerX;
+                float y = Convert.ToSingle(Math.Sin(ang)) * centerY;
                 if (i % 2 == 0)
                 {
                     x /= 2; // the shorter radius points of the star

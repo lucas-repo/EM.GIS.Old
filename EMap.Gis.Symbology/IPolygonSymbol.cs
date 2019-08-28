@@ -2,6 +2,8 @@
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
+using SixLabors.Shapes;
+using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
 {
@@ -9,7 +11,7 @@ namespace EMap.Gis.Symbology
     {
         PolygonSymbolType PolygonSymbolType { get; }
         RectangleF Bounds { get; set; }
-        void FillPath(Image<Rgba32> image, PointF[] points);
+        void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon);
         IBrush<Rgba32> GetBrush();
     }
 }

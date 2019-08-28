@@ -2,6 +2,6 @@
 {
     public interface IPointScheme : IFeatureScheme
     {
-        new CategoryCollection<IPointCategory> Categories { get; }
+        new IPointCategoryCollection Categories { get; set; }
     }
 }

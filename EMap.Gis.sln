@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis.Data", "EMap.Gis.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis.Symbology", "EMap.Gis.Symbology\EMap.Gis.Symbology.csproj", "{35158FA5-0E1D-4DB0-BF4A-CB29E7E53708}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMap.Gis.Test", "EMap.Gis.Test\EMap.Gis.Test.csproj", "{B4D07424-F3E1-4133-BB0D-1BE24B830DE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMap.Gis.Test", "EMap.Gis.Test\EMap.Gis.Test.csproj", "{B4D07424-F3E1-4133-BB0D-1BE24B830DE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

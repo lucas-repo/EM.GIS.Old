@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
@@ -28,9 +29,9 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public override void Draw(Image<Rgba32> image, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
         {
-            Symbolizer?.Draw(image, rectangle);
+            Symbolizer?.DrawLegend(context, rectangle);
         }
     }
 }
