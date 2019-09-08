@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -22,33 +20,35 @@ namespace EMap.Gis.Symbology
                 float val = value;
                 if (val > 1) val = 1F;
                 if (val < 0) val = 0F;
-                Color = new Rgba32(Color.R, Color.G, Color.B, (byte)(val * 255));
+                Color = Color.FromArgb((byte)(val * 255),Color.R, Color.G, Color.B);
             }
         }
         protected LineSymbol(LineSymbolType lineSymbolType)
         {
             LineSymbolType = lineSymbolType;
         }
-        protected LineSymbol(Rgba32 color, LineSymbolType lineSymbolType) : base(color)
+        protected LineSymbol(Color color, LineSymbolType lineSymbolType) : base(color)
         {
             LineSymbolType = lineSymbolType;
         }
-        protected LineSymbol(Rgba32 color, float width, LineSymbolType lineSymbolType) : base(color)
+        protected LineSymbol(Color color, float width, LineSymbolType lineSymbolType) : base(color)
         {
             LineSymbolType = lineSymbolType;
             Width = width;
         }
 
-        public virtual IPen<Rgba32> ToPen(float scale)
+        public virtual Pen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen<Rgba32> pen = new Pen<Rgba32>(Color, width);
+            Pen pen = new Pen(Color, width);
             return pen;
         }
-        public void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        public void DrawLine(Graphics graphics, float scale, GraphicsPath path)
         {
-            IPen<Rgba32> pen = ToPen(scale);
-            context.DrawLines(pen, points);
+            using (Pen pen = ToPen(scale))
+            {
+                graphics.DrawPath(pen, path); 
+            }
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
     public interface IGetImage
     {
-        Image<Rgba32> GetImage(Envelope envelope, Rectangle rectangle) ;
+        Image GetImage(Envelope envelope, Rectangle rectangle) ;
     }
 }

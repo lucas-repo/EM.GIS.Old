@@ -1,8 +1,5 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -11,6 +8,6 @@ namespace EMap.Gis.Symbology
         bool UseOutLine { get; set; }
         ILineSymbolizer OutLineSymbolizer { get; set; }
         void CopyOutLine(IOutlineSymbol outlineSymbol);
-        void DrawOutLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
+        void DrawOutLine(Graphics graphics, float scale, GraphicsPath path);
     }
 }

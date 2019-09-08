@@ -1,11 +1,5 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -13,7 +7,7 @@ namespace EMap.Gis.Symbology
     {
         float Width { get; set; }
         LineSymbolType LineSymbolType { get; }
-        void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
-        IPen<Rgba32> ToPen(float scale);
+        void DrawLine(Graphics graphics, float scale, GraphicsPath path);
+        Pen ToPen(float scale);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -15,7 +15,7 @@ namespace EMap.Gis.Symbology
         {
             throw new NotImplementedException();
         }
-        public override IBrush<Rgba32> GetBrush()
+        public override Brush GetBrush()
         {
             return base.GetBrush();
         }

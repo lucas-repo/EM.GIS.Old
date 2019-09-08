@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -15,57 +13,59 @@ namespace EMap.Gis.Symbology
         {
             PointShape = PointShape.Ellipse;
         }
-        public PointSimpleSymbol(Rgba32 color)
+        public PointSimpleSymbol(Color color)
            : this()
         {
             Color = color;
         }
-        public PointSimpleSymbol(Rgba32 color, PointShape shape) : this(color)
+        public PointSimpleSymbol(Color color, PointShape shape) : this(color)
         {
             PointShape = shape;
         }
 
-        public PointSimpleSymbol(Rgba32 color, PointShape shape, float size) : this(color, shape)
+        public PointSimpleSymbol(Color color, PointShape shape, float size) : this(color, shape)
         {
             Size = new SizeF(size, size);
         }
 
         public PointShape PointShape { get; set; }
 
-        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        public override void DrawPoint(Graphics graphics, float scale, PointF point)
         {
             if (scale == 0) return;
             if (Size.Width == 0 || Size.Height == 0) return;
 
             RectangleF rectangle = new RectangleF(point.X, point.Y, scale * Size.Width, scale * Size.Height);
-            PointF[] points = null;
+            GraphicsPath path = null;
             switch (PointShape)
             {
                 case PointShape.Diamond:
-                    points = rectangle.ToRegularPoints(4);
+                    path = rectangle.ToRegularPath(4);
                     break;
                 case PointShape.Ellipse:
-                    points = rectangle.ToEllipsePoints();
+                    path = rectangle.ToEllipsePath();
                     break;
                 case PointShape.Hexagon:
-                    points = rectangle.ToRegularPoints(6);
+                    path = rectangle.ToRegularPath(6);
                     break;
                 case PointShape.Pentagon:
-                    points = rectangle.ToRegularPoints(5);
+                    path = rectangle.ToRegularPath(5);
                     break;
                 case PointShape.Rectangle:
-                    points = rectangle.ToPoints();
+                    path = rectangle.ToPath();
                     break;
                 case PointShape.Star:
-                    points = rectangle.ToStarsPoints();
+                    path = rectangle.ToStarsPath();
                     break;
                 case PointShape.Triangle:
-                    points = rectangle.ToRegularPoints(3);
+                    path = rectangle.ToRegularPath(3);
                     break;
             }
-            IPath path = points.ToPath();
-            context.Fill(Color, path);
-            DrawOutLine(context, scale, points);
+            using (Brush brush = new SolidBrush(Color))
+            {
+                graphics.FillPath(brush, path);
+            }
+            DrawOutLine(graphics, scale, path);
         }
     }
 }

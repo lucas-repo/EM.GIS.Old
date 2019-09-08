@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -21,10 +21,10 @@ namespace EMap.Gis.Symbology
         {
             Symbolizer = pointSymbolizer;
             SelectionSymbolizer = pointSymbolizer.Clone() as IPointSymbolizer;
-            SelectionSymbolizer.Symbols[0].Color = Rgba32.Cyan;
+            SelectionSymbolizer.Symbols[0].Color = Color.Cyan;
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(Graphics context, Rectangle rectangle)
         {
             Symbolizer?.DrawLegend(context, rectangle);
         }

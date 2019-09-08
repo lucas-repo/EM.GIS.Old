@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
 
 namespace EMap.Gis.Symbology
 {
@@ -20,41 +14,25 @@ namespace EMap.Gis.Symbology
             PolygonSymbolType = polygonSymbolType;
         }
 
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
+        public void DrawPolygon(Graphics graphics, float scale, GraphicsPath path)
         {
-            if (context == null || polygon == null )
+            if (graphics == null || path == null )
             {
                 return;
             }
-            IBrush<Rgba32> brush = GetBrush();
-            if (brush == null)
+            using (Brush brush = GetBrush())
             {
-                return;
+                if (brush != null)
+                {
+                    graphics.FillPath(brush, path);
+                }
             }
-            //List<ILineSegment> lineSegments = new List<ILineSegment>();
-            //foreach (var points in polygons)
-            //{
-            //    if (points.Length > 2)
-            //    {
-            //        ILineSegment lineSegment = new LinearLineSegment(points); 
-            //        lineSegments.Add(lineSegment);
-            //    }
-            //}
-            //if (lineSegments.Count == 0)
-            //{
-            //    return;
-            //}
-            //Polygon polygon = new Polygon(lineSegments); 
-            context.Fill(brush, polygon); 
-            foreach (var lineSegment in polygon.LineSegments)
-            {
-                DrawOutLine(context, scale, lineSegment.Flatten().ToArray());
-            }
+            DrawOutLine(graphics, scale, path);
         }
 
-        public virtual IBrush<Rgba32> GetBrush()
+        public virtual Brush GetBrush()
         {
-            IBrush<Rgba32> brush = new SolidBrush<Rgba32>(Color);
+            Brush brush = new SolidBrush(Color);
             return brush;
         }
     }

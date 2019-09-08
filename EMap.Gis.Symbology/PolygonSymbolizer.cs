@@ -1,9 +1,6 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
-using System.Collections.Generic;
+﻿
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -24,11 +21,11 @@ namespace EMap.Gis.Symbology
             IPolygonSymbol polygonSymbol = new PolygonSimpleSymbol();
             if (selected)
             {
-                polygonSymbol.Color = Rgba32.Cyan;
+                polygonSymbol.Color = Color.Cyan;
             }
             Symbols.Add(polygonSymbol);
         }
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(Graphics graphics, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
@@ -38,13 +35,16 @@ namespace EMap.Gis.Symbology
                 new PointF(rectangle.Right,rectangle.Top),
                 new PointF(rectangle.Left,rectangle.Top)
             };
-            DrawPolygon(context, 1, points.ToPolygon());
+            using (GraphicsPath path = rectangle.ToPath())
+            {
+                DrawPolygon(graphics, 1, path);
+            }
         }
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
+        public void DrawPolygon(Graphics graphics, float scale, GraphicsPath path)
         {
             foreach (var symbol in Symbols)
             {
-                symbol.DrawPolygon(context, scale, polygon);
+                symbol.DrawPolygon(graphics, scale, path);
             }
         }
     }

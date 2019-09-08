@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -25,11 +25,11 @@ namespace EMap.Gis.Symbology
             if (select.Symbols != null && select.Symbols.Count > 0)
             {
                 var ss = select.Symbols[select.Symbols.Count - 1] as ILineSimpleSymbol;
-                if (ss != null) ss.Color = Rgba32.Cyan;
+                if (ss != null) ss.Color = Color.Cyan;
             }
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(Graphics context, Rectangle rectangle)
         {
             Symbolizer?.DrawLegend(context, rectangle);
         }

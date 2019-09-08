@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -18,6 +18,6 @@ namespace EMap.Gis.Symbology
         {
             PointSymbolType = pointSymbolType;
         }
-        public abstract void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point);
+        public abstract void DrawPoint(Graphics context, float scale, PointF point);
     }
 }

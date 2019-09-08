@@ -16,9 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="Gdal.Core" Version="1.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
-    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0008" />
   </ItemGroup>
 
 </Project>

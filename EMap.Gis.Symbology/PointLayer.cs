@@ -5,10 +5,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 using EMap.Gis.Data;
 
 namespace EMap.Gis.Symbology
@@ -35,22 +35,19 @@ namespace EMap.Gis.Symbology
         protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
         {
             int geometryCount = geometry.GetGeometryCount();
-            drawArgs.Image.Mutate(context =>
+            for (int i = 0; i < geometryCount; i++)
             {
-                for (int i = 0; i < geometryCount; i++)
+                Geometry partGeo = geometry.GetGeometryRef(i);
+                int pointCount = partGeo.GetPointCount();
+                double[] coord = new double[2];
+                float scaleSize = (float)symbolizer.GetScale(drawArgs);
+                for (int j = 0; j < pointCount; j++)
                 {
-                    Geometry partGeo = geometry.GetGeometryRef(i);
-                    int pointCount = partGeo.GetPointCount();
-                    double[] coord = new double[2];
-                    float scaleSize = (float)symbolizer.GetScale(drawArgs);
-                    for (int j = 0; j < pointCount; j++)
-                    {
-                        partGeo.GetPoint_2D(j, coord);
-                        PointF point = drawArgs.ProjToPixelPointF(coord);
-                        (symbolizer as IPointSymbolizer).DrawPoint(context, scaleSize, point);
-                    }
+                    partGeo.GetPoint_2D(j, coord);
+                    PointF point = drawArgs.ProjToPixelPointF(coord);
+                    (symbolizer as IPointSymbolizer).DrawPoint(drawArgs.Device, scaleSize, point);
                 }
-            });
+            }
         }
     }
 }

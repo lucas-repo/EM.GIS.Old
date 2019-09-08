@@ -1,5 +1,5 @@
 ﻿using OSGeo.OGR;
-using SixLabors.Primitives;
+using System.Drawing;
 
 namespace EMap.Gis.Data
 {

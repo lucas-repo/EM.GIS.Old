@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
@@ -33,7 +29,7 @@ namespace EMap.Gis.Symbology
             return _legendSymbolSize;
         }
 
-        public virtual void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public virtual void DrawLegend(Graphics graphics, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

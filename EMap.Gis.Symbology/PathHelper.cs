@@ -1,21 +1,19 @@
-﻿using SixLabors.Primitives;
-using SixLabors.Shapes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
     public static class PathHelper
     {
-        public static IPath ToPath(this RectangleF rectangle)
+        public static GraphicsPath ToPolygonPath(this RectangleF rectangle)
         {
             float xMin = rectangle.X;
             float yMin = rectangle.Y;
             float xMax = xMin + rectangle.Width;
             float yMax = yMin + rectangle.Height;
-            IPath path = ExtentToPath(xMin, yMin, xMax, yMax);
+            GraphicsPath path = ToPath(xMin, yMin, xMax, yMax);
             return path;
         }
         public static PointF[] ToPoints(this RectangleF rectangle)
@@ -24,16 +22,28 @@ namespace EMap.Gis.Symbology
             float yMin = rectangle.Y;
             float xMax = xMin + rectangle.Width;
             float yMax = yMin + rectangle.Height;
-            PointF[] points = ExtentToPoints(xMin, yMin, xMax, yMax);
+            PointF[] points = ToPoints(xMin, yMin, xMax, yMax);
             return points;
         }
-        public static IPath ToPath(this Size size)
+        public static GraphicsPath ToPath(this RectangleF rectangle)
+        {
+            GraphicsPath graphicsPath = new GraphicsPath();
+            graphicsPath.AddRectangle(rectangle);
+            return graphicsPath;
+        }
+        public static GraphicsPath ToPath(this Rectangle rectangle)
+        {
+            GraphicsPath graphicsPath = new GraphicsPath();
+            graphicsPath.AddRectangle(rectangle);
+            return graphicsPath;
+        }
+        public static GraphicsPath ToPath(this Size size)
         {
             float xMin = -size.Width / 2;
             float yMin = -size.Height / 2;
             float xMax = xMin + size.Width;
             float yMax = yMin + size.Height;
-            IPath path = ExtentToPath(xMin, yMin, xMax, yMax);
+            GraphicsPath path = ToPath(xMin, yMin, xMax, yMax);
             return path;
         }
         public static PointF[] ToPoints(this SizeF size)
@@ -42,19 +52,19 @@ namespace EMap.Gis.Symbology
             float yMin = -size.Height / 2;
             float xMax = xMin + size.Width;
             float yMax = yMin + size.Height;
-            PointF[] points = ExtentToPoints(xMin, yMin, xMax, yMax);
+            PointF[] points = ToPoints(xMin, yMin, xMax, yMax);
             return points;
         }
-        public static IPath ToPath(this SizeF size)
+        public static GraphicsPath ToPath(this SizeF size)
         {
             float xMin = -size.Width / 2;
             float yMin = -size.Height / 2;
             float xMax = xMin + size.Width;
             float yMax = yMin + size.Height;
-            IPath path = ExtentToPath(xMin, yMin, xMax, yMax);
+            GraphicsPath path = ToPath(xMin, yMin, xMax, yMax); 
             return path;
         }
-        public static PointF[] ExtentToPoints(float xMin, float yMin, float xMax, float yMax)
+        public static PointF[] ToPoints(float xMin, float yMin, float xMax, float yMax)
         {
             PointF[] polyPoints = new PointF[]
             {
@@ -66,82 +76,42 @@ namespace EMap.Gis.Symbology
             };
             return polyPoints;
         }
-        public static IPath ExtentToPath(float xMin, float yMin, float xMax, float yMax)
+        public static GraphicsPath ToPath(float xMin, float yMin, float xMax, float yMax)
         {
-            PointF[] polyPoints = ExtentToPoints(xMin, yMin, xMax, yMax);
-            ILineSegment lineSegment = new LinearLineSegment(polyPoints);
-            IPath path = new Path(lineSegment);
+            PointF[] polyPoints = ToPoints(xMin, yMin, xMax, yMax);
+            GraphicsPath path = new GraphicsPath();
+            path.AddPolygon(polyPoints);
             return path;
         }
-        public static IPath ToPath(this PointF[] points)
+        public static GraphicsPath ToPath(this PointF[] points)
         {
-            IPath path = null;
+            GraphicsPath path = null;
             if (points == null || points.Length < 2)
             {
                 return path;
             }
-            ILineSegment lineSegment = new LinearLineSegment(points);
-            path = new Path(lineSegment);
+            path.AddLines(points); 
             return path;
         }
-        public static Polygon ToPolygon(this PointF[] points)
+        
+        public static GraphicsPath ToPath(this Point[] points)
         {
-            Polygon polygon = null;
-            if (points == null || points.Length < 3)
+            GraphicsPath path = null;
+            if (points == null || points.Length < 2)
             {
-                return polygon;
+                return path;
             }
-            ILineSegment lineSegment = new LinearLineSegment(points);
-            polygon = new Polygon(lineSegment);
-            return polygon;
-        }
-        public static IPath ToPath(this Point[] points)
-        {
-            PointF[] pointFs = new PointF[points.Length];
-            for (int i = 0; i < points.Length; i++)
-            {
-                pointFs[i] = new PointF(points[i].X, points[i].Y);
-            }
-            IPath path = pointFs.ToPath();
+            path.AddLines(points);
             return path;
         }
-        public static PointF[] ToEllipsePoints(this SizeF scaledSize)
+       
+        public static GraphicsPath ToEllipsePath(this RectangleF rectangleF)
         {
-            PointF upperLeft = new PointF(-scaledSize.Width / 2, -scaledSize.Height / 2);
-            RectangleF destRect = new RectangleF(upperLeft, scaledSize);
-            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft, scaledSize);
-            var pathes = ellipsePolygon.Flatten();
-            List<PointF> points = new List<PointF>();
-            foreach (var path in pathes)
-            {
-                foreach (var point in path.Points)
-                {
-                    points.Add(point);
-                }
-            }
-            return points.ToArray();
-        }
-        public static PointF[] ToEllipsePoints(this RectangleF rectangle)
-        {
-            PointF upperLeft = new PointF(rectangle.X - rectangle.Width / 2, rectangle.Y - rectangle.Height / 2);
-            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft.X, upperLeft.Y, rectangle.Width, rectangle.Height);
-            var pathes = ellipsePolygon.Flatten();
-            List<PointF> points = new List<PointF>();
-            foreach (var path in pathes)
-            {
-                foreach (var point in path.Points)
-                {
-                    points.Add(point);
-                }
-            }
-            return points.ToArray();
-        }
-        public static EllipsePolygon ToEllipsePolygon(this SizeF scaledSize)
-        {
-            PointF upperLeft = new PointF(-scaledSize.Width / 2, -scaledSize.Height / 2);
-            RectangleF destRect = new RectangleF(upperLeft, scaledSize);
-            EllipsePolygon ellipsePolygon = new EllipsePolygon(upperLeft, scaledSize);
-            return ellipsePolygon;
+            PointF upperLeft = new PointF(-rectangleF.Width / 2, -rectangleF.Height / 2);
+            RectangleF destRect = new RectangleF(upperLeft, rectangleF.Size);
+            GraphicsPath graphicsPath = new GraphicsPath();
+            graphicsPath.AddEllipse(destRect);
+            return graphicsPath;
         }
         public static PointF[] ToRegularPoints(this SizeF scaledSize, int numSides)
         {
@@ -155,7 +125,7 @@ namespace EMap.Gis.Symbology
             }
             return polyPoints;
         }
-        public static PointF[] ToRegularPoints(this RectangleF rectangle, int numSides)//todo 待测试
+        public static GraphicsPath ToRegularPath(this RectangleF rectangle, int numSides)//todo 待测试
         {
             PointF[] polyPoints = new PointF[numSides + 1];
             float centerX = rectangle.X + rectangle.Width / 2f;
@@ -167,12 +137,14 @@ namespace EMap.Gis.Symbology
                 float y = Convert.ToSingle(Math.Sin(ang)) * centerY;
                 polyPoints[i] = new PointF(x, y);
             }
-            return polyPoints;
+            GraphicsPath graphics = new GraphicsPath();
+            graphics.AddLines(polyPoints);
+            return graphics;
         }
-        public static IPath ToRegularPolyPath(this SizeF scaledSize, int numSides)
+        public static GraphicsPath ToRegularPolyPath(this SizeF scaledSize, int numSides)
         {
             PointF[] polyPoints = ToRegularPoints(scaledSize, numSides);
-            IPath path = polyPoints.ToPath();
+            GraphicsPath path = polyPoints.ToPath();
             return path;
         }
         public static PointF[] ToStarsPoints(this SizeF scaledSize)
@@ -192,7 +164,7 @@ namespace EMap.Gis.Symbology
             }
             return polyPoints;
         }
-        public static PointF[] ToStarsPoints(this RectangleF rectangle)
+        public static GraphicsPath ToStarsPath(this RectangleF rectangle)
         {
             PointF[] polyPoints = new PointF[11];
             float centerX = rectangle.X + rectangle.Width / 2f;
@@ -209,9 +181,11 @@ namespace EMap.Gis.Symbology
                 }
                 polyPoints[i] = new PointF(x, y);
             }
-            return polyPoints;
+            GraphicsPath graphicsPath = new GraphicsPath();
+            graphicsPath.AddLines(polyPoints);
+            return graphicsPath;
         }
-        public static IPath ToStarsPath(this SizeF scaledSize)
+        public static GraphicsPath ToStarsPath(this SizeF scaledSize)
         {
             PointF[] polyPoints = new PointF[11];
             for (int i = 0; i <= 10; i++)
@@ -226,7 +200,7 @@ namespace EMap.Gis.Symbology
                 }
                 polyPoints[i] = new PointF(x, y);
             }
-            IPath path = polyPoints.ToPath();
+            GraphicsPath path = polyPoints.ToPath();
             return path;
         }
     }

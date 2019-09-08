@@ -1,14 +1,15 @@
 ﻿using EMap.Gis.Data;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+
+using System.Drawing;
+
+
+
 using System.Collections.Generic;
 using System.Threading;
 using System;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -29,17 +30,14 @@ namespace EMap.Gis.Symbology
             {
                 return;
             }
-            drawArgs.Image.Mutate(context =>
+            float scaleSize = (float)symbolizer.GetScale(drawArgs);
+            using (var path =new GraphicsPath( FillMode.Winding))
             {
-                float scaleSize = (float)symbolizer.GetScale(drawArgs);
-                var polygons = GetPolygons(drawArgs, geometry);
-                foreach (var polygon in polygons)
-                {
-                    polygonSymbolizer.DrawPolygon(context, scaleSize, polygon);
-                }
-            });
+                BuildPolygon(drawArgs, geometry, path);
+                polygonSymbolizer.DrawPolygon(drawArgs.Device, scaleSize, path);
+            }
         }
-        private void DrawGeometry(MapArgs drawArgs, IImageProcessingContext<Rgba32> context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
+        private void DrawGeometry(MapArgs drawArgs,float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
         {
             int geoCount = geometry.GetGeometryCount();
             if (geoCount == 0)
@@ -53,7 +51,10 @@ namespace EMap.Gis.Symbology
                     PointF point = drawArgs.ProjToPixelPointF(coord);
                     points[j] = point;
                 }
-                polygonSymbolizer.DrawPolygon(context, scaleSize, points.ToPolygon());
+                using (var path = points.ToPath())
+                {
+                    polygonSymbolizer.DrawPolygon(drawArgs.Device, scaleSize, path);
+                }
             }
             else
             {
@@ -61,18 +62,29 @@ namespace EMap.Gis.Symbology
                 {
                     using (var partGeo = geometry.GetGeometryRef(i))
                     {
-                        DrawGeometry(drawArgs, context, scaleSize, polygonSymbolizer, partGeo);
+                        DrawGeometry(drawArgs,  scaleSize, polygonSymbolizer, partGeo);
                     }
                 }
             }
         }
-        private List<ILineSegment> GetLineSegments(MapArgs drawArgs, Geometry geometry)
+        private void BuildPolygon(MapArgs drawArgs, Geometry geometry, GraphicsPath path)
         {
-            List<ILineSegment> lineSegments = new List<ILineSegment>();
             int geoCount = geometry.GetGeometryCount();
             var geometryType = geometry.GetGeometryType();
             switch (geometryType)
             {
+                case wkbGeometryType.wkbMultiPolygon:
+                case wkbGeometryType.wkbMultiPolygon25D:
+                case wkbGeometryType.wkbMultiPolygonM:
+                case wkbGeometryType.wkbMultiPolygonZM:
+                    for (int i = 0; i < geoCount; i++)
+                    {
+                        using (var partGeo = geometry.GetGeometryRef(i))
+                        {
+                            BuildPolygon(drawArgs, partGeo, path);
+                        }
+                    }
+                    break;
                 case wkbGeometryType.wkbPolygon:
                 case wkbGeometryType.wkbPolygon25D:
                 case wkbGeometryType.wkbPolygonM:
@@ -81,7 +93,8 @@ namespace EMap.Gis.Symbology
                     {
                         using (var partGeo = geometry.GetGeometryRef(i))
                         {
-                            lineSegments.AddRange(GetLineSegments(drawArgs, partGeo));
+                            path.StartFigure();
+                            BuildPolygon(drawArgs, partGeo, path);
                         }
                     }
                     break;
@@ -97,54 +110,12 @@ namespace EMap.Gis.Symbology
                         geometry.GetPoint_2D(j, coord);
                         PointF point = drawArgs.ProjToPixelPointF(coord);
                         points[j] = point;
-                        Debug.WriteLine($"{point.X},{point.Y}");
                     }
-                    ILineSegment lineSegment = new LinearLineSegment(points);
-                    lineSegments.Add(lineSegment);
+                    path.AddLines(points);
                     break;
                 default:
                     throw new Exception("不支持的几何类型");
             }
-            return lineSegments;
-        }
-        private List<Polygon> GetPolygons(MapArgs drawArgs, Geometry geometry)
-        {
-            List<Polygon> polygons = new List<Polygon>();
-            int geoCount = geometry.GetGeometryCount();
-            var geometryType = geometry.GetGeometryType();
-            Polygon polygon;
-            switch (geometryType)
-            {
-                case wkbGeometryType.wkbMultiPolygon:
-                case wkbGeometryType.wkbMultiPolygon25D:
-                case wkbGeometryType.wkbMultiPolygonM:
-                case wkbGeometryType.wkbMultiPolygonZM:
-                    for (int i = 0; i < geoCount; i++)
-                    {
-                        using (var partGeo = geometry.GetGeometryRef(i))
-                        {
-                            polygon = GetPolygon(drawArgs, partGeo);
-                            polygons.Add(polygon);
-                        }
-                    }
-                    break;
-                case wkbGeometryType.wkbPolygon:
-                case wkbGeometryType.wkbPolygon25D:
-                case wkbGeometryType.wkbPolygonM:
-                case wkbGeometryType.wkbPolygonZM:
-                    polygon = GetPolygon(drawArgs, geometry);
-                    polygons.Add(polygon);
-                    break;
-                default:
-                    throw new Exception("不支持的几何类型");
-            }
-            return polygons;
-        }
-        private Polygon GetPolygon(MapArgs drawArgs, Geometry geometry)
-        {
-            List<ILineSegment> lineSegments = GetLineSegments(drawArgs, geometry);
-            Polygon polygon = new Polygon(lineSegments);
-            return polygon;
         }
     }
 }

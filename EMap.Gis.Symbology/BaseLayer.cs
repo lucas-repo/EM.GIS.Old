@@ -4,10 +4,10 @@ using System.Text;
 using System.Threading;
 using OSGeo.OGR;
 using OSGeo.OSR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -17,8 +17,8 @@ namespace EMap.Gis.Symbology
         public IScheme Symbology { get; set; }
         public IFrame MapFrame { get; set; }
         public abstract Envelope Extents { get; }
-        private Image<Rgba32> _bufferImgage;
-        public Image<Rgba32> BufferImgage
+        private Image _bufferImgage;
+        public Image BufferImgage
         {
             get => _bufferImgage;
             set
@@ -119,7 +119,7 @@ namespace EMap.Gis.Symbology
         }
 
         public abstract void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource);
-        public void DrawReagion(Image<Rgba32> image, Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
+        public void DrawReagion(Image image, Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
         {
             if (image == null || envelope == null || cancellationTokenSource?.IsCancellationRequested == true)
             {
@@ -130,11 +130,10 @@ namespace EMap.Gis.Symbology
             {
                 ResetBuffer(rectangle, envelope, selected,progressHandler, cancellationTokenSource);
             }
-            using (var fs = System.IO.File.Create(@"C:\Users\lc156\Desktop\tmp\234.png"))
+            using (Graphics g = Graphics.FromImage(image))
             {
-                BufferImgage.SaveAsPng(fs);
+                g.DrawImage(BufferImgage, new Point(rectangle.X, rectangle.Y));
             }
-            image.Mutate(x => x.DrawImage(BufferImgage, new Point(rectangle.X, rectangle.Y), 1));
         }
     }
 }

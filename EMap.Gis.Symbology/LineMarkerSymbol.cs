@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public class LineMarkerSymbol : LineCartographicSymbol, ILineMarkerSymbol
     {
         public IPointSymbolizer Marker { get; set; }
@@ -15,24 +11,20 @@ namespace EMap.Gis.Symbology
         {
             Marker = new PointSymbolizer();
         }
-        public override IPen<Rgba32> ToPen(float scale)
+        public override Pen ToPen(float scale)
         {
-            float width = scale * Width;
-            IPen<Rgba32> pen = null; 
-            if (Marker == null)
+            Pen pen = base.ToPen(scale); 
+            if (Marker != null)
             {
-                pen = new Pen<Rgba32>(Color, width, Pattern);
-            }
-            else
-            {
-                SizeF size = Marker.Size;
-                int imgWidth = (int)Math.Ceiling(size.Width);
-                int imgHeight= (int)Math.Ceiling(size.Height);
-                Image<Rgba32> image = new Image<Rgba32>(imgWidth,imgHeight);
-                Rectangle rectangle = new Rectangle(0, 0, imgWidth, imgHeight);
-                image.Mutate(x => Marker.DrawLegend(x, rectangle));
-                IBrush<Rgba32> brush = new ImageBrush<Rgba32>(image);
-                pen = new Pen<Rgba32>(brush, width, Pattern);
+                int width = (int)Math.Ceiling(Marker.Size.Width);
+                int height = (int)Math.Ceiling(Marker.Size.Height);
+                Image image = new Bitmap(width, height);
+                using (Graphics g = Graphics.FromImage(image))
+                {
+                    PointF point = new PointF(width / 2.0f, height / 2.0f);
+                    Marker.DrawPoint(g, scale, point);
+                }
+                pen.Brush = new TextureBrush(image);//todo 待测试
             }
             return pen;
         }

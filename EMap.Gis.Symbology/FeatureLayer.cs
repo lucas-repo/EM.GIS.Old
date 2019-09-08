@@ -1,12 +1,9 @@
 ﻿using EMap.Gis.Data;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 
@@ -71,13 +68,13 @@ namespace EMap.Gis.Symbology
             {
                 return;
             }
-            BufferImgage = new Image<Rgba32>(rectangle.Width, rectangle.Height);
+            BufferImgage = new Bitmap(rectangle.Width, rectangle.Height);
             using (Geometry polygon = envelope.ToGeometry())
             {
-                Layer.SetSpatialFilter(polygon); 
+                Layer.SetSpatialFilter(polygon);
             }
             List<Feature> features = new List<Feature>();
-            Feature feature = Layer.GetNextFeature(); 
+            Feature feature = Layer.GetNextFeature();
             long featureCount = Layer.GetFeatureCount(0);
             long drawnFeatureCount = 0;
             int threshold = 65536;
@@ -87,10 +84,13 @@ namespace EMap.Gis.Symbology
             {
                 if (features.Count > 0)
                 {
-                    percent = (int)(drawnFeatureCount * 100 / featureCount); 
+                    percent = (int)(drawnFeatureCount * 100 / featureCount);
                     progressHandler?.Invoke("绘制要素中：", percent, "");
-                    MapArgs drawArgs = new MapArgs(BufferImgage, envelope, rectangle);
-                    DrawFeatures(drawArgs, features, selected, progressHandler, cancellationTokenSource);
+                    using (Graphics g = Graphics.FromImage(BufferImgage))
+                    {
+                        MapArgs drawArgs = new MapArgs(envelope, rectangle, g);
+                        DrawFeatures(drawArgs, features, selected, progressHandler, cancellationTokenSource);
+                    }
                     drawnFeatureCount += features.Count;
                     foreach (var item in features)
                     {
@@ -253,7 +253,7 @@ namespace EMap.Gis.Symbology
                     switch (column.DataType.Name)
                     {
                         case "Int32":
-                            dataRow[column] = feature.GetFieldAsInteger(name); 
+                            dataRow[column] = feature.GetFieldAsInteger(name);
                             break;
                         case "Int64":
                             dataRow[column] = feature.GetFieldAsInteger64(name);

@@ -1,6 +1,6 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
+﻿
+using System.Drawing;
+
 using System;
 using System.Collections.Generic;
 using System.Text;

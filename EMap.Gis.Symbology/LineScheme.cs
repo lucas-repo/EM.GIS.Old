@@ -1,6 +1,6 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+﻿using System.Drawing;
+
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +20,7 @@ namespace EMap.Gis.Symbology
             Categories.Add(category);
         }
 
-        public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
+        public override ICategory CreateNewCategory(Color fillColor, float size)
         {
             ILineSymbolizer ls = EditorSettings.TemplateSymbolizer.Clone() as ILineSymbolizer;
             if (ls != null)
@@ -46,7 +46,7 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
+        public override void DrawCategory(int index, Graphics context, Rectangle bounds)
         {
             Categories[index].Symbolizer.DrawLegend(context, bounds);
         }

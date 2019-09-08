@@ -1,8 +1,7 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+﻿
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -10,13 +9,24 @@ namespace EMap.Gis.Symbology
     {
         #region Fields
 
+        /// <summary>
+        /// An instance of Random that is created when needed and sits around so we don't keep creating new ones.
+        /// </summary>
         private static readonly Random DefaultRandom = new Random();
 
         #endregion
 
         #region Methods
 
-        public static Rgba32 ColorFromHsl(double hue, double saturation, double brightness)
+        /// <summary>
+        /// Converts a colour from HSL to RGB.
+        /// </summary>
+        /// <remarks>Adapted from the algoritm in Foley and Van-Dam</remarks>
+        /// <param name="hue">A double representing degrees ranging from 0 to 360 and is equal to the GetHue() on a Color structure.</param>
+        /// <param name="saturation">A double value ranging from 0 to 1, where 0 is gray and 1 is fully saturated with color.</param>
+        /// <param name="brightness">A double value ranging from 0 to 1, where 0 is black and 1 is white.</param>
+        /// <returns>A Color structure with the equivalent hue saturation and brightness</returns>
+        public static Color ColorFromHsl(double hue, double saturation, double brightness)
         {
             double normalizedHue = hue / 360;
 
@@ -84,33 +94,30 @@ namespace EMap.Gis.Symbology
             if (green < 0) green = 0;
             if (blue > 1) blue = 1;
             if (blue < 0) blue = 0;
+            return Color.FromArgb((int)(255 * red), (int)(255 * green), (int)(255 * blue));
+        }
 
-            return new Rgba32((int)(255 * red), (int)(255 * green), (int)(255 * blue));
-        }
-        public static IImageProcessingContext<TPixel> DrawLines<TPixel>(this IImageProcessingContext<TPixel> source, IPen<TPixel> pen, float x0, float y0, float x1, float y1) where TPixel : struct, IPixel<TPixel>
-        {
-            return source.DrawLines(pen, new PointF(x0, y0), new PointF(x1, y1));
-        }
         /// <summary>
         /// Draws a rectangle with ever so slightly rounded edges. Good for selection borders.
         /// </summary>
         /// <param name="g">The Graphics object</param>
         /// <param name="pen">The pen to draw with</param>
         /// <param name="rect">The rectangle to draw to.</param>
-        public static void DrawRoundedRectangle(Image<Rgba32> image, Pen<Rgba32> pen, Rectangle rect)
+        public static void DrawRoundedRectangle(Graphics g, Pen pen, Rectangle rect)
         {
             int l = rect.Left;
             int r = rect.Right;
             int t = rect.Top;
             int b = rect.Bottom;
-            image.Mutate(x => x
-            .DrawLines(pen, l + 1, t, r - 1, t)
-            .DrawLines(pen, l, t + 1, l, b - 1)
-            .DrawLines(pen, r, t + 1, r, b - 1)
-            .DrawLines(pen, l, t + 2, l + 2, t)
-            .DrawLines(pen, r - 2, t, r, t + 2)
-            .DrawLines(pen, l, b - 2, l + 2, b)
-            .DrawLines(pen, r, b - 2, r - 2, b));
+            g.DrawLine(pen, l + 1, t, r - 1, t);
+            g.DrawLine(pen, l + 1, b, r - 1, b);
+            g.DrawLine(pen, l, t + 1, l, b - 1);
+            g.DrawLine(pen, r, t + 1, r, b - 1);
+
+            g.DrawLine(pen, l, t + 2, l + 2, t);
+            g.DrawLine(pen, r - 2, t, r, t + 2);
+            g.DrawLine(pen, l, b - 2, l + 2, b);
+            g.DrawLine(pen, r, b - 2, r - 2, b);
         }
 
         /// <summary>
@@ -128,185 +135,71 @@ namespace EMap.Gis.Symbology
             int h = Math.Abs(a.Y - b.Y);
             return new Rectangle(x, y, w, h);
         }
-        public static float GetBrightness(this Rgba32 rgba32)
-        {
-            float num = rgba32.R / 255f;
-            float num2 = rgba32.G / 255f;
-            float num3 = rgba32.B / 255f;
-            float num4 = num;
-            float num5 = num;
-            if (num2 > num4)
-            {
-                num4 = num2;
-            }
-            if (num3 > num4)
-            {
-                num4 = num3;
-            }
-            if (num2 < num5)
-            {
-                num5 = num2;
-            }
-            if (num3 < num5)
-            {
-                num5 = num3;
-            }
-            return (num4 + num5) / 2f;
-        }
-        public static float GetHue(this Rgba32 rgba32)
-        {
-            if (rgba32.R == rgba32.G && rgba32.G == rgba32.B)
-            {
-                return 0f;
-            }
-            float num = rgba32.R / 255f;
-            float num2 = rgba32.G / 255f;
-            float num3 = rgba32.B / 255f;
-            float num4 = 0f;
-            float num5 = num;
-            float num6 = num;
-            if (num2 > num5)
-            {
-                num5 = num2;
-            }
-            if (num3 > num5)
-            {
-                num5 = num3;
-            }
-            if (num2 < num6)
-            {
-                num6 = num2;
-            }
-            if (num3 < num6)
-            {
-                num6 = num3;
-            }
-            float num7 = num5 - num6;
-            if (num == num5)
-            {
-                num4 = (num2 - num3) / num7;
-            }
-            else if (num2 == num5)
-            {
-                num4 = 2f + (num3 - num) / num7;
-            }
-            else if (num3 == num5)
-            {
-                num4 = 4f + (num - num2) / num7;
-            }
-            num4 *= 60f;
-            if (num4 < 0f)
-            {
-                num4 += 360f;
-            }
-            return num4;
-        }
-        public static float GetSaturation(this Rgba32 rgba32)
-        {
-            float num = rgba32.R / 255f;
-            float num2 = rgba32.G / 255f;
-            float num3 = rgba32.B / 255f;
-            float result = 0f;
-            float num4 = num;
-            float num5 = num;
-            if (num2 > num4)
-            {
-                num4 = num2;
-            }
-            if (num3 > num4)
-            {
-                num4 = num3;
-            }
-            if (num2 < num5)
-            {
-                num5 = num2;
-            }
-            if (num3 < num5)
-            {
-                num5 = num3;
-            }
-            if (num4 != num5)
-            {
-                float num6 = (num4 + num5) / 2f;
-                result = ((!((double)num6 <= 0.5)) ? ((num4 - num5) / (2f - num4 - num5)) : ((num4 - num5) / (num4 + num5)));
-            }
-            return result;
-        }
+
         /// <summary>
         /// Gets a cool Highlight brush for highlighting things.
         /// </summary>
         /// <param name="box">The rectangle in the box</param>
         /// <param name="selectionHighlight">The color to use for the higlight</param>
         /// <returns>The highlight brush.</returns>
-        public static IBrush<Rgba32> HighlightBrush(Rectangle box, Rgba32 selectionHighlight)
+        public static Brush HighlightBrush(Rectangle box, Color selectionHighlight)
         {
             float med = selectionHighlight.GetBrightness();
             float bright = med + 0.05f;
             if (bright > 1f) bright = 1f;
             float dark = med - 0.05f;
             if (dark < 0f) dark = 0f;
-            Rgba32 brtCol = ColorFromHsl(selectionHighlight.GetHue(), selectionHighlight.GetSaturation(), bright);
-            Rgba32 drkCol = ColorFromHsl(selectionHighlight.GetHue(), selectionHighlight.GetSaturation(), dark);
-            Point p1 = new Point(box.X, box.Y - box.Height / 2);
-            Point p2 = new Point(box.X+box.Width, box.Y - box.Height / 2);
-            ColorStop<Rgba32>[] colorStops = new ColorStop<Rgba32>[2]
-            {
-                new ColorStop<Rgba32>(0,brtCol),
-                new ColorStop<Rgba32>(0.5f,drkCol)
-            };
-            return new LinearGradientBrush<Rgba32>(p1, p2,  GradientRepetitionMode.None, colorStops);
+            Color brtCol = ColorFromHsl(selectionHighlight.GetHue(), selectionHighlight.GetSaturation(), bright);
+            Color drkCol = ColorFromHsl(selectionHighlight.GetHue(), selectionHighlight.GetSaturation(), dark);
+            return new LinearGradientBrush(box, brtCol, drkCol, LinearGradientMode.Vertical);
         }
 
         /// <summary>
         /// Returns a completely random opaque color.
         /// </summary>
         /// <returns>A random color.</returns>
-        public static Rgba32 RandomColor()
+        public static Color RandomColor()
         {
-            return new Rgba32(DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255));
+            return Color.FromArgb(DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255));
         }
 
         /// <summary>
         /// This allows the creation of a transparent color with the specified opacity.
         /// </summary>
         /// <param name="opacity">A float ranging from 0 for transparent to 1 for opaque</param>
-        /// <returns>A Rgba32</returns>
-        public static Rgba32 RandomDarkColor(float opacity)
+        /// <returns>A Color</returns>
+        public static Color RandomDarkColor(float opacity)
         {
             int alpha = Convert.ToInt32(opacity * 255);
             if (alpha > 255) alpha = 255;
             if (alpha < 0) alpha = 0;
-            Rgba32 rgba32 = ColorFromHsl(DefaultRandom.Next(0, 360), (double)DefaultRandom.Next(0, 255) / 256, (double)DefaultRandom.Next(0, 123) / 256);
-            rgba32.A = (byte)alpha;
-            return rgba32;
+            return Color.FromArgb(alpha, ColorFromHsl(DefaultRandom.Next(0, 360), (double)DefaultRandom.Next(0, 255) / 256, (double)DefaultRandom.Next(0, 123) / 256));
         }
 
         /// <summary>
         /// This allows the creation of a transparent color with the specified opacity.
         /// </summary>
         /// <param name="opacity">A float ranging from 0 for transparent to 1 for opaque</param>
-        /// <returns>A Rgba32</returns>
-        public static Rgba32 RandomLightColor(float opacity)
+        /// <returns>A Color</returns>
+        public static Color RandomLightColor(float opacity)
         {
             int alpha = Convert.ToInt32(opacity * 255);
             if (alpha > 255) alpha = 255;
             if (alpha < 0) alpha = 0;
-            Rgba32 rgba32 = ColorFromHsl(DefaultRandom.Next(0, 360), (double)DefaultRandom.Next(0, 255) / 256, (double)DefaultRandom.Next(123, 255) / 256);
-            rgba32.A = (byte)alpha;
-            return rgba32;
+            return Color.FromArgb(alpha, ColorFromHsl(DefaultRandom.Next(0, 360), (double)DefaultRandom.Next(0, 255) / 256, (double)DefaultRandom.Next(123, 255) / 256));
         }
 
         /// <summary>
         /// This allows the creation of a transparent color with the specified opacity.
         /// </summary>
         /// <param name="opacity">A float ranging from 0 for transparent to 1 for opaque</param>
-        /// <returns>A Rgba32</returns>
-        public static Rgba32 RandomTranslucent(float opacity)
+        /// <returns>A Color</returns>
+        public static Color RandomTranslucent(float opacity)
         {
             int alpha = Convert.ToInt32(opacity * 255);
             if (alpha > 255) alpha = 255;
             if (alpha < 0) alpha = 0;
-            return new Rgba32(DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255), alpha);
+            return Color.FromArgb(alpha, DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255), DefaultRandom.Next(0, 255));
         }
 
         #endregion

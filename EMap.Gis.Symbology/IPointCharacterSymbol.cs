@@ -1,4 +1,4 @@
-﻿using SixLabors.Fonts;
+﻿using System.Drawing;
 using System.Globalization;
 
 namespace EMap.Gis.Symbology

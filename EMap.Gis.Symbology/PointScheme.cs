@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -21,7 +21,7 @@ namespace EMap.Gis.Symbology
             //Categories.Add(category);
         }
 
-        public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
+        public override ICategory CreateNewCategory(Color fillColor, float size)
         {
             IPointSymbolizer ps = EditorSettings.TemplateSymbolizer.Clone() as IPointSymbolizer ?? new PointSymbolizer(fillColor, PointShape.Ellipse, size);
             ps.Symbols[0].Color = fillColor;
@@ -42,7 +42,7 @@ namespace EMap.Gis.Symbology
         }
 
 
-        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
+        public override void DrawCategory(int index, Graphics context, Rectangle bounds)
         {
             Categories[index].Symbolizer.DrawLegend(context, bounds);
         }

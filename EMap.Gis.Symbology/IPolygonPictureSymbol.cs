@@ -1,14 +1,15 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
+﻿
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
     public interface IPolygonPictureSymbol:IPolygonSymbol
     {
         float Angle { get; set; }
-        Image<Rgba32> Picture { get; set; }
+        Image Picture { get; set; }
         PointF Scale { get; set; }
-        
+         WrapMode WrapMode { get; set; }
+
     }
 }

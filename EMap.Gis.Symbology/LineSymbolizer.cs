@@ -1,20 +1,21 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+﻿
+using System.Drawing;
+
+
+
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
     public class LineSymbolizer : FeatureSymbolizer, ILineSymbolizer
     {
-        public Rgba32 Color
+        public Color Color
         {
             get
             {
-                Rgba32 color = new Rgba32();
+                Color color = new Color();
                 if (Symbols.Count > 0)
                 {
                     color = Symbols[Symbols.Count - 1].Color;
@@ -64,7 +65,7 @@ namespace EMap.Gis.Symbology
                 symbol
             };
         }
-        public LineSymbolizer(Rgba32 color)
+        public LineSymbolizer(Color color)
         {
             var symbol = new LineSimpleSymbol(color);
             Symbols = new LineSymbolCollection
@@ -72,7 +73,7 @@ namespace EMap.Gis.Symbology
                 symbol
             };
         }
-        public LineSymbolizer(Rgba32 color, float width)
+        public LineSymbolizer(Color color, float width)
         {
             var symbol = new LineSimpleSymbol(color, width);
             Symbols = new LineSymbolCollection
@@ -85,7 +86,7 @@ namespace EMap.Gis.Symbology
             ILineSymbol symbol = null;
             if (selected)
             {
-                symbol= new LineSimpleSymbol(Rgba32.Cyan);
+                symbol= new LineSimpleSymbol(Color.Cyan);
             }
             else
             {
@@ -97,21 +98,22 @@ namespace EMap.Gis.Symbology
             };
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(Graphics context, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
                 new PointF(rectangle.X, rectangle.Y + (rectangle.Height / 2)),
                 new PointF(rectangle.Right, rectangle.Y + (rectangle.Height / 2))
             };
-            DrawLine(context, 1, points);
+            GraphicsPath graphicsPath= points.ToPath();
+            DrawLine(context, 1, graphicsPath);
         }
 
-        public void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        public void DrawLine(Graphics context, float scale, GraphicsPath path)
         {
             foreach (var symbol in Symbols)
             {
-                symbol.DrawLine(context, scale, points);
+                symbol.DrawLine(context, scale, path);
             }
         }
     }

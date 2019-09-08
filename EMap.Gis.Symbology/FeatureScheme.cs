@@ -1,11 +1,8 @@
 ﻿using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 
 namespace EMap.Gis.Symbology
@@ -57,7 +54,7 @@ namespace EMap.Gis.Symbology
         {
             return table.Columns[fieldName].DataType == typeof(string);
         }
-        protected Rgba32 CreateRandomColor()
+        protected Color CreateRandomColor()
         {
             Random rnd = new Random(DateTime.Now.Millisecond);
             return CreateRandomColor(rnd);
@@ -66,7 +63,7 @@ namespace EMap.Gis.Symbology
         {
             Breaks = GetUniqueValues(fieldName, table);
             List<float> sizeRamp = GetSizeSet(Breaks.Count);
-            List<Rgba32> colorRamp = GetColorSet(Breaks.Count);
+            List<Color> colorRamp = GetColorSet(Breaks.Count);
             string fieldExpression = "[" + fieldName.ToUpper() + "]";
             Clear();
 
@@ -77,7 +74,7 @@ namespace EMap.Gis.Symbology
             foreach (Break brk in Breaks)
             {
                 // get the color for the category
-                Rgba32 randomColor = colorRamp[colorIndex];
+                Color randomColor = colorRamp[colorIndex];
                 float size = sizeRamp[colorIndex];
                 IFeatureCategory cat = CreateNewCategory(randomColor, size) as IFeatureCategory;
 
@@ -268,7 +265,7 @@ namespace EMap.Gis.Symbology
         }
         public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
 
-        public void Draw(IImageProcessingContext<Rgba32> context, Envelope envelope, Rectangle rectangle)
+        public void Draw(Graphics graphics, Envelope envelope, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

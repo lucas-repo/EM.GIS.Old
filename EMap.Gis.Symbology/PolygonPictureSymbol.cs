@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -12,29 +11,35 @@ namespace EMap.Gis.Symbology
     {
         public PolygonPictureSymbol() : base(PolygonSymbolType.Picture)
         { }
-        public Image<Rgba32> Picture { get; set; }
+        public Image Picture { get; set; }
         public float Angle { get; set; }
         public PointF Scale { get; set; } = new PointF(1, 1);
-        private Image<Rgba32> GetPicture(Image<Rgba32> srcImg)
+        public WrapMode WrapMode { get; set; }
+        private Image GetPicture(Image srcImg)
         {
-            Image<Rgba32> destImg = null;
+            Image destImg = null;
             if (srcImg != null)
             {
-                destImg = srcImg.Clone();
-                destImg.Mutate(x => x.Resize((int)Math.Ceiling(Picture.Width * Scale.X), (int)Math.Ceiling(Picture.Height * Scale.Y)).Rotate(Angle));
+                destImg= new Bitmap((int)(Picture.Width * Scale.X), (int)(Picture.Height * Scale.Y));
+                using (Graphics g = Graphics.FromImage(destImg))
+                {
+                    g.DrawImage(Picture, new Rectangle(0, 0, destImg.Width, destImg.Height), new Rectangle(0, 0, Picture.Width, Picture.Height), GraphicsUnit.Pixel);
+                }
             }
             return destImg;
         }
-        public override IBrush<Rgba32> GetBrush()
+        public override Brush GetBrush()
         {
-            IBrush<Rgba32> brush = base.GetBrush();
+            Brush brush = base.GetBrush();
             if (Picture == null) return brush;
             if (Scale.X == 0 || Scale.Y == 0) return brush;
             if (Scale.X * Picture.Width * Scale.Y * Picture.Height > 8000 * 8000) return brush; // The scaled image is too large, will cause memory exceptions.
             if (Picture != null)
             {
-                Image<Rgba32> scaledBitmap = GetPicture(Picture);
-                brush = new ImageBrush<Rgba32>(scaledBitmap);
+                using (Image scaledBitmap = GetPicture(Picture))
+                {
+                    brush = new TextureBrush(scaledBitmap, WrapMode);
+                }
             }
             return brush;
         }

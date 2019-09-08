@@ -1,7 +1,7 @@
 ﻿using OSGeo.OGR;
-using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace EMap.Gis.Data
 {

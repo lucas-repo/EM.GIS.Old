@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using OSGeo.OGR;
+using System;
+using System.Drawing;
 using System.Threading;
-using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
     public class Group : BaseLayer, IGroup
     {
-        public Image<Rgba32> Icon { get; set; }
+        public Image Icon { get; set; }
         public new ILayerCollection Items { get => base.Items as ILayerCollection; set => base.Items = value; }
 
         public new IGroup Parent { get => base.Parent as IGroup; set => base.Parent = value; }

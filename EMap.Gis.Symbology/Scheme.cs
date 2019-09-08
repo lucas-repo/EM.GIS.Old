@@ -1,10 +1,6 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
@@ -27,9 +23,9 @@ namespace EMap.Gis.Symbology
             }
             return result;
         }
-        private List<Rgba32> CreateRandomColors(int numColors)
+        private List<Color> CreateRandomColors(int numColors)
         {
-            var result = new List<Rgba32>(numColors);
+            var result = new List<Color>(numColors);
             var rnd = new Random(DateTime.Now.Millisecond);
             for (var i = 0; i < numColors; i++)
             {
@@ -208,7 +204,7 @@ namespace EMap.Gis.Symbology
                 colorIndex++;
             }
         }
-        protected Rgba32 CreateRandomColor(Random rnd)
+        protected Color CreateRandomColor(Random rnd)
         {
             var startColor = EditorSettings.StartColor;
             var endColor = EditorSettings.EndColor;
@@ -233,11 +229,11 @@ namespace EMap.Gis.Symbology
             int bHigh = Math.Max(startColor.B, endColor.B);
             int iaLow = Math.Min(startColor.A, endColor.A);
             int aHigh = Math.Max(startColor.A, endColor.A);
-            return new Rgba32(rnd.Next(rLow, rHigh), rnd.Next(gLow, gHigh), rnd.Next(bLow, bHigh), rnd.Next(iaLow, aHigh));
+            return Color.FromArgb(rnd.Next(iaLow, aHigh),rnd.Next(rLow, rHigh), rnd.Next(gLow, gHigh), rnd.Next(bLow, bHigh) );
         }
-        private static List<Rgba32> CreateRampColors(int numColors, float minSat, float minLight, int minHue, float maxSat, float maxLight, int maxHue, int hueShift, int minAlpha, int maxAlpha)
+        private static List<Color> CreateRampColors(int numColors, float minSat, float minLight, int minHue, float maxSat, float maxLight, int maxHue, int hueShift, int minAlpha, int maxAlpha)
         {
-            var result = new List<Rgba32>(numColors);
+            var result = new List<Color>(numColors);
             var ds = (maxSat - (double)minSat) / numColors;
             var dh = (maxHue - (double)minHue) / numColors;
             var dl = (maxLight - (double)minLight) / numColors;
@@ -253,28 +249,28 @@ namespace EMap.Gis.Symbology
 
             return result;
         }
-        private static List<Rgba32> CreateRampColors(int numColors, Rgba32 startColor, Rgba32 endColor)
+        private static List<Color> CreateRampColors(int numColors, Color startColor, Color endColor)
         {
-            var result = new List<Rgba32>(numColors);
+            var result = new List<Color>(numColors);
             var dR = (endColor.R - (double)startColor.R) / numColors;
             var dG = (endColor.G - (double)startColor.G) / numColors;
             var dB = (endColor.B - (double)startColor.B) / numColors;
             var dA = (endColor.A - (double)startColor.A) / numColors;
             for (var i = 0; i < numColors; i++)
             {
-                result.Add(new Rgba32((int)(startColor.R + (dR * i)), (int)(startColor.G + (dG * i)), (int)(startColor.B + (dB * i)), (int)(startColor.A + (dA * i))));
+                result.Add(Color.FromArgb((int)(startColor.A + (dA * i)),(int)(startColor.R + (dR * i)), (int)(startColor.G + (dG * i)), (int)(startColor.B + (dB * i))));
             }
 
             return result;
         }
-        protected virtual List<Rgba32> GetDefaultColors(int count)
+        protected virtual List<Color> GetDefaultColors(int count)
         {
             return EditorSettings.RampColors ? CreateUnboundedRampColors(count) : CreateUnboundedRandomColors(count);
         }
-        private static List<Rgba32> CreateUnboundedRandomColors(int numColors)
+        private static List<Color> CreateUnboundedRandomColors(int numColors)
         {
             var rnd = new Random(DateTime.Now.Millisecond);
-            var result = new List<Rgba32>(numColors);
+            var result = new List<Color>(numColors);
             for (var i = 0; i < numColors; i++)
             {
                 result.Add(rnd.NextColor());
@@ -282,13 +278,13 @@ namespace EMap.Gis.Symbology
 
             return result;
         }
-        private static List<Rgba32> CreateUnboundedRampColors(int numColors)
+        private static List<Color> CreateUnboundedRampColors(int numColors)
         {
             return CreateRampColors(numColors, .25f, .25f, 0, .75f, .75f, 360, 0, 255, 255);
         }
-        protected List<Rgba32> GetColorSet(int count)
+        protected List<Color> GetColorSet(int count)
         {
-            List<Rgba32> colorRamp;
+            List<Color> colorRamp;
             if (EditorSettings.UseColorRange)
             {
                 if (!EditorSettings.RampColors)
@@ -313,8 +309,8 @@ namespace EMap.Gis.Symbology
             return colorRamp;
         }
 
-        public abstract ICategory CreateNewCategory(Rgba32 fillColor, float size);
-        public abstract void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds);
+        public abstract ICategory CreateNewCategory(Color fillColor, float size);
+        public abstract void DrawCategory(int index, Graphics graphics, Rectangle bounds);
         public abstract void Add(ICategory item);
         public abstract void Clear();
         public abstract bool Contains(ICategory item);
