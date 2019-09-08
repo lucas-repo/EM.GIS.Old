@@ -12,6 +12,6 @@ namespace EMap.Gis.Symbology
     public interface IPolygonSymbolizer:IFeatureSymbolizer
     {
         new IPolygonSymbolCollection Symbols { get; set; }
-        void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale,Polygon polygon);
+        void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path);
     }
 }

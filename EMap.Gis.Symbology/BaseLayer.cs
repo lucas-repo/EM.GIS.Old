@@ -130,10 +130,6 @@ namespace EMap.Gis.Symbology
             {
                 ResetBuffer(rectangle, envelope, selected,progressHandler, cancellationTokenSource);
             }
-            using (var fs = System.IO.File.Create(@"C:\Users\lc156\Desktop\tmp\234.png"))
-            {
-                BufferImgage.SaveAsPng(fs);
-            }
             image.Mutate(x => x.DrawImage(BufferImgage, new Point(rectangle.X, rectangle.Y), 1));
         }
     }

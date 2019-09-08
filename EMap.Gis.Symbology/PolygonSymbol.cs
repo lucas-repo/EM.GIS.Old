@@ -20,9 +20,9 @@ namespace EMap.Gis.Symbology
             PolygonSymbolType = polygonSymbolType;
         }
 
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
+        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path)
         {
-            if (context == null || polygon == null )
+            if (context == null || path == null )
             {
                 return;
             }
@@ -31,24 +31,11 @@ namespace EMap.Gis.Symbology
             {
                 return;
             }
-            //List<ILineSegment> lineSegments = new List<ILineSegment>();
-            //foreach (var points in polygons)
-            //{
-            //    if (points.Length > 2)
-            //    {
-            //        ILineSegment lineSegment = new LinearLineSegment(points); 
-            //        lineSegments.Add(lineSegment);
-            //    }
-            //}
-            //if (lineSegments.Count == 0)
-            //{
-            //    return;
-            //}
-            //Polygon polygon = new Polygon(lineSegments); 
-            context.Fill(brush, polygon); 
-            foreach (var lineSegment in polygon.LineSegments)
+            context.Fill(brush, path);
+            var simplePaths = path.Flatten();
+            foreach (var simplePath in simplePaths)
             {
-                DrawOutLine(context, scale, lineSegment.Flatten().ToArray());
+                DrawOutLine(context, scale, simplePath.Points.ToArray());
             }
         }
 

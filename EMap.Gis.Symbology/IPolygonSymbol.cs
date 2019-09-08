@@ -11,7 +11,7 @@ namespace EMap.Gis.Symbology
     {
         PolygonSymbolType PolygonSymbolType { get; }
         RectangleF Bounds { get; set; }
-        void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon);
+        void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path);
         IBrush<Rgba32> GetBrush();
     }
 }

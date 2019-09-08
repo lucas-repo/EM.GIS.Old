@@ -40,11 +40,11 @@ namespace EMap.Gis.Symbology
             };
             DrawPolygon(context, 1, points.ToPolygon());
         }
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, Polygon polygon)
+        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path)
         {
             foreach (var symbol in Symbols)
             {
-                symbol.DrawPolygon(context, scale, polygon);
+                symbol.DrawPolygon(context, scale, path);
             }
         }
     }
