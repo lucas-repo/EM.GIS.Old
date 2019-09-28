@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\Bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gdal.Core" Version="1.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
-    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0008" />
+    <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
+    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public class Descriptor: CopyBase,IDescriptor
     {
         public void CopyProperties(object source)

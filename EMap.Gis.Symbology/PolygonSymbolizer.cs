@@ -28,7 +28,7 @@ namespace EMap.Gis.Symbology
             }
             Symbols.Add(polygonSymbol);
         }
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
@@ -40,7 +40,7 @@ namespace EMap.Gis.Symbology
             };
             DrawPolygon(context, 1, points.ToPolygon());
         }
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path)
+        public void DrawPolygon(IImageProcessingContext context, float scale, IPath path)
         {
             foreach (var symbol in Symbols)
             {

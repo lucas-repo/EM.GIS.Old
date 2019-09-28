@@ -14,6 +14,6 @@ namespace EMap.Gis.Symbology
         Rgba32 Color { get; set; }
         float Width { get; set; }
         new ILineSymbolCollection Symbols { get; set; }
-        void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
+        void DrawLine(IImageProcessingContext context, float scale, IPath path);
     }
 }

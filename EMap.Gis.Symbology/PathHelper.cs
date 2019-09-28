@@ -163,8 +163,8 @@ namespace EMap.Gis.Symbology
             for (int i = 0; i <= numSides; i++)
             {
                 double ang = i * (2 * Math.PI) / numSides;
-                float x = Convert.ToSingle(Math.Cos(ang)) * centerX;
-                float y = Convert.ToSingle(Math.Sin(ang)) * centerY;
+                float x = centerX + Convert.ToSingle(Math.Cos(ang)) * rectangle.Width / 2f;
+                float y = centerY + Convert.ToSingle(Math.Sin(ang)) * rectangle.Height / 2f;
                 polyPoints[i] = new PointF(x, y);
             }
             return polyPoints;

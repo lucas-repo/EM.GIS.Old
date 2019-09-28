@@ -7,6 +7,6 @@
         Dot,
         DashDot,
         DashDotDot,
-        //Custom
+        Custom
     }
 }

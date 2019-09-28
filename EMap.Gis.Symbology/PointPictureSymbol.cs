@@ -61,7 +61,7 @@ namespace EMap.Gis.Symbology
             return destImage;
         }
 
-        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        public override void DrawPoint(IImageProcessingContext context, float scale, PointF point)
         {
             float width = scale * Size.Width;
             float height = scale * Size.Height;
@@ -89,7 +89,7 @@ namespace EMap.Gis.Symbology
                 });
             }
             PointF[] points = rectangle.ToPoints();
-            DrawOutLine(context, scale, points);
+            DrawOutLine(context, scale, points.ToPath());
         }
     }
 }

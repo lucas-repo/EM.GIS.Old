@@ -81,7 +81,7 @@ namespace EMap.Gis.Symbology
             Symbols.Add(ss);
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             float scaleH = rectangle.Width / Size.Width;
             float scaleV = rectangle.Height / Size.Height;
@@ -92,7 +92,7 @@ namespace EMap.Gis.Symbology
             DrawPoint(context, scale, point);
         }
 
-        public void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        public void DrawPoint(IImageProcessingContext context, float scale, PointF point)
         {
             foreach (var symbol in Symbols)
             {

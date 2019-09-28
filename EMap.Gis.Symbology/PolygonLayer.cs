@@ -38,7 +38,7 @@ namespace EMap.Gis.Symbology
                 polygonSymbolizer.DrawPolygon(context, scaleSize, path);
             });
         }
-        private void DrawGeometry(MapArgs drawArgs, IImageProcessingContext<Rgba32> context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
+        private void DrawGeometry(MapArgs drawArgs, IImageProcessingContext context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
         {
             int geoCount = geometry.GetGeometryCount();
             if (geoCount == 0)

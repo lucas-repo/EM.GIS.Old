@@ -29,7 +29,7 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             Symbolizer?.DrawLegend(context, rectangle);
         }

@@ -15,7 +15,7 @@ namespace EMap.Gis.Symbology
         float Angle { get; set; }
         PointF Offset { get; set; }
         PointSymbolType PointSymbolType { get; }
-        void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point);
+        void DrawPoint(IImageProcessingContext context, float scale, PointF point);
         SizeF Size { get; set; }
     }
 }

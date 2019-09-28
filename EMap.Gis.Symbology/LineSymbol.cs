@@ -10,6 +10,7 @@ using SixLabors.Shapes;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public abstract class LineSymbol : FeatureSymbol, ILineSymbol
     {
         public LineSymbolType LineSymbolType { get; }
@@ -39,16 +40,16 @@ namespace EMap.Gis.Symbology
             Width = width;
         }
 
-        public virtual IPen<Rgba32> ToPen(float scale)
+        public virtual IPen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen<Rgba32> pen = new Pen<Rgba32>(Color, width);
+            IPen pen = new Pen(Color, width);
             return pen;
         }
-        public void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        public virtual void DrawLine(IImageProcessingContext context, float scale, IPath path)
         {
-            IPen<Rgba32> pen = ToPen(scale);
-            context.DrawLines(pen, points);
+            IPen pen = ToPen(scale); 
+            context.Draw(pen, path);
         }
     }
 }

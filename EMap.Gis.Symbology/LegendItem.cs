@@ -33,7 +33,7 @@ namespace EMap.Gis.Symbology
             return _legendSymbolSize;
         }
 
-        public virtual void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public virtual void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

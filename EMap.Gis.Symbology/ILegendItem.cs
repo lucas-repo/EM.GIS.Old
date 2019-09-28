@@ -16,6 +16,6 @@ namespace EMap.Gis.Symbology
         bool LegendItemVisible { get; set; }
         string LegendText { get; set; }
         Size GetLegendSymbolSize();
-        void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle);
+        void DrawLegend(IImageProcessingContext context, Rectangle rectangle);
     }
 }

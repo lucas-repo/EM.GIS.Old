@@ -314,7 +314,7 @@ namespace EMap.Gis.Symbology
         }
 
         public abstract ICategory CreateNewCategory(Rgba32 fillColor, float size);
-        public abstract void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds);
+        public abstract void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds);
         public abstract void Add(ICategory item);
         public abstract void Clear();
         public abstract bool Contains(ICategory item);

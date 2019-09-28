@@ -21,11 +21,11 @@ namespace EMap.Gis.Symbology
             OutLineSymbolizer = outlineSymbol.OutLineSymbolizer.Clone() as ILineSymbolizer;
         }
 
-        public void DrawOutLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        public void DrawOutLine(IImageProcessingContext context, float scale, IPath path)
         {
-            if (UseOutLine && OutLineSymbolizer != null && points.Length > 1)
+            if (UseOutLine && OutLineSymbolizer != null && path.Length > 1)
             {
-                OutLineSymbolizer.DrawLine(context, scale, points);
+                OutLineSymbolizer.DrawLine(context, scale, path);
             }
         }
     }

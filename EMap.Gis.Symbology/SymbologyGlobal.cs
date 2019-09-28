@@ -87,7 +87,7 @@ namespace EMap.Gis.Symbology
 
             return new Rgba32((int)(255 * red), (int)(255 * green), (int)(255 * blue));
         }
-        public static IImageProcessingContext<TPixel> DrawLines<TPixel>(this IImageProcessingContext<TPixel> source, IPen<TPixel> pen, float x0, float y0, float x1, float y1) where TPixel : struct, IPixel<TPixel>
+        public static IImageProcessingContext DrawLines<TPixel>(this IImageProcessingContext source, IPen pen, float x0, float y0, float x1, float y1) where TPixel : struct, IPixel<TPixel>
         {
             return source.DrawLines(pen, new PointF(x0, y0), new PointF(x1, y1));
         }
@@ -97,20 +97,20 @@ namespace EMap.Gis.Symbology
         /// <param name="g">The Graphics object</param>
         /// <param name="pen">The pen to draw with</param>
         /// <param name="rect">The rectangle to draw to.</param>
-        public static void DrawRoundedRectangle(Image<Rgba32> image, Pen<Rgba32> pen, Rectangle rect)
+        public static void DrawRoundedRectangle(Image<Rgba32> image, Pen pen, Rectangle rect)
         {
             int l = rect.Left;
             int r = rect.Right;
             int t = rect.Top;
             int b = rect.Bottom;
             image.Mutate(x => x
-            .DrawLines(pen, l + 1, t, r - 1, t)
-            .DrawLines(pen, l, t + 1, l, b - 1)
-            .DrawLines(pen, r, t + 1, r, b - 1)
-            .DrawLines(pen, l, t + 2, l + 2, t)
-            .DrawLines(pen, r - 2, t, r, t + 2)
-            .DrawLines(pen, l, b - 2, l + 2, b)
-            .DrawLines(pen, r, b - 2, r - 2, b));
+            .DrawLines<Rgba32>(pen, l + 1, t, r - 1, t)
+            .DrawLines<Rgba32>(pen, l, t + 1, l, b - 1)
+            .DrawLines<Rgba32>(pen, r, t + 1, r, b - 1)
+            .DrawLines<Rgba32>(pen, l, t + 2, l + 2, t)
+            .DrawLines<Rgba32>(pen, r - 2, t, r, t + 2)
+            .DrawLines<Rgba32>(pen, l, b - 2, l + 2, b)
+            .DrawLines<Rgba32>(pen, r, b - 2, r - 2, b));
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace EMap.Gis.Symbology
         /// <param name="box">The rectangle in the box</param>
         /// <param name="selectionHighlight">The color to use for the higlight</param>
         /// <returns>The highlight brush.</returns>
-        public static IBrush<Rgba32> HighlightBrush(Rectangle box, Rgba32 selectionHighlight)
+        public static IBrush HighlightBrush(Rectangle box, Rgba32 selectionHighlight)
         {
             float med = selectionHighlight.GetBrightness();
             float bright = med + 0.05f;
@@ -249,12 +249,12 @@ namespace EMap.Gis.Symbology
             Rgba32 drkCol = ColorFromHsl(selectionHighlight.GetHue(), selectionHighlight.GetSaturation(), dark);
             Point p1 = new Point(box.X, box.Y - box.Height / 2);
             Point p2 = new Point(box.X+box.Width, box.Y - box.Height / 2);
-            ColorStop<Rgba32>[] colorStops = new ColorStop<Rgba32>[2]
+            ColorStop[] colorStops = new ColorStop[2]
             {
-                new ColorStop<Rgba32>(0,brtCol),
-                new ColorStop<Rgba32>(0.5f,drkCol)
+                new ColorStop(0,brtCol),
+                new ColorStop(0.5f,drkCol)
             };
-            return new LinearGradientBrush<Rgba32>(p1, p2,  GradientRepetitionMode.None, colorStops);
+            return new LinearGradientBrush(p1, p2,  GradientRepetitionMode.None, colorStops);
         }
 
         /// <summary>

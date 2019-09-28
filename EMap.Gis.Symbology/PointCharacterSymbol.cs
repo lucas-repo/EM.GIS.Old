@@ -58,7 +58,7 @@ namespace EMap.Gis.Symbology
             base.OnRandomize(generator);
         }
 
-        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        public override void DrawPoint(IImageProcessingContext context, float scale, PointF point)
         {
             string text = new string(new[] { Character });
             float fontPointSize = Size.Height * scale;
@@ -69,7 +69,7 @@ namespace EMap.Gis.Symbology
             PointF location = new PointF(x, y);
             context.DrawText(text, font, Color, location);
             PointF[] points = bounds.ToPoints();
-            DrawOutLine(context, scale, points);
+            DrawOutLine(context, scale, points.ToPath());
         }
     }
 }

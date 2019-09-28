@@ -11,6 +11,6 @@ namespace EMap.Gis.Symbology
         bool UseOutLine { get; set; }
         ILineSymbolizer OutLineSymbolizer { get; set; }
         void CopyOutLine(IOutlineSymbol outlineSymbol);
-        void DrawOutLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
+        void DrawOutLine(IImageProcessingContext context, float scale,IPath path);
     }
 }

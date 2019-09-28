@@ -17,6 +17,6 @@ namespace EMap.Gis.Symbology
         new IFeatureLayer Parent { get; set; }
         void CreateCategories(DataTable table);
         IFeatureCategory CreateRandomCategory(string filterExpression);
-        void Draw(IImageProcessingContext<Rgba32> context, Envelope envelope, Rectangle rectangle);
+        void Draw(IImageProcessingContext context, Envelope envelope, Rectangle rectangle);
     }
 }

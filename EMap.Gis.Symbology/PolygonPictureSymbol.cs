@@ -25,16 +25,16 @@ namespace EMap.Gis.Symbology
             }
             return destImg;
         }
-        public override IBrush<Rgba32> GetBrush()
+        public override IBrush GetBrush()
         {
-            IBrush<Rgba32> brush = base.GetBrush();
+            IBrush brush = base.GetBrush();
             if (Picture == null) return brush;
             if (Scale.X == 0 || Scale.Y == 0) return brush;
             if (Scale.X * Picture.Width * Scale.Y * Picture.Height > 8000 * 8000) return brush; // The scaled image is too large, will cause memory exceptions.
             if (Picture != null)
             {
                 Image<Rgba32> scaledBitmap = GetPicture(Picture);
-                brush = new ImageBrush<Rgba32>(scaledBitmap);
+                brush = new ImageBrush(scaledBitmap);
             }
             return brush;
         }

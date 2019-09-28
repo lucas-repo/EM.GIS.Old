@@ -18,7 +18,7 @@ namespace EMap.Gis.Symbology
             SelectionSymbolizer = new PolygonSymbolizer(true);
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             Symbolizer?.DrawLegend(context, rectangle);
         }

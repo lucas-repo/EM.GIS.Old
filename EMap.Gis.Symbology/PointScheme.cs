@@ -17,8 +17,6 @@ namespace EMap.Gis.Symbology
         public PointScheme()
         {
             Categories = new PointCategoryCollection(this);
-            //PointCategory category = new PointCategory();//todo 添加默认
-            //Categories.Add(category);
         }
 
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
@@ -42,7 +40,7 @@ namespace EMap.Gis.Symbology
         }
 
 
-        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
+        public override void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds)
         {
             Categories[index].Symbolizer.DrawLegend(context, bounds);
         }

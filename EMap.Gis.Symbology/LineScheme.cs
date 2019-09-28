@@ -16,8 +16,6 @@ namespace EMap.Gis.Symbology
         public LineScheme()
         {
             Categories = new LineCategoryCollection(this);
-            LineCategory category = new LineCategory();
-            Categories.Add(category);
         }
 
         public override ICategory CreateNewCategory(Rgba32 fillColor, float size)
@@ -46,7 +44,7 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
+        public override void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds)
         {
             Categories[index].Symbolizer.DrawLegend(context, bounds);
         }

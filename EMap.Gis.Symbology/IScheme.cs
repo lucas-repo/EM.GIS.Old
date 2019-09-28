@@ -13,7 +13,7 @@ namespace EMap.Gis.Symbology
         ICategoryCollection Categories { get; set; }
         EditorSettings EditorSettings { get; set; }
         Statistics Statistics { get; }
-        void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds);
+        void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds);
         ICategory CreateNewCategory(Rgba32 fillColor, float size);
         List<double> Values { get; }
         void Move(int oldIndex, int newIndex);

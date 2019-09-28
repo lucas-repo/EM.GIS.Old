@@ -6,6 +6,7 @@ using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public class LineSimpleSymbol : LineSymbol, ILineSimpleSymbol
     {
 
@@ -21,10 +22,10 @@ namespace EMap.Gis.Symbology
         }
         public virtual DashStyle DashStyle { get; set; }
 
-        public override IPen<Rgba32> ToPen(float scale)
+        public override IPen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen<Rgba32> pen = null;
+            IPen pen = null;
             switch (DashStyle)
             {
                 case DashStyle.Solid:

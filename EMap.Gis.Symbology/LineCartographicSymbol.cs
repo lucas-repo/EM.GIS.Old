@@ -7,10 +7,38 @@ using SixLabors.ImageSharp.Processing;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public class LineCartographicSymbol : LineSimpleSymbol, ILineCartographicSymbol
     {
-        public float[] Pattern { get; set; } = new float[0];
-        public List<ILineDecoration> Decorations { get;  } = new List<ILineDecoration>();
+        protected static readonly float[] DashDotPattern = new float[4]
+        {
+                3f,
+                1f,
+                1f,
+                1f
+        };
+        protected static readonly float[] DashDotDotPattern = new float[6]
+        {
+            3f,
+            1f,
+            1f,
+            1f,
+            1f,
+            1f
+        };
+        protected static readonly float[] DottedPattern = new float[2]
+        {
+            1f,
+            1f
+        };
+        protected static readonly float[] DashedPattern = new float[2]
+        {
+            3f,
+            1f
+        };
+        protected static readonly float[] EmptyPattern = new float[0];
+        public float[] Pattern { get; set; } = EmptyPattern;
+        public List<ILineDecoration> Decorations { get; } = new List<ILineDecoration>();
         public override DashStyle DashStyle
         {
             get => base.DashStyle;
@@ -19,16 +47,20 @@ namespace EMap.Gis.Symbology
                 switch (DashStyle)
                 {
                     case DashStyle.Dash:
-                        Pattern = new float[] { 3f, 1f, 1f, 1f };
+                        Pattern = DashedPattern;
                         break;
                     case DashStyle.Dot:
-                        Pattern = new float[] { 1f, 1f };
+                        Pattern = DottedPattern;
                         break;
                     case DashStyle.DashDot:
-                        Pattern = new float[] { 3f, 1f, 1f, 1f };
+                        Pattern = DashDotPattern;
                         break;
                     case DashStyle.DashDotDot:
-                        Pattern = new float[] { 3f, 1f, 1f, 1f, 1f, 1f };
+                        Pattern = DashDotDotPattern;
+                        break;
+                    case DashStyle.Solid:
+                    case DashStyle.Custom:
+                        Pattern = EmptyPattern;
                         break;
                 }
                 base.DashStyle = value;
@@ -39,10 +71,10 @@ namespace EMap.Gis.Symbology
         protected LineCartographicSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         {
         }
-        public override IPen<Rgba32> ToPen(float scale)
+        public override IPen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen<Rgba32> pen = new Pen<Rgba32>(Color, width, Pattern);
+            IPen pen = new Pen(Color, width,Pattern); 
             return pen;
         }
     }

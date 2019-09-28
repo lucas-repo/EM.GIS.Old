@@ -15,7 +15,7 @@ namespace EMap.Gis.Symbology
         {
             throw new NotImplementedException();
         }
-        public override IBrush<Rgba32> GetBrush()
+        public override IBrush GetBrush()
         {
             return base.GetBrush();
         }

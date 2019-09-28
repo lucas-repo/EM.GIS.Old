@@ -17,8 +17,6 @@ namespace EMap.Gis.Symbology
         public PolygonScheme()
         {
             Categories = new PolygonCategoryCollection(this);
-            var category = new PolygonCategory();//todo 添加默认
-            Categories.Add(category);
         }
 
 
@@ -33,7 +31,7 @@ namespace EMap.Gis.Symbology
         }
 
 
-        public override void DrawCategory(int index, IImageProcessingContext<Rgba32> context, Rectangle bounds)
+        public override void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds)
         {
             Categories[index].Symbolizer.DrawLegend(context, bounds);
         }

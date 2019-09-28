@@ -49,7 +49,7 @@ namespace EMap.Gis.Symbology
                 var ratio = value / width;
                 foreach (var item in Symbols)
                 {
-                    Symbols[Symbols.Count - 1].Width *= ratio;
+                    item.Width *= ratio;
                 }
             }
         }
@@ -97,21 +97,21 @@ namespace EMap.Gis.Symbology
             };
         }
 
-        public override void DrawLegend(IImageProcessingContext<Rgba32> context, Rectangle rectangle)
+        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
         {
             PointF[] points = new PointF[]
             {
                 new PointF(rectangle.X, rectangle.Y + (rectangle.Height / 2)),
                 new PointF(rectangle.Right, rectangle.Y + (rectangle.Height / 2))
             };
-            DrawLine(context, 1, points);
+            DrawLine(context, 1, points.ToPath());
         }
 
-        public void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points)
+        public void DrawLine(IImageProcessingContext context, float scale, IPath path)
         {
             foreach (var symbol in Symbols)
             {
-                symbol.DrawLine(context, scale, points);
+                symbol.DrawLine(context, scale, path);
             }
         }
     }

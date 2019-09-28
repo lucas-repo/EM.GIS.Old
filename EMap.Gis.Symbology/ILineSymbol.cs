@@ -13,7 +13,7 @@ namespace EMap.Gis.Symbology
     {
         float Width { get; set; }
         LineSymbolType LineSymbolType { get; }
-        void DrawLine(IImageProcessingContext<Rgba32> context, float scale, PointF[] points);
-        IPen<Rgba32> ToPen(float scale);
+        void DrawLine(IImageProcessingContext context, float scale, IPath path);
+        IPen ToPen(float scale);
     }
 }

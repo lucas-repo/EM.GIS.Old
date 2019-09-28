@@ -20,28 +20,24 @@ namespace EMap.Gis.Symbology
             PolygonSymbolType = polygonSymbolType;
         }
 
-        public void DrawPolygon(IImageProcessingContext<Rgba32> context, float scale, IPath path)
+        public void DrawPolygon(IImageProcessingContext context, float scale, IPath path)
         {
-            if (context == null || path == null )
+            if (context == null || path == null)
             {
                 return;
             }
-            IBrush<Rgba32> brush = GetBrush();
+            IBrush brush = GetBrush();
             if (brush == null)
             {
                 return;
             }
             context.Fill(brush, path);
-            var simplePaths = path.Flatten();
-            foreach (var simplePath in simplePaths)
-            {
-                DrawOutLine(context, scale, simplePath.Points.ToArray());
-            }
+            DrawOutLine(context, scale, path);
         }
 
-        public virtual IBrush<Rgba32> GetBrush()
+        public virtual IBrush GetBrush()
         {
-            IBrush<Rgba32> brush = new SolidBrush<Rgba32>(Color);
+            IBrush brush = new SolidBrush(Color);
             return brush;
         }
     }

@@ -8,6 +8,7 @@ using SixLabors.Primitives;
 
 namespace EMap.Gis.Symbology
 {
+    [Serializable]
     public abstract class FeatureSymbol : Descriptor, IFeatureSymbol
     {
         private Rgba32 _color;

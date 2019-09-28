@@ -268,7 +268,7 @@ namespace EMap.Gis.Symbology
         }
         public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
 
-        public void Draw(IImageProcessingContext<Rgba32> context, Envelope envelope, Rectangle rectangle)
+        public void Draw(IImageProcessingContext context, Envelope envelope, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

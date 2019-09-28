@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -32,12 +33,13 @@ namespace EMap.Gis.Symbology
 
         public PointShape PointShape { get; set; }
 
-        public override void DrawPoint(IImageProcessingContext<Rgba32> context, float scale, PointF point)
+        public override void DrawPoint(IImageProcessingContext context, float scale, PointF point)
         {
             if (scale == 0) return;
             if (Size.Width == 0 || Size.Height == 0) return;
-
-            RectangleF rectangle = new RectangleF(point.X, point.Y, scale * Size.Width, scale * Size.Height);
+            float width = scale * Size.Width;
+            float height = scale * Size.Height;
+            RectangleF rectangle = new RectangleF(point.X- width/2, point.Y - height / 2, scale * Size.Width, scale * Size.Height);
             PointF[] points = null;
             switch (PointShape)
             {
@@ -64,8 +66,11 @@ namespace EMap.Gis.Symbology
                     break;
             }
             IPath path = points.ToPath();
+            path = path.Rotate(Angle);
+            path = path.Translate(Offset);
             context.Fill(Color, path);
-            DrawOutLine(context, scale, points);
+            DrawOutLine(context, scale, path);
+
         }
     }
 }

@@ -4,6 +4,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
+using SixLabors.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,27 +34,57 @@ namespace EMap.Gis.Symbology
 
         protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
         {
-            int geometryCount = geometry.GetGeometryCount();
+            ILineSymbolizer lineSymbolizer = symbolizer as ILineSymbolizer;
+            if (drawArgs == null || lineSymbolizer == null || geometry == null)
+            {
+                return;
+            }
             drawArgs.Image.Mutate(context =>
             {
-                ILineSymbolizer lineSymbolizer = symbolizer as ILineSymbolizer;
-                for (int i = 0; i < geometryCount; i++)
-                {
-                    Geometry partGeo = geometry.GetGeometryRef(i);
-                    int pointCount = partGeo.GetPointCount();
-                    double[] coord = new double[2];
-                    List<PointF> points = new List<PointF>();
-                    float scaleSize = (float)symbolizer.GetScale(drawArgs);
-                    for (int j = 0; j < pointCount; j++)
-                    {
-                        partGeo.GetPoint_2D(j, coord);
-                        PointF point = drawArgs.ProjToPixelPointF(coord);
-                        points.Add(point);
-                    }
-                    lineSymbolizer.DrawLine(context, scaleSize, points.ToArray());
-                }
+                float scaleSize = (float)symbolizer.GetScale(drawArgs);
+                PathBuilder pathBuilder = new PathBuilder();
+                GetLines(drawArgs, geometry, pathBuilder);
+                IPath path = pathBuilder.Build();
+                lineSymbolizer.DrawLine(context, scaleSize, path);
             });
         }
-
+        private void GetLines(MapArgs drawArgs, Geometry geometry, PathBuilder pathBuilder)
+        {
+            int geoCount = geometry.GetGeometryCount();
+            var geometryType = geometry.GetGeometryType();
+            switch (geometryType)
+            {
+                case wkbGeometryType.wkbMultiLineString:
+                case wkbGeometryType.wkbMultiLineString25D:
+                case wkbGeometryType.wkbMultiLineStringM:
+                case wkbGeometryType.wkbMultiLineStringZM:
+                    for (int i = 0; i < geoCount; i++)
+                    {
+                        using (var partGeo = geometry.GetGeometryRef(i))
+                        {
+                            pathBuilder.StartFigure();
+                            GetLines(drawArgs, partGeo, pathBuilder);
+                        }
+                    }
+                    break;
+                case wkbGeometryType.wkbLineString:
+                case wkbGeometryType.wkbLineString25D:
+                case wkbGeometryType.wkbLineStringM:
+                case wkbGeometryType.wkbLineStringZM:
+                    int pointCount = geometry.GetPointCount();
+                    double[] coord = new double[2];
+                    PointF[] points = new PointF[pointCount];
+                    for (int j = 0; j < pointCount; j++)
+                    {
+                        geometry.GetPoint_2D(j, coord);
+                        PointF point = drawArgs.ProjToPixelPointF(coord);
+                        points[j] = point;
+                    }
+                    pathBuilder.AddLines(points);
+                    break;
+                default:
+                    throw new Exception("不支持的几何类型");
+            }
+        }
     }
 }
