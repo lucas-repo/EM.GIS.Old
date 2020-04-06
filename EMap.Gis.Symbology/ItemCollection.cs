@@ -13,6 +13,9 @@ namespace EMap.Gis.Symbology
         public TChild this[int index] { get => Items[index]; set => Items[index]=value; }
         [NonSerialized]
         private TParent _parent;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
         public TParent Parent { get => _parent; set => _parent = value; }
 
         public int Count => Items.Count;
@@ -67,6 +70,7 @@ namespace EMap.Gis.Symbology
                     setOldItemsAction.Invoke();
                     break;
             }
+            CollectionChanged?.Invoke(this, e);
         }
      
 

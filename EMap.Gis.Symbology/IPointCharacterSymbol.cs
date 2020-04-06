@@ -1,4 +1,4 @@
-﻿using SixLabors.Fonts;
+﻿using System.Drawing;
 using System.Globalization;
 
 namespace EMap.Gis.Symbology
@@ -11,7 +11,7 @@ namespace EMap.Gis.Symbology
 
         string FontFamilyName { get; set; }
 
-        FontStyle Style { get; set; }
+        FontStyle FontStyle { get; set; }
 
         string ToString();
     }

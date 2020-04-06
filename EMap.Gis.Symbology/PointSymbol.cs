@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -18,6 +13,24 @@ namespace EMap.Gis.Symbology
         {
             PointSymbolType = pointSymbolType;
         }
-        public abstract void DrawPoint(IImageProcessingContext context, float scale, PointF point);
+        public void DrawPoint(Graphics g, float scale, PointF point)
+        {
+            if (g != null && scale != 0 && !Size.IsEmpty)
+            {
+                Matrix old = g.Transform;
+                Matrix adjust = g.Transform;
+                float dx = point.X + scale * Offset.X;
+                float dy = point.Y - scale * Offset.Y;
+                adjust.Translate(dx, dy);
+                adjust.Rotate(Angle);
+                g.Transform = adjust;
+
+                OnDrawPoint(g, scale);
+
+                g.Transform = old;
+            }
+        }
+
+        protected abstract void OnDrawPoint(Graphics g, float scale);
     }
 }

@@ -1,14 +1,8 @@
 ﻿using EMap.Gis.Data;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
-using System.Collections.Generic;
-using System.Threading;
 using System;
-using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -24,21 +18,16 @@ namespace EMap.Gis.Symbology
         }
         protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
         {
-            IPolygonSymbolizer polygonSymbolizer = symbolizer as IPolygonSymbolizer;
-            if (drawArgs == null || polygonSymbolizer == null || geometry == null)
+            if (drawArgs == null || !(symbolizer is IPolygonSymbolizer polygonSymbolizer) || geometry == null)
             {
                 return;
             }
-            drawArgs.Image.Mutate(context =>
-            {
-                float scaleSize = (float)symbolizer.GetScale(drawArgs);
-                PathBuilder pathBuilder = new PathBuilder();
-                GetPolygons(drawArgs, geometry, pathBuilder);
-                IPath path= pathBuilder.Build();
-                polygonSymbolizer.DrawPolygon(context, scaleSize, path);
-            });
+            float scaleSize = (float)symbolizer.GetScale(drawArgs);
+            GraphicsPath path = new  GraphicsPath();
+            GetPolygons(drawArgs, geometry, path);
+            polygonSymbolizer.DrawPolygon(drawArgs.Device, scaleSize, path);
         }
-        private void DrawGeometry(MapArgs drawArgs, IImageProcessingContext context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
+        private void DrawGeometry(MapArgs drawArgs, Graphics context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
         {
             int geoCount = geometry.GetGeometryCount();
             if (geoCount == 0)
@@ -52,7 +41,7 @@ namespace EMap.Gis.Symbology
                     PointF point = drawArgs.ProjToPixelPointF(coord);
                     points[j] = point;
                 }
-                polygonSymbolizer.DrawPolygon(context, scaleSize, points.ToPolygon());
+                polygonSymbolizer.DrawPolygon(context, scaleSize, points.ToPath());
             }
             else
             {
@@ -65,7 +54,7 @@ namespace EMap.Gis.Symbology
                 }
             }
         }
-        private void GetPolygons(MapArgs drawArgs, Geometry geometry, PathBuilder pathBuilder)
+        private void GetPolygons(MapArgs drawArgs, Geometry geometry, GraphicsPath path)
         {
             int geoCount = geometry.GetGeometryCount();
             var geometryType = geometry.GetGeometryType();
@@ -79,7 +68,7 @@ namespace EMap.Gis.Symbology
                     {
                         using (var partGeo = geometry.GetGeometryRef(i))
                         {
-                            GetPolygons(drawArgs, partGeo, pathBuilder);
+                            GetPolygons(drawArgs, partGeo, path);
                         }
                     }
                     break;
@@ -91,8 +80,8 @@ namespace EMap.Gis.Symbology
                     {
                         using (var partGeo = geometry.GetGeometryRef(i))
                         {
-                            pathBuilder.StartFigure();
-                            GetPolygons(drawArgs, partGeo, pathBuilder);
+                            path.StartFigure();
+                            GetPolygons(drawArgs, partGeo, path);
                         }
                     }
                     break;
@@ -109,7 +98,7 @@ namespace EMap.Gis.Symbology
                         PointF point = drawArgs.ProjToPixelPointF(coord);
                         points[j] = point;
                     }
-                    pathBuilder.AddLines(points);
+                    path.AddLines(points);
                     break;
                 default:
                     throw new Exception("不支持的几何类型");

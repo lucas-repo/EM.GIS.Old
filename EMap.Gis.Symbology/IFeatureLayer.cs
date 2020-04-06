@@ -11,5 +11,6 @@ namespace EMap.Gis.Symbology
         DataSource DataSource { get; set; }
         ISelection Selection { get; }
         Layer Layer { get;  }
+        ILabelLayer LabelLayer { get; set; }
     }
 }

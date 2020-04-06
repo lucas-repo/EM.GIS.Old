@@ -1,23 +1,19 @@
-﻿using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
+﻿using EMap.Gis.Data;
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 
 namespace EMap.Gis.Symbology
 {
-    public interface IBaseLayer : ILegendItem, IDisposable
+    public interface IBaseLayer :  IDisposable,IDynamicVisibility
     {
-        Image<Rgba32> BufferImgage { get; set; }
-        Envelope BufferEnvelope { get; }
+        bool Name { get; set; }
+        bool AliasName { get; set; }
+        bool IsVisible { get; set; }
+        Extent Extent { get;  }
         IScheme Symbology { get; set; }
         ICategory DefaultCategory { get; set; }
-        IFrame MapFrame { get; set; }
-        Envelope Extents { get; }
-        //OSGeo.OSR.SpatialReference SpatialReference { get; }
-        void DrawReagion(Image<Rgba32> image, Rectangle rectangle, Envelope envelope, bool selected,ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource);
-        void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource);
+        bool GetVisible(Extent extent,Rectangle rectangle);
+        void Draw(Graphics graphics,Rectangle rectangle, Extent extent, bool selected=false, ProgressHandler progressHandler = null, CancellationTokenSource cancellationTokenSource = null);
     }
 }

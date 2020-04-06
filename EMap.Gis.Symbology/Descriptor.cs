@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMap.Gis.Serialization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -6,12 +7,8 @@ using System.Reflection;
 namespace EMap.Gis.Symbology
 {
     [Serializable]
-    public class Descriptor: CopyBase,IDescriptor
+    public class Descriptor: BaseCopy,IDescriptor
     {
-        public void CopyProperties(object source)
-        {
-            OnCopyProperties(source);
-        }
         public bool Matches(IMatchable other, out List<string> mismatchedProperties)
         {
             mismatchedProperties = new List<string>();
@@ -23,62 +20,6 @@ namespace EMap.Gis.Symbology
             OnRandomize(generator);
         }
 
-        protected virtual void OnCopyProperties(object source)
-        {
-            Type original = GetType();
-            Type copy = source.GetType();
-            PropertyInfo[] originalProperties = DistinctNames(original.GetProperties(BindingFlags.Public | BindingFlags.Instance));
-            PropertyInfo[] copyProperties = DistinctNames(copy.GetProperties(BindingFlags.Public | BindingFlags.Instance));
-            foreach (PropertyInfo originalProperty in originalProperties)
-            {
-                if (originalProperty.CanWrite == false) continue;
-                if (copyProperties.Contains(originalProperty.Name) == false) continue;
-
-                PropertyInfo copyProperty = copyProperties.GetFirst(originalProperty.Name);
-                if (copyProperty == null)
-                {
-                    continue;
-                }
-
-                object copyValue = copyProperty.GetValue(source, null);
-                if (copyProperty.GetCustomAttributes(typeof(NonSerializedAttribute), true).Length == 0)
-                {
-                    ICloneable cloneable = copyValue as ICloneable;
-                    if (cloneable != null)
-                    {
-                        originalProperty.SetValue(this, cloneable.Clone(), null);
-                        continue;
-                    }
-                }
-
-                originalProperty.SetValue(this, copyValue, null);
-            }
-
-            FieldInfo[] originalFields = original.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            FieldInfo[] copyFields = copy.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            foreach (FieldInfo originalField in originalFields)
-            {
-                FieldInfo copyField = copyFields.GetFirst(originalField.Name);
-                if (copyFields.Contains(originalField.Name) == false) continue;
-                if (copyField == null)
-                {
-                    continue;
-                }
-
-                object copyValue = copyField.GetValue(source);
-                if (copyField.GetCustomAttributes(typeof(NonSerializedAttribute), true).Length == 0)
-                {
-                    ICloneable cloneable = copyValue as ICloneable;
-                    if (cloneable != null)
-                    {
-                        originalField.SetValue(this, cloneable.Clone());
-                        continue;
-                    }
-                }
-
-                originalField.SetValue(this, copyValue);
-            }
-        }
 
         protected virtual bool OnMatch(IMatchable other, List<string> mismatchedProperties)
         {

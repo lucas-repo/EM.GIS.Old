@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using System.ComponentModel;
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -11,6 +11,10 @@ namespace EMap.Gis.Symbology
     public abstract class LegendItem : Descriptor, ILegendItem
     {
         private Size _legendSymbolSize;
+
+        public event EventHandler ItemChanged;
+        public event EventHandler RemoveItem;
+
         public bool IsVisible { get; set; }
         public bool IsExpanded { get; set; }
         public bool IsSelected { get; set; }
@@ -18,7 +22,16 @@ namespace EMap.Gis.Symbology
         public bool LegendItemVisible { get; set; } = true;
         public string LegendText { get; set; }
         public ILegendItem Parent { get; set; }
-        public ILegendItemCollection Items { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the item is checked.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual bool Checked { get; set; }
+        public List<SymbologyMenuItem> ContextMenuItems { get; set; }
+        public SymbolMode LegendSymbolMode { get ; set ; }
+        public LegendType LegendType { get; set; }
 
         public LegendItem()
         {
@@ -33,7 +46,7 @@ namespace EMap.Gis.Symbology
             return _legendSymbolSize;
         }
 
-        public virtual void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
+        public virtual void DrawLegend(Graphics g, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

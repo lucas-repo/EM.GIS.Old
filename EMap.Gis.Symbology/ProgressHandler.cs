@@ -4,5 +4,5 @@ using System.Text;
 
 namespace EMap.Gis.Symbology
 {
-    public delegate void ProgressHandler(string key, int percent, string message);
+    public delegate void ProgressHandler(int percent, string message);
 }

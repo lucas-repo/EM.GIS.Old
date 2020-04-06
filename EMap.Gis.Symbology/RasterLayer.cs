@@ -1,14 +1,10 @@
-﻿using OSGeo.GDAL;
-using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+﻿using EMap.Gis.Data;
+using OSGeo.GDAL;
 using System;
 using System.Diagnostics;
-using System.Numerics;
-using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Threading;
 
 namespace EMap.Gis.Symbology
@@ -27,11 +23,24 @@ namespace EMap.Gis.Symbology
         public double[] Affine { get; set; }
         public int RasterXSize { get => Dataset.RasterXSize; }
         public int RasterYSize { get => Dataset.RasterYSize; }
-        public Band[] Bands { get; }
+        public Band[] Bands { get; private set; }
         Band FirstBand { get => Bands.Length > 0 ? Bands[0] : null; }
         public int NumBands { get => Dataset.RasterCount; }
-        public double NoDataValue { get; }
+        public double NoDataValue { get; private set; }
+        public RasterLayer()
+        {
+        }
+        public RasterLayer(string fileName)
+        {
+            Dataset dataset = LayerFactory.OpenDataset(fileName);
+            Configure(dataset);
+        }
+
         public RasterLayer(Dataset dataset)
+        {
+            Configure(dataset);
+        }
+        private void Configure(Dataset dataset)
         {
             Dataset = dataset;
             Affine = new double[6];
@@ -53,22 +62,21 @@ namespace EMap.Gis.Symbology
                 }
             }
         }
-
         public new IRasterScheme Symbology { get => base.Symbology as IRasterScheme; set => base.Symbology = value; }
-        private Envelope _extents;
-        public override Envelope Extents
+        private Extent _extent;
+        public override Extent Extent
         {
             get
             {
-                if (_extents == null)
+                if (_extent == null)
                 {
-                    _extents = new Envelope();
+                    _extent = new Extent();
                 }
-                _extents.MinX = GetXMin();
-                _extents.MinY = GetYMin();
-                _extents.MaxX = GetXMax();
-                _extents.MaxY = GetYMax();
-                return _extents;
+                _extent.MinX = GetXMin();
+                _extent.MinY = GetYMin();
+                _extent.MaxX = GetXMax();
+                _extent.MaxY = GetYMax();
+                return _extent;
             }
         }
         private double GetXMin()
@@ -106,7 +114,7 @@ namespace EMap.Gis.Symbology
         }
         public double GetXMax()
         {
-            double width= (RasterXSize * Math.Abs(Affine[1])) + (RasterYSize * Math.Abs(Affine[2]));
+            double width = (RasterXSize * Math.Abs(Affine[1])) + (RasterYSize * Math.Abs(Affine[2]));
             double xMax = GetXMin() + width;
             return xMax;
         }
@@ -116,11 +124,11 @@ namespace EMap.Gis.Symbology
             double yMin = GetYMax() - height;
             return yMin;
         }
-       
 
-        private Image<Rgba32> GetImage(int xOffset, int yOffset, int xSize, int ySize)
+
+        private Bitmap GetImage(int xOffset, int yOffset, int xSize, int ySize)
         {
-            Image<Rgba32> result = null;
+            Bitmap result = null;
             Action action = new Action(() =>
             {
                 switch (NumBands)
@@ -161,7 +169,7 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        private Image<Rgba32> ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize)
+        private Bitmap ReadGrayIndex(int xOffset, int yOffset, int xSize, int ySize)
         {
             Band firstBand;
             var disposeBand = false;
@@ -181,22 +189,27 @@ namespace EMap.Gis.Symbology
             {
                 firstBand.Dispose();
             }
-            Image<Rgba32> result = GetImage(width, height, rBuffer, rBuffer, rBuffer);
+            Bitmap result = GetImage(width, height, rBuffer, rBuffer, rBuffer);
             return result;
         }
-        private Image<Rgba32> GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null)
+        private unsafe Bitmap GetImage(int width, int height, byte[] rBuffer, byte[] gBuffer, byte[] bBuffer, byte[] aBuffer = null)
         {
             if (width <= 0 || height <= 0)
             {
                 return null;
             }
-            Image<Rgba32> result = new Image<Rgba32>(width, height);
+            Bitmap result = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            BitmapData bData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            byte* scan0 = (byte*)bData.Scan0;
+            int stride = bData.Stride;
+            int dWidth = stride - width * 4;
+            int ptrIndex = -1;
             int bufferIndex = -1;
             if (aBuffer == null)
             {
                 for (int row = 0; row < height; row++)
                 {
-                    Span<Rgba32> pixelRowSpan = result.GetPixelRowSpan(row);
+                    ptrIndex = row * stride;
                     bufferIndex = row * width;
                     for (int col = 0; col < width; col++)
                     {
@@ -208,7 +221,11 @@ namespace EMap.Gis.Symbology
                         {
                             aValue = 0;
                         }
-                        pixelRowSpan[col] = new Rgba32(rValue, gValue, bValue, aValue);
+                        scan0[ptrIndex] = bValue;
+                        scan0[ptrIndex + 1] = gValue;
+                        scan0[ptrIndex + 2] = rValue;
+                        scan0[ptrIndex + 3] = aValue;
+                        ptrIndex += 4;
                         bufferIndex++;
                     }
                 }
@@ -217,6 +234,7 @@ namespace EMap.Gis.Symbology
             {
                 for (int row = 0; row < height; row++)
                 {
+                    ptrIndex = row * stride;
                     bufferIndex = row * width;
                     for (int col = 0; col < width; col++)
                     {
@@ -228,14 +246,19 @@ namespace EMap.Gis.Symbology
                         {
                             aValue = 0;
                         }
-                        result[col, row] = new Rgba32(rValue, gValue, bValue, aValue);
+                        scan0[ptrIndex] = bValue;
+                        scan0[ptrIndex + 1] = gValue;
+                        scan0[ptrIndex + 2] = rValue;
+                        scan0[ptrIndex + 3] = aValue;
+                        ptrIndex += 4;
                         bufferIndex++;
                     }
                 }
             }
+            result.UnlockBits(bData);
             return result;
         }
-        private Image<Rgba32> ReadRgb(int xOffset, int yOffset, int xSize, int ySize)
+        private Bitmap ReadRgb(int xOffset, int yOffset, int xSize, int ySize)
         {
             if (Bands.Length < 3)
             {
@@ -270,11 +293,11 @@ namespace EMap.Gis.Symbology
                 gBand.Dispose();
                 bBand.Dispose();
             }
-            Image<Rgba32> result = GetImage(width, height, rBuffer, gBuffer, bBuffer);
+            Bitmap result = GetImage(width, height, rBuffer, gBuffer, bBuffer);
             return result;
         }
 
-        private Image<Rgba32> ReadArgb(int xOffset, int yOffset, int xSize, int ySize)
+        private Bitmap ReadArgb(int xOffset, int yOffset, int xSize, int ySize)
         {
             if (Bands.Length < 4)
             {
@@ -314,10 +337,10 @@ namespace EMap.Gis.Symbology
                 gBand.Dispose();
                 bBand.Dispose();
             }
-            Image<Rgba32> result = GetImage(width, height, rBuffer, gBuffer, bBuffer, aBuffer);
+            Bitmap result = GetImage(width, height, rBuffer, gBuffer, bBuffer, aBuffer);
             return result;
         }
-        private Image<Rgba32> ReadPaletteBuffered(int xOffset, int yOffset, int xSize, int ySize)
+        private Bitmap ReadPaletteBuffered(int xOffset, int yOffset, int xSize, int ySize)
         {
             ColorTable ct = FirstBand.GetRasterColorTable();
             if (ct == null)
@@ -372,7 +395,7 @@ namespace EMap.Gis.Symbology
                 gBuffer[i] = colorTable[index][2];
                 bBuffer[i] = colorTable[index][3];
             }
-            Image<Rgba32> result = GetImage(width, height, rBuffer, gBuffer, gBuffer, aBuffer);
+            Bitmap result = GetImage(width, height, rBuffer, gBuffer, gBuffer, aBuffer);
             return result;
         }
         public static void NormalizeSizeToBand(int xOffset, int yOffset, int xSize, int ySize, Band band, out int width, out int height)
@@ -411,7 +434,7 @@ namespace EMap.Gis.Symbology
                 case DataType.GDT_Byte:
                     {
                         byte[] tmpBuffer = new byte[length];
-                        bufferPtr = GCHandleHelper.GetIntPtr(tmpBuffer);
+                        bufferPtr = GCHandleHelper.GetIntPtr(tmpBuffer); 
                         band.ReadRaster(xOffset, yOffset, width, height, bufferPtr, width, height, dataType, 0, 0);
                         dValue = (byte)(highValue - lowValue);
                         for (int i = 0; i < length; i++)
@@ -597,31 +620,27 @@ namespace EMap.Gis.Symbology
                     }
                 }
                 Dataset?.Dispose();
-                Symbology?.Dispose();
                 Dataset = null;
                 Symbology = null;
             }
             base.Dispose(disposing);
         }
-
-        public override void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false, ProgressHandler progressHandler = null, CancellationTokenSource cancellationTokenSource = null)
         {
             if (Bands.Length == 0)
             {
                 return;
             }
-            if (rectangle.Width == 0 || rectangle.Height == 0 || envelope == null )
-            {
-                throw new Exception("参数错误");
-            }
-            if (selected||cancellationTokenSource?.IsCancellationRequested == true)
+            if (selected || cancellationTokenSource?.IsCancellationRequested == true)
             {
                 return;
             }
-            BufferImgage = new Image<Rgba32>(rectangle.Width, rectangle.Height);
+            var layerIsDrawing = $"{Name} 绘制中...";
+            progressHandler?.Invoke(5, layerIsDrawing);
+
             // Gets the scaling factor for converting from geographic to pixel coordinates
-            double width = envelope.MaxX - envelope.MinX;//范围宽
-            double height = envelope.MaxY - envelope.MinY;//范围高
+            double width = extent.MaxX - extent.MinX;//范围宽
+            double height = extent.MaxY - extent.MinY;//范围高
             double dx = rectangle.Width / width;//x分辨率倒数
             double dy = rectangle.Height / height;//y分辨率倒数
 
@@ -636,14 +655,14 @@ namespace EMap.Gis.Symbology
             aInv[3] = a[1] * p;
 
             // estimate rectangle coordinates
-            double tlx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
-            double tly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
-            double trx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MaxY - a[3]) * aInv[1]);
-            double trY = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MaxY - a[3]) * aInv[3]);
-            double blx = ((envelope.MinX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
-            double bly = ((envelope.MinX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
-            double brx = ((envelope.MaxX - a[0]) * aInv[0]) + ((envelope.MinY - a[3]) * aInv[1]);
-            double bry = ((envelope.MaxX - a[0]) * aInv[2]) + ((envelope.MinY - a[3]) * aInv[3]);
+            double tlx = ((extent.MinX - a[0]) * aInv[0]) + ((extent.MaxY - a[3]) * aInv[1]);
+            double tly = ((extent.MinX - a[0]) * aInv[2]) + ((extent.MaxY - a[3]) * aInv[3]);
+            double trx = ((extent.MaxX - a[0]) * aInv[0]) + ((extent.MaxY - a[3]) * aInv[1]);
+            double trY = ((extent.MaxX - a[0]) * aInv[2]) + ((extent.MaxY - a[3]) * aInv[3]);
+            double blx = ((extent.MinX - a[0]) * aInv[0]) + ((extent.MinY - a[3]) * aInv[1]);
+            double bly = ((extent.MinX - a[0]) * aInv[2]) + ((extent.MinY - a[3]) * aInv[3]);
+            double brx = ((extent.MaxX - a[0]) * aInv[0]) + ((extent.MinY - a[3]) * aInv[1]);
+            double bry = ((extent.MaxX - a[0]) * aInv[2]) + ((extent.MinY - a[3]) * aInv[3]);
 
             // get absolute maximum and minimum coordinates to make a rectangle on projected coordinates
             // that overlaps all the visible area.
@@ -664,6 +683,8 @@ namespace EMap.Gis.Symbology
             if (bRx < 0) bRx = 0;
             if (bRy < 0) bRy = 0;
 
+            progressHandler?.Invoke(10, layerIsDrawing);
+
             // gets the affine scaling factors.
             float m11 = Convert.ToSingle(a[1] * dx);//x缩放值
             float m22 = Convert.ToSingle(a[5] * -dy);//y缩放值
@@ -673,8 +694,8 @@ namespace EMap.Gis.Symbology
             //double t = a[3] - (.5 * (a[4] + a[5])); // top of top left pixel
             double l = a[0]; // Left of top left pixel
             double t = a[3]; // top of top left pixel
-            float xShift = (float)((l - envelope.MinX) * dx);
-            float yShift = (float)((envelope.MaxY - t) * dy);
+            float xShift = (float)((l - extent.MinX) * dx);
+            float yShift = (float)((extent.MaxY - t) * dy);
 
             float xRatio = 1, yRatio = 1;
             if (_overviewCount > 0)
@@ -706,12 +727,13 @@ namespace EMap.Gis.Symbology
                 }
             }
 
+            progressHandler?.Invoke(15, layerIsDrawing);
+
             var overviewPow = Math.Pow(2, _overview + 1);
 
             // witdh and height of the image
             var w = (bRx - tLx) / overviewPow;
             var h = (bRy - tLy) / overviewPow;
-            Matrix3x2 matrix = new Matrix3x2(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift);
 
             //image.Mutate(x => x.Transform(affineTransformBuilder));
             int blockXsize, blockYsize;
@@ -767,41 +789,46 @@ namespace EMap.Gis.Symbology
             {
                 nbY = (int)Math.Ceiling(h / blockYsize);
             }
-            BufferImgage.Mutate(context =>
+            Matrix originMatrix = graphics.Transform;
+            using (var matrix = new Matrix(m11 * (float)overviewPow, m12 * (float)overviewPow, m21 * (float)overviewPow, m22 * (float)overviewPow, xShift, yShift))
             {
-                for (var i = 0; i < nbX; i++)
+                graphics.Transform = matrix;
+            }
+
+            progressHandler?.Invoke(20, $"{Name} 绘制中...");
+            var increment = 70.0 / nbX / nbY;
+            double progressPercent = 20;
+            for (var i = 0; i < nbX; i++)
+            {
+                for (var j = 0; j < nbY; j++)
                 {
-                    for (var j = 0; j < nbY; j++)
+                    double xOffsetD = (tLx / overviewPow) + (i * blockXsize);
+                    double yOffsetD = (tLy / overviewPow) + (j * blockYsize);
+                    int xOffsetI = (int)Math.Floor(xOffsetD);
+                    int yOffsetI = (int)Math.Floor(yOffsetD);
+                    // The +1 is to remove the white stripes artifacts
+                    int xSize = blockXsize + 1;
+                    int ySize = blockYsize + 1;
+                    try
                     {
-                        double xOffsetD = (tLx / overviewPow) + (i * blockXsize);
-                        double yOffsetD = (tLy / overviewPow) + (j * blockYsize);
-                        int xOffsetI = (int)Math.Floor(xOffsetD);
-                        int yOffsetI = (int)Math.Floor(yOffsetD);
-                        // The +1 is to remove the white stripes artifacts
-                        int xSize = blockXsize + 1;
-                        int ySize = blockYsize + 1;
-                        try
+                        using (Bitmap childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
                         {
-                            using (Image<Rgba32> childImage = GetImage(xOffsetI, yOffsetI, xSize, ySize))
+                            if (childImage != null)
                             {
-                                if (childImage != null)
-                                {
-                                    AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder();
-                                    PointF pointF = new PointF(xOffsetI, yOffsetI);
-                                    affineTransformBuilder.AppendTranslation(pointF);
-                                    affineTransformBuilder.AppendMatrix(matrix);
-                                    childImage.Mutate(x => x.Transform(affineTransformBuilder));
-                                    context.DrawImage(childImage, 1);
-                                }
+                                graphics.DrawImage(childImage, xOffsetI, yOffsetI);
                             }
                         }
-                        catch (Exception e)
-                        {
-                            Debug.WriteLine($"获取图片失败：{e.Message}");
-                        }
                     }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine($"获取图片失败：{e.Message}");
+                    }
+                    progressPercent += increment;
+                    progressHandler?.Invoke((int)progressPercent, $"{Name} 绘制中...");
                 }
-            });
+            }
+            graphics.Transform = originMatrix;
+            progressHandler?.Invoke(99, $"{Name} 绘制中...");
         }
     }
 }

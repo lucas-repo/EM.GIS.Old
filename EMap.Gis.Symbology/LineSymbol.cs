@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -23,33 +17,33 @@ namespace EMap.Gis.Symbology
                 float val = value;
                 if (val > 1) val = 1F;
                 if (val < 0) val = 0F;
-                Color = new Rgba32(Color.R, Color.G, Color.B, (byte)(val * 255));
+                Color = Color.FromArgb((byte)(val * 255),Color.R, Color.G, Color.B );
             }
         }
         protected LineSymbol(LineSymbolType lineSymbolType)
         {
             LineSymbolType = lineSymbolType;
         }
-        protected LineSymbol(Rgba32 color, LineSymbolType lineSymbolType) : base(color)
+        protected LineSymbol(Color color, LineSymbolType lineSymbolType) : base(color)
         {
             LineSymbolType = lineSymbolType;
         }
-        protected LineSymbol(Rgba32 color, float width, LineSymbolType lineSymbolType) : base(color)
+        protected LineSymbol(Color color, float width, LineSymbolType lineSymbolType) : base(color)
         {
             LineSymbolType = lineSymbolType;
             Width = width;
         }
 
-        public virtual IPen ToPen(float scale)
+        public virtual Pen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen pen = new Pen(Color, width);
+            Pen pen = new Pen(Color, width);
             return pen;
         }
-        public virtual void DrawLine(IImageProcessingContext context, float scale, IPath path)
+        public virtual void DrawLine(Graphics g, float scale, GraphicsPath path)
         {
-            IPen pen = ToPen(scale); 
-            context.Draw(pen, path);
+            Pen pen = ToPen(scale);
+            g.DrawPath(pen, path);
         }
     }
 }

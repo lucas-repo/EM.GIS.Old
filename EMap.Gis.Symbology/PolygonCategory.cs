@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+﻿using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -18,7 +14,7 @@ namespace EMap.Gis.Symbology
             SelectionSymbolizer = new PolygonSymbolizer(true);
         }
 
-        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
+        public override void DrawLegend(Graphics context, Rectangle rectangle)
         {
             Symbolizer?.DrawLegend(context, rectangle);
         }

@@ -1,7 +1,7 @@
-﻿using OSGeo.OGR;
-using SixLabors.Primitives;
+﻿
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace EMap.Gis.Data
 {
@@ -34,15 +34,14 @@ namespace EMap.Gis.Data
         {
             double x = Convert.ToDouble(position.X);
             double y = Convert.ToDouble(position.Y);
-            if (self != null && self.Envelope != null)
+            if (self != null && self.Extent != null)
             {
-                x = (x - self.Rectangle.X) * self.Envelope.Width() / self.Rectangle.Width + self.Envelope.MinX;
-                y = self.Envelope.MaxY - (y - self.Rectangle.Y) * self.Envelope.Height() / self.Rectangle.Height;
+                x = (x - self.Bounds.X) * self.Extent.Width / self.Bounds.Width + self.Extent.MinX;
+                y = self.Extent.MaxY - (y - self.Bounds.Y) * self.Extent.Height / self.Bounds.Height;
             }
 
             return new double[] { x, y };
         }
-
         /// <summary>
         /// Converts a rectangle in pixel coordinates relative to the map control into
         /// a geographic envelope.
@@ -50,13 +49,13 @@ namespace EMap.Gis.Data
         /// <param name="self">This IProj</param>
         /// <param name="rect">The rectangle to convert</param>
         /// <returns>An IEnvelope interface</returns>
-        public static Envelope PixelToProj(this IProj self, Rectangle rect)
+        public static Extent PixelToProj(this IProj self, Rectangle rect)
         {
             Point tl = new Point(rect.X, rect.Y);
             Point br = new Point(rect.Right, rect.Bottom);
             var topLeft = PixelToProj(self, tl);
             var bottomRight = PixelToProj(self, br);
-            return new Envelope()
+            return new Extent()
             {
                 MinX = topLeft[0],
                 MinY = bottomRight[1],
@@ -71,9 +70,9 @@ namespace EMap.Gis.Data
         /// <param name="self">This IProj</param>
         /// <param name="clipRects">The clip rectangles</param>
         /// <returns>A List of IEnvelope geographic bounds that correspond to the specified clip rectangles.</returns>
-        public static List<Envelope> PixelToProj(this IProj self, List<Rectangle> clipRects)
+        public static List<Extent> PixelToProj(this IProj self, List<Rectangle> clipRects)
         {
-            List<Envelope> result = new List<Envelope>();
+            List<Extent> result = new List<Extent>();
             foreach (Rectangle r in clipRects)
             {
                 result.Add(PixelToProj(self, r));
@@ -89,13 +88,13 @@ namespace EMap.Gis.Data
         /// <returns>A Point with the new location.</returns>
         public static Point ProjToPixelPoint(this IProj self, double[] location)
         {
-            if (self.Envelope.Width() == 0 || self.Envelope.Height() == 0) return Point.Empty;
+            if (self.Extent.Width == 0 || self.Extent.Height == 0) return Point.Empty;
             try
             {
-                int x = Convert.ToInt32(self.Rectangle.X + (location[0] - self.Envelope.MinX) *
-                                    (self.Rectangle.Width / self.Envelope.Width()));
-                int y = Convert.ToInt32(self.Rectangle.Y + (self.Envelope.MaxY - location[1]) *
-                                        (self.Rectangle.Height / self.Envelope.Height()));
+                int x = Convert.ToInt32(self.Bounds.X + (location[0] - self.Extent.MinX) *
+                                    (self.Bounds.Width / self.Extent.Width));
+                int y = Convert.ToInt32(self.Bounds.Y + (self.Extent.MaxY - location[1]) *
+                                        (self.Bounds.Height / self.Extent.Height));
 
                 return new Point(x, y);
             }
@@ -112,15 +111,30 @@ namespace EMap.Gis.Data
         /// <returns>A Point with the new location.</returns>
         public static PointF ProjToPixelPointF(this IProj self, double[] location)
         {
-            if (self.Envelope.Width() == 0 || self.Envelope.Height() == 0) return Point.Empty;
+            if (self.Extent.Width == 0 || self.Extent.Height == 0) return Point.Empty;
+            //try
+            //{
+            //    float x = (float)(self.Rectangle.X + (location[0] - self.Envelope.MinX) *
+            //                        (self.Rectangle.Width / self.Envelope.Width()));
+            //    float y = (float)(self.Rectangle.Y + (self.Envelope.MaxY - location[1]) *
+            //                            (self.Rectangle.Height / self.Envelope.Height()));
+
+            //    return new PointF(x, y);
+            //}
+            //catch (OverflowException)
+            //{
+            //    return Point.Empty;
+            //}
+
+            if (self.Extent.Width == 0 || self.Extent.Height == 0) return Point.Empty;
             try
             {
-                float x = (float)(self.Rectangle.X + (location[0] - self.Envelope.MinX) *
-                                    (self.Rectangle.Width / self.Envelope.Width()));
-                float y = (float)(self.Rectangle.Y + (self.Envelope.MaxY - location[1]) *
-                                        (self.Rectangle.Height / self.Envelope.Height()));
+                int x = Convert.ToInt32(self.Bounds.X + (location[0] - self.Extent.MinX) *
+                                    (self.Bounds.Width / self.Extent.Width));
+                int y = Convert.ToInt32(self.Bounds.Y + (self.Extent.MaxY - location[1]) *
+                                        (self.Bounds.Height / self.Extent.Height));
 
-                return new PointF(x, y);
+                return new Point(x, y);
             }
             catch (OverflowException)
             {
@@ -133,7 +147,7 @@ namespace EMap.Gis.Data
         /// <param name="self">This IProj</param>
         /// <param name="env">The geographic IEnvelope</param>
         /// <returns>A Rectangle</returns>
-        public static Rectangle ProjToPixel(this IProj self, Envelope env)
+        public static Rectangle ProjToPixel(this IProj self, Extent env)
         {
             var tl = new double[] { env.MinX, env.MaxY };
             var br = new double[] { env.MaxX, env.MinY };
@@ -148,10 +162,10 @@ namespace EMap.Gis.Data
         /// <param name="self">This IProj</param>
         /// <param name="regions">The list of geographic regions to project</param>
         /// <returns>A list of pixel rectangles that describe the specified region</returns>
-        public static List<Rectangle> ProjToPixel(this IProj self, List<Envelope> regions)
+        public static List<Rectangle> ProjToPixel(this IProj self, List<Extent> regions)
         {
             List<Rectangle> result = new List<Rectangle>();
-            foreach (Envelope region in regions)
+            foreach (Extent region in regions)
             {
                 if (region == null) continue;
                 result.Add(ProjToPixel(self, region));
@@ -168,7 +182,7 @@ namespace EMap.Gis.Data
         /// <returns>The integer distance in pixels</returns>
         public static double ProjToPixel(this IProj self, double distance)
         {
-            return distance * self.Rectangle.Width / self.Envelope.Width();
+            return distance * self.Bounds.Width / self.Extent.Width;
         }
 
         #endregion

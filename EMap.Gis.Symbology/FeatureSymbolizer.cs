@@ -1,8 +1,6 @@
 ﻿using EMap.Gis.Data;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -16,7 +14,7 @@ namespace EMap.Gis.Symbology
         {
             if (ScaleMode == ScaleMode.Geographic)
             {
-                return drawArgs.Rectangle.Width / drawArgs.Envelope.Width();
+                return drawArgs.Bounds.Width / drawArgs.Extent.Width;
             }
             return 1;
         }

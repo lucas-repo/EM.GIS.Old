@@ -5,8 +5,7 @@ using System.Text;
 
 namespace EMap.Gis
 {
-    public class BaseCollection<T> : ICollection<T>
-         where T : class
+    public class BaseCollection<T> : ICollection<T>where T : class
     {
         #region Fields
 

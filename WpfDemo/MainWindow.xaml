@@ -1,0 +1,30 @@
+﻿<Window x:Class="WpfDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfControls="clr-namespace:EMap.Gis.WpfControls;assembly=EMap.Gis.WpfControls"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="Demo" Height="450" Width="800">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Height="24">
+            <WrapPanel VerticalAlignment="Center">
+                <Button Content="添加图层" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+                <Button Content="居中" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+            </WrapPanel>
+        </Grid>
+        <Grid DockPanel.Dock="Bottom" Height="20">
+            <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                <ProgressBar Height="20" Name="progressBar" Width="100" VerticalContentAlignment="Stretch" />
+                <TextBlock Name="progressTBlock" Margin="5,0,0,0"/>
+            </WrapPanel>
+            <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0">
+                <TextBlock Name="coordTBlock" />
+            </WrapPanel>
+        </Grid>
+        <Border BorderBrush="Gray" BorderThickness="1" >
+            <wpfControls:Map Name="map"/>
+        </Border>
+    </DockPanel>
+</Window>

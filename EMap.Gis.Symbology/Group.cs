@@ -1,64 +1,60 @@
-﻿using System;
+﻿using EMap.Gis.Data;
+using OSGeo.OGR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.Specialized;
+using System.Drawing;
+using System.Linq;
 using System.Threading;
-using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
+
 
 namespace EMap.Gis.Symbology
 {
     public class Group : BaseLayer, IGroup
     {
-        public Image<Rgba32> Icon { get; set; }
-        public new ILayerCollection Items { get => base.Items as ILayerCollection; set => base.Items = value; }
-
-        public new IGroup Parent { get => base.Parent as IGroup; set => base.Parent = value; }
-        private Envelope _extents;
-        public override Envelope Extents
-        {
-            get
-            {
-                if (_extents == null)
-                {
-                    _extents = new Envelope();
-                }
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    var layer = Items[i];
-                    if (i == 0)
-                    {
-                        _extents.MinX = layer.Extents.MinX;
-                        _extents.MinY = layer.Extents.MinY;
-                        _extents.MaxX = layer.Extents.MaxX;
-                        _extents.MaxY = layer.Extents.MaxY;
-                    }
-                    else
-                    {
-                        _extents.MinX = Math.Min(_extents.MinX ,layer.Extents.MinX);
-                        _extents.MinY = Math.Min(_extents.MinY, layer.Extents.MinY);
-                        _extents.MaxX = Math.Max(_extents.MaxX, layer.Extents.MaxX);
-                        _extents.MaxY = Math.Max(_extents.MaxY, layer.Extents.MaxY);
-                    }
-                }
-                return _extents;
-            }
-        }
-
-        public override void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
-        {
-            throw new NotImplementedException();
-        }
+        public ILayerCollection Layers { get; }
 
         public Group()
         {
-            Items = new LayerCollection(MapFrame, this);
+            Layers = new LayerCollection()
+            {
+                Parent=this
+            };
         }
-        public Group(IFrame frame) : this()
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false, ProgressHandler progressHandler = null, CancellationTokenSource cancellationTokenSource = null)
         {
-            MapFrame = frame;
+            var visibleLayers = Layers.Where(x => x.GetVisible(extent, rectangle));
+            foreach (var layer in visibleLayers)
+            {
+                layer?.Draw(graphics, rectangle, extent, selected, progressHandler, cancellationTokenSource);
+            }
+        }
+        public override Extent Extent 
+        {
+            get
+            {
+                Extent extent = new Extent();
+                for (int i = 0; i < Layers.Count; i++)
+                {
+                    var layer = Layers[i];
+                    if (i == 0)
+                    {
+                        extent.MinX = layer.Extent.MinX;
+                        extent.MinY = layer.Extent.MinY;
+                        extent.MaxX = layer.Extent.MaxX;
+                        extent.MaxY = layer.Extent.MaxY;
+                    }
+                    else
+                    {
+                        extent.MinX = Math.Min(extent.MinX, layer.Extent.MinX);
+                        extent.MinY = Math.Min(extent.MinY, layer.Extent.MinY);
+                        extent.MaxX = Math.Max(extent.MaxX, layer.Extent.MaxX);
+                        extent.MaxY = Math.Max(extent.MaxY, layer.Extent.MaxY);
+                    }
+                }
+                return extent;
+            }
         }
     }
 }

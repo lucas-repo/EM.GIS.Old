@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace EMap.Gis.Symbology
 {
     public class PointPictureSymbol : PointSymbol, IPointPictureSymbol
     {
-        private Image<Rgba32> _original;
-        private Image<Rgba32> _image;
-        public Image<Rgba32> Image
+        private Image _original;
+        private Image _image;
+        public Image Image
         {
             get
             {
@@ -52,44 +47,42 @@ namespace EMap.Gis.Symbology
         public PointPictureSymbol() : base(PointSymbolType.Picture)
         { }
 
-        private static Image<Rgba32> MakeTransparent(Image<Rgba32> image, float opacity)
+        private static Image MakeTransparent(Image image, float opacity)
         {
-            Image<Rgba32> destImage = null;
-            if (image == null) return destImage;
-            destImage = new Image<Rgba32>(image.Width, image.Height);
-            destImage.Mutate(x => x.DrawImage(image, opacity));
-            return destImage;
+            if (image == null) return null;
+            if (opacity == 1F) return image.Clone() as Image;
+
+            Bitmap bmp = new Bitmap(image.Width, image.Height);
+            Graphics g = Graphics.FromImage(bmp);
+            float[][] ptsArray =
+            {
+                new float[] { 1, 0, 0, 0, 0 }, // R
+                new float[] { 0, 1, 0, 0, 0 }, // G
+                new float[] { 0, 0, 1, 0, 0 }, // B
+                new[] { 0, 0, 0, opacity, 0 }, // A
+                new float[] { 0, 0, 0, 0, 1 }
+            };
+            ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+            ImageAttributes att = new ImageAttributes();
+            att.SetColorMatrix(clrMatrix);
+            g.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, att);
+            g.Dispose();
+            return bmp;
         }
 
-        public override void DrawPoint(IImageProcessingContext context, float scale, PointF point)
+        protected override void OnDrawPoint(Graphics g, float scale)
         {
-            float width = scale * Size.Width;
-            float height = scale * Size.Height;
-            float x = point.X - scale * Size.Width / 2;
-            float y = point.Y - scale * Size.Height / 2;
-            RectangleF rectangle = new RectangleF(x, y, width, height);
-            if (Image != null)
+            float dx = scale * Size.Width / 2;
+            float dy = scale * Size.Height / 2;
+            using (GraphicsPath gp = new GraphicsPath())
             {
-                PointF position = new PointF(Size.Width / 2, Size.Height / 2);
-                AffineTransformBuilder affineTransformBuilder = new AffineTransformBuilder()
-                    .AppendScale(scale)
-                    .AppendTranslation(new PointF(rectangle.X, rectangle.Y));
-                //using (Image<Rgba32> tmpImage = Image.Clone())
-                //{
-                //    tmpImage.Mutate(processing =>
-                //    {
-                //        processing.Transform(affineTransformBuilder);
-                //        context.DrawImage(tmpImage, 1);
-                //    });
-                //}
-                Image.Mutate(processing =>
+                gp.AddRectangle(new RectangleF(-dx, -dy, dx * 2, dy * 2));
+                if (_image != null)
                 {
-                    processing.Transform(affineTransformBuilder);
-                    context.DrawImage(Image, 1);
-                });
+                    g.DrawImage(_image, new RectangleF(-dx, -dy, dx * 2, dy * 2));
+                }
+                DrawOutLine(g, scale, gp);
             }
-            PointF[] points = rectangle.ToPoints();
-            DrawOutLine(context, scale, points.ToPath());
         }
     }
 }

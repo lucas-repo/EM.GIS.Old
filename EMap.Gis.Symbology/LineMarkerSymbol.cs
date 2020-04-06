@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -17,15 +11,16 @@ namespace EMap.Gis.Symbology
         public LineMarkerSymbol() : base(LineSymbolType.Marker)
         {
             Marker = new PointSymbolizer();
+            throw new NotImplementedException();//todo 待完善
         }
-        public override IPen ToPen(float scale)
+        public override Pen ToPen(float scale)
         {
-            IPen pen = ToPen(scale, 0);
+            Pen pen = ToPen(scale, 0);
             return pen;
         }
-        public IPen ToPen(float scale, float angle)
+        public Pen ToPen(float scale, float angle)
         {
-            IPen pen = null;
+            Pen pen = null;
             if (Marker != null)
             {
                 pen = base.ToPen(scale);
@@ -33,22 +28,25 @@ namespace EMap.Gis.Symbology
             else
             {
                 float width = GetWidth(scale);
-                IBrush brush = null;
+                Brush brush = null;
                 if (Marker != null)
                 {
                     SizeF size = Marker.Size;
                     int imgWidth = (int)Math.Ceiling(size.Width);
                     int imgHeight = (int)Math.Ceiling(size.Height);
-                    Image<Rgba32> image = new Image<Rgba32>(imgWidth, imgHeight);
+                    Bitmap image = new Bitmap(imgWidth, imgHeight);
                     Rectangle rectangle = new Rectangle(0, 0, imgWidth, imgHeight);
-                    image.Mutate(x =>
+                    using (Graphics g = Graphics.FromImage(image))
                     {
-                        x.Rotate(angle);
-                        Marker.DrawLegend(x, rectangle);
-                    });
-                    brush = new ImageBrush(image);
+                        g.RotateTransform(angle);//todo 测试角度
+                        Marker.DrawLegend(g, rectangle);
+                    }
+                    brush = new TextureBrush(image);
                 }
-                pen = new Pen(brush, width, Pattern);
+                pen = new Pen(brush, width)
+                {
+                    DashPattern = DashPattern
+                };
             }
             return pen;
         }
@@ -62,9 +60,9 @@ namespace EMap.Gis.Symbology
             width *= scale;
             return width;
         }
-        public IPen ToPen(float scale, PointF startPoint, PointF endPoint)
+        public Pen ToPen(float scale, PointF startPoint, PointF endPoint)
         {
-            IPen pen = null;
+            Pen pen = null;
             if (Marker == null)
             {
                 pen = base.ToPen(scale);
@@ -72,30 +70,25 @@ namespace EMap.Gis.Symbology
             else
             {
                 float width = GetWidth(scale);
-                IBrush brush = null;
                 SizeF size = Marker.Size;
                 int imgWidth = (int)Math.Ceiling(size.Width);
                 int imgHeight = (int)Math.Ceiling(size.Height);
-                Image<Rgba32> image = new Image<Rgba32>(imgWidth, imgHeight);
+                Bitmap image = new Bitmap(imgWidth, imgHeight);
                 Rectangle rectangle = new Rectangle(0, 0, imgWidth, imgHeight);
                 float angle = DrawingHelper.GetAngle(startPoint, endPoint, true);
-                //foreach (var symbol in Marker.Symbols)
-                //{
-                //    symbol.Angle += angle;
-                //}
-                //AffineTransformBuilder ats = new AffineTransformBuilder().AppendRotationRadians(angle, new System.Numerics.Vector2(imgWidth / 2f, imgHeight / 2f));
-                image.Mutate(x =>
+                using (Graphics g = Graphics.FromImage(image))
                 {
-                    Marker.DrawLegend(x, rectangle);
-                    x.Rotate(angle);
-                });
-                //foreach (var symbol in Marker.Symbols)
-                //{
-                //    symbol.Angle -= angle;
-                //}
-                brush = new ImageBrush(image) ;
-                float[] dashPattern = ToDashPattern(Pattern, startPoint, endPoint);
-                pen = new Pen(brush, width, dashPattern);
+                    Marker.DrawLegend(g, rectangle);
+                }
+                var brush = new TextureBrush(image);
+                //brush.RotateTransform(angle);
+                float[] dashPattern = ToDashPattern(DashPattern, startPoint, endPoint);
+                pen = new Pen(brush, width);
+                if (dashPattern != null)
+                {
+                    pen.DashStyle = DashStyle.Custom;
+                    pen.DashPattern = new float[] { 1 };
+                }
             }
             return pen;
         }
@@ -164,7 +157,7 @@ namespace EMap.Gis.Symbology
             }
             return dashPattern;
         }
-        public override void DrawLine(IImageProcessingContext context, float scale, IPath path)
+        public override void DrawLine(Graphics context, float scale, GraphicsPath path)
         {
             if (Marker == null)
             {
@@ -172,21 +165,14 @@ namespace EMap.Gis.Symbology
             }
             else
             {
-                var simplePaths = path.Flatten();
-                PointF[] points = new PointF[2];
-                GraphicsOptions graphicsOptions = GraphicsOptions.Default;
-                foreach (var simplePath in simplePaths)
+                for (int i = 0; i < path.PointCount - 1; i++)
                 {
-                    for (int i = 0; i < simplePath.Points.Count - 1; i++)
-                    {
-                        PointF point0 = simplePath.Points[i];
-                        PointF point1 = simplePath.Points[i + 1];
-                        IPen pen = ToPen(scale, point0, point1);
-                        points[0] = point0;
-                        points[1] = point1;
-                        context.Draw(graphicsOptions, pen, points.ToPath());
-                    }
+                    PointF point0 = path.PathPoints[i];
+                    PointF point1 = path.PathPoints[i + 1];
+                    Pen pen = ToPen(scale, point0, point1);
+                    context.DrawLine(pen, point0, point1);
                 }
+
             }
         }
     }

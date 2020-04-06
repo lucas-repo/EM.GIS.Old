@@ -1,12 +1,9 @@
 ﻿using EMap.Gis.Data;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 
@@ -27,7 +24,22 @@ namespace EMap.Gis.Symbology
                 return _layer;
             }
         }
-
+        public override Extent Extent
+        {
+            get
+            {
+                Extent extent = null;
+                if (Layer != null)
+                {
+                    using (Envelope envelope = new Envelope())
+                    {
+                        var ret = Layer.GetExtent(envelope, 0);
+                        extent = envelope.ToExtent();
+                    }
+                }
+                return extent;
+            }
+        }
         public new IFeatureScheme Symbology { get => base.Symbology as IFeatureScheme; set => base.Symbology = value; }
         public new IFeatureCategory DefaultCategory { get => base.DefaultCategory as IFeatureCategory; set => base.DefaultCategory = value; }
         public FeatureLayer(DataSource dataSource)
@@ -35,21 +47,9 @@ namespace EMap.Gis.Symbology
             DataSource = dataSource;
             Selection = new Selection();
         }
-        private Envelope _extents;
-        public override Envelope Extents
-        {
-            get
-            {
-                if (_extents == null)
-                {
-                    _extents = new Envelope();
-                }
-                Layer?.GetExtent(_extents, 1);
-                return _extents;
-            }
-        }
 
         public ISelection Selection { get; }
+        public ILabelLayer LabelLayer { get; set; }
 
         protected override void Dispose(bool disposing)
         {
@@ -61,23 +61,14 @@ namespace EMap.Gis.Symbology
             }
             base.Dispose(disposing);
         }
-        public override void ResetBuffer(Rectangle rectangle, Envelope envelope, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false, ProgressHandler progressHandler = null, CancellationTokenSource cancellationTokenSource = null)
         {
-            if (rectangle.Width == 0 || rectangle.Height == 0 || envelope == null)
+            using (Geometry polygon = extent.ToGeometry())
             {
-                throw new Exception("参数错误");
-            }
-            if (cancellationTokenSource?.IsCancellationRequested == true)
-            {
-                return;
-            }
-            BufferImgage = new Image<Rgba32>(rectangle.Width, rectangle.Height);
-            using (Geometry polygon = envelope.ToGeometry())
-            {
-                Layer.SetSpatialFilter(polygon); 
+                Layer.SetSpatialFilter(polygon);
             }
             List<Feature> features = new List<Feature>();
-            Feature feature = Layer.GetNextFeature(); 
+            Feature feature = Layer.GetNextFeature();
             long featureCount = Layer.GetFeatureCount(0);
             long drawnFeatureCount = 0;
             int threshold = 65536;
@@ -87,9 +78,9 @@ namespace EMap.Gis.Symbology
             {
                 if (features.Count > 0)
                 {
-                    percent = (int)(drawnFeatureCount * 100 / featureCount); 
-                    progressHandler?.Invoke("绘制要素中：", percent, "");
-                    MapArgs drawArgs = new MapArgs(BufferImgage, envelope, rectangle);
+                    percent = (int)(drawnFeatureCount * 100 / featureCount);
+                    progressHandler?.Invoke( percent, "绘制要素中...");
+                    MapArgs drawArgs = new MapArgs(rectangle, extent, graphics);
                     DrawFeatures(drawArgs, features, selected, progressHandler, cancellationTokenSource);
                     drawnFeatureCount += features.Count;
                     foreach (var item in features)
@@ -115,10 +106,8 @@ namespace EMap.Gis.Symbology
             {
                 drawFeatuesAction();
             }
-            progressHandler?.Invoke("绘制要素中：", 100, "");
+            progressHandler?.Invoke(100, "绘制要素中...");
         }
-
-        //public   abstract void DrawFeatures(MapArgs drawArgs, List<Feature> features, bool selected, ProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource);
         private Dictionary<Feature, IFeatureCategory> GetFeatureAndCategoryDic(List<Feature> features)
         {
             Dictionary<Feature, IFeatureCategory> featureCategoryDic = new Dictionary<Feature, IFeatureCategory>();
@@ -253,7 +242,7 @@ namespace EMap.Gis.Symbology
                     switch (column.DataType.Name)
                     {
                         case "Int32":
-                            dataRow[column] = feature.GetFieldAsInteger(name); 
+                            dataRow[column] = feature.GetFieldAsInteger(name);
                             break;
                         case "Int64":
                             dataRow[column] = feature.GetFieldAsInteger64(name);

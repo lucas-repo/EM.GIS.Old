@@ -1,4 +1,4 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
@@ -6,7 +6,7 @@ namespace EMap.Gis.Symbology
     {
         #region Properties
         
-        public Rgba32 EndColor { get; set; } = SymbologyGlobal.ColorFromHsl(345, .8, .8);
+        public Color EndColor { get; set; } = SymbologyGlobal.ColorFromHsl(345, .8, .8);
         
         public string ExcludeExpression { get; set; }
 
@@ -24,7 +24,7 @@ namespace EMap.Gis.Symbology
 
         public bool RampColors { get; set; } = true;
 
-        public Rgba32 StartColor { get; set; } = SymbologyGlobal.ColorFromHsl(5, .7, .7);
+        public Color StartColor { get; set; } = SymbologyGlobal.ColorFromHsl(5, .7, .7);
 
         public bool UseColorRange { get; set; } = true;
 

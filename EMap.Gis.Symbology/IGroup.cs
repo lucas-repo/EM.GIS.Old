@@ -1,13 +1,9 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using System.Collections.Generic;
+﻿using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
     public interface IGroup : IBaseLayer
     {
-        Image<Rgba32> Icon { get; set; }
-        new ILayerCollection Items { get; set; }
-        new IGroup Parent { get; set; }
+        ILayerCollection Layers { get; }
     }
 }

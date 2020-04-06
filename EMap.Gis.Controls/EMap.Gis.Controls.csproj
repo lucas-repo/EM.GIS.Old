@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EMap.Gis.Data\EMap.Gis.Data.csproj" />
+    <ProjectReference Include="..\EMap.Gis.Serialization\EMap.Gis.Serialization.csproj" />
+    <ProjectReference Include="..\EMap.Gis.Symbology\EMap.Gis.Symbology.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EMap">
+      <HintPath>..\EMap.Gis.Resources\Dependencies\EMap.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

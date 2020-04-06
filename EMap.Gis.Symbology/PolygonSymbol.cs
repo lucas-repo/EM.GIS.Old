@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -20,24 +13,26 @@ namespace EMap.Gis.Symbology
             PolygonSymbolType = polygonSymbolType;
         }
 
-        public void DrawPolygon(IImageProcessingContext context, float scale, IPath path)
+        public void DrawPolygon(Graphics context, float scale, GraphicsPath path)
         {
             if (context == null || path == null)
             {
                 return;
             }
-            IBrush brush = GetBrush();
-            if (brush == null)
+            using (Brush brush = GetBrush())
             {
-                return;
+                if (brush == null)
+                {
+                    return;
+                }
+                context.FillPath(brush, path);
             }
-            context.Fill(brush, path);
             DrawOutLine(context, scale, path);
         }
 
-        public virtual IBrush GetBrush()
+        public virtual Brush GetBrush()
         {
-            IBrush brush = new SolidBrush(Color);
+            Brush brush = new SolidBrush(Color);
             return brush;
         }
     }

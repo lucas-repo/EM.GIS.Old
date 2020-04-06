@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Version>1.0.0-alpha0003</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -19,19 +20,18 @@
 
   <ItemGroup>
     <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
-    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" />
-    <PackageReference Include="SixLabors.Shapes.Text" Version="1.0.0-beta0009" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EMap.Gis.Data\EMap.Gis.Data.csproj" />
+    <ProjectReference Include="..\EMap.Gis.Resources\EMap.Gis.Resources.csproj" />
+    <ProjectReference Include="..\EMap.Gis.Serialization\EMap.Gis.Serialization.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="EMap">
-      <HintPath>..\EMap.Gis\Dependencies\EMap.dll</HintPath>
+      <HintPath>..\EMap.Gis.Resources\Dependencies\EMap.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

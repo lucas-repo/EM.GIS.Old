@@ -7,14 +7,14 @@ namespace EMap.Gis.Symbology
     public class Selection : Changeable, ISelection
     {
         public List<Feature> Features { get; }
-        private Envelope _envelope;
-        public Envelope Envelope
+        private Extent _envelope;
+        public Extent Extent
         {
             get
             {
                 if (_envelope == null)
                 {
-                    _envelope = new Envelope();
+                    _envelope = new Extent();
                 }
                 for (int i = 0; i < Features.Count; i++)
                 {
@@ -33,7 +33,7 @@ namespace EMap.Gis.Symbology
                             }
                             else
                             {
-                                _envelope.ExpandToInclude(tempEnvelope);
+                                _envelope.ExpandToInclude(tempEnvelope.ToExtent());
                             }
                         }
                     }
@@ -48,11 +48,6 @@ namespace EMap.Gis.Symbology
         }
         protected override void Dispose(bool disposing)
         {
-            if (_envelope != null)
-            {
-                _envelope.Dispose();
-                _envelope = null;
-            }
             if (Features.Count > 0)
             {
                 foreach (var item in Features)

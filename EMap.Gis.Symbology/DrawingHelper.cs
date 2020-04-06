@@ -1,6 +1,7 @@
-﻿using SixLabors.Primitives;
+﻿
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace EMap.Gis.Symbology

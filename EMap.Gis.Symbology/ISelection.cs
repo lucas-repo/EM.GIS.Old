@@ -1,13 +1,13 @@
-﻿using OSGeo.OGR;
+﻿using EMap.Gis.Data;
+using OSGeo.OGR;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace EMap.Gis.Symbology
 {
     public interface ISelection:IDisposable
     {
-        Envelope Envelope { get; }
+        Extent Extent { get; }
         List<Feature> Features { get; }
     }
 }

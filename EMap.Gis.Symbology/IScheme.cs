@@ -1,10 +1,5 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
@@ -13,8 +8,8 @@ namespace EMap.Gis.Symbology
         ICategoryCollection Categories { get; set; }
         EditorSettings EditorSettings { get; set; }
         Statistics Statistics { get; }
-        void DrawCategory(int index, IImageProcessingContext context, Rectangle bounds);
-        ICategory CreateNewCategory(Rgba32 fillColor, float size);
+        void DrawCategory(int index, Graphics context, Rectangle bounds);
+        ICategory CreateNewCategory(Color fillColor, float size);
         List<double> Values { get; }
         void Move(int oldIndex, int newIndex);
     }

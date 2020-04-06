@@ -1,81 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
     [Serializable]
     public class LineCartographicSymbol : LineSimpleSymbol, ILineCartographicSymbol
     {
-        protected static readonly float[] DashDotPattern = new float[4]
-        {
-                3f,
-                1f,
-                1f,
-                1f
-        };
-        protected static readonly float[] DashDotDotPattern = new float[6]
-        {
-            3f,
-            1f,
-            1f,
-            1f,
-            1f,
-            1f
-        };
-        protected static readonly float[] DottedPattern = new float[2]
-        {
-            1f,
-            1f
-        };
-        protected static readonly float[] DashedPattern = new float[2]
-        {
-            3f,
-            1f
-        };
-        protected static readonly float[] EmptyPattern = new float[0];
-        public float[] Pattern { get; set; } = EmptyPattern;
+        public LineJoinType JoinType { get; set; }
+        public float Offset { get; set; }
+        public float[] CompoundArray { get; set; }
+        public LineCap StartCap { get; set; }
+        public LineCap EndCap { get; set; }
+        public float[] DashPattern { get; set; } 
         public List<ILineDecoration> Decorations { get; } = new List<ILineDecoration>();
-        public override DashStyle DashStyle
-        {
-            get => base.DashStyle;
-            set
-            {
-                switch (DashStyle)
-                {
-                    case DashStyle.Dash:
-                        Pattern = DashedPattern;
-                        break;
-                    case DashStyle.Dot:
-                        Pattern = DottedPattern;
-                        break;
-                    case DashStyle.DashDot:
-                        Pattern = DashDotPattern;
-                        break;
-                    case DashStyle.DashDotDot:
-                        Pattern = DashDotDotPattern;
-                        break;
-                    case DashStyle.Solid:
-                    case DashStyle.Custom:
-                        Pattern = EmptyPattern;
-                        break;
-                }
-                base.DashStyle = value;
-            }
-        }
+       
         public LineCartographicSymbol() : this(LineSymbolType.Cartographic)
         { }
         protected LineCartographicSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         {
         }
-        public override IPen ToPen(float scale)
+        public override Pen ToPen(float scale)
         {
-            float width = scale * Width;
-            IPen pen = new Pen(Color, width,Pattern); 
-            return pen;
+            Pen myPen = base.ToPen(scale);
+            myPen.EndCap = EndCap;
+            myPen.StartCap = StartCap;
+            if (CompoundArray != null) myPen.CompoundArray = CompoundArray;
+            if (Offset != 0F)
+            {
+                float[] pattern = { 0, 1 };
+                float w = (float)Width;
+                if (w == 0) w = 1;
+                w = (float)(scale * w);
+                float w2 = (Math.Abs(Offset) + (w / 2)) * 2;
+                if (CompoundArray != null)
+                {
+                    pattern = new float[CompoundArray.Length];
+                    for (int i = 0; i < CompoundArray.Length; i++)
+                    {
+                        pattern[i] = CompoundArray[i];
+                    }
+                }
+
+                for (int i = 0; i < pattern.Length; i++)
+                {
+                    if (Offset > 0)
+                    {
+                        pattern[i] = (w / w2) * pattern[i];
+                    }
+                    else
+                    {
+                        pattern[i] = 1 - (w / w2) + ((w / w2) * pattern[i]);
+                    }
+                }
+
+                myPen.CompoundArray = pattern;
+                myPen.Width = w2;
+            }
+
+            if (DashPattern != null)
+            {
+                myPen.DashPattern = DashPattern;
+            }
+            else
+            {
+                if (myPen.DashStyle == DashStyle.Custom)
+                {
+                    myPen.DashStyle = DashStyle.Solid;
+                }
+            }
+
+            switch (JoinType)
+            {
+                case LineJoinType.Bevel:
+                    myPen.LineJoin = LineJoin.Bevel;
+                    break;
+                case LineJoinType.Mitre:
+                    myPen.LineJoin = LineJoin.Miter;
+                    break;
+                case LineJoinType.Round:
+                    myPen.LineJoin = LineJoin.Round;
+                    break;
+            }
+
+            return myPen;
         }
     }
 }

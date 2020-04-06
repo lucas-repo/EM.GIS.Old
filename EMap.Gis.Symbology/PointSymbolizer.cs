@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using System.Drawing;
+
+
 
 namespace EMap.Gis.Symbology
 {
@@ -48,7 +47,7 @@ namespace EMap.Gis.Symbology
             IPointSymbol pointSymbol = Symbols[0];
             if (pointSymbol != null)
             {
-                pointSymbol.Color = Rgba32.Cyan;
+                pointSymbol.Color = Color.Cyan;
             }
         }
         public PointSymbolizer(IPointSymbol symbol) : this()
@@ -63,7 +62,7 @@ namespace EMap.Gis.Symbology
             }
         }
 
-        public PointSymbolizer(Rgba32 color, PointShape shape, float size) : this()
+        public PointSymbolizer(Color color, PointShape shape, float size) : this()
         {
             IPointSymbol ss = new PointSimpleSymbol(color, shape, size);
             Symbols.Add(ss);
@@ -81,7 +80,7 @@ namespace EMap.Gis.Symbology
             Symbols.Add(ss);
         }
 
-        public override void DrawLegend(IImageProcessingContext context, Rectangle rectangle)
+        public override void DrawLegend(Graphics context, Rectangle rectangle)
         {
             float scaleH = rectangle.Width / Size.Width;
             float scaleV = rectangle.Height / Size.Height;
@@ -92,7 +91,7 @@ namespace EMap.Gis.Symbology
             DrawPoint(context, scale, point);
         }
 
-        public void DrawPoint(IImageProcessingContext context, float scale, PointF point)
+        public void DrawPoint(Graphics context, float scale, PointF point)
         {
             foreach (var symbol in Symbols)
             {

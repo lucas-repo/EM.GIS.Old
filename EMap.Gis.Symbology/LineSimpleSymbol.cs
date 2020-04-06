@@ -1,8 +1,6 @@
 ﻿using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -14,35 +12,27 @@ namespace EMap.Gis.Symbology
         { }
         protected LineSimpleSymbol(LineSymbolType lineSymbolType) : base(lineSymbolType)
         { }
-        public LineSimpleSymbol(Rgba32 color) : base(color, LineSymbolType.Simple)
+        public LineSimpleSymbol(Color color) : base(color, LineSymbolType.Simple)
         {
         }
-        public LineSimpleSymbol(Rgba32 color, float width) : base(color, width, LineSymbolType.Simple)
+        public LineSimpleSymbol(Color color, float width) : base(color, width, LineSymbolType.Simple)
         {
         }
-        public virtual DashStyle DashStyle { get; set; }
+        public DashStyle DashStyle { get; set; }
 
-        public override IPen ToPen(float scale)
+        public override Pen ToPen(float scale)
         {
             float width = scale * Width;
-            IPen pen = null;
-            switch (DashStyle)
+            Pen pen  = new Pen(Color, width)
             {
-                case DashStyle.Solid:
-                    pen = Pens.Solid(Color, width);
-                    break;
-                case DashStyle.Dash:
-                    pen = Pens.Dash(Color, width);
-                    break;
-                case DashStyle.Dot:
-                    pen = Pens.Dot(Color, width);
-                    break;
-                case DashStyle.DashDot:
-                    pen = Pens.DashDot(Color, width);
-                    break;
-                case DashStyle.DashDotDot:
-                    pen = Pens.DashDotDot(Color, width);
-                    break;
+                DashStyle = DashStyle,
+                LineJoin = LineJoin.Round,
+                StartCap = LineCap.Round,
+                EndCap = LineCap.Round
+            };
+            if (DashStyle == DashStyle.Custom)
+            {
+                pen.DashPattern = new[] { 1F };
             }
             return pen;
         }

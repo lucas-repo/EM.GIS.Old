@@ -1,15 +1,8 @@
 ﻿using EMap.Gis.Data;
 using OSGeo.OGR;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace EMap.Gis.Symbology
 {
@@ -34,21 +27,18 @@ namespace EMap.Gis.Symbology
 
         protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
         {
-            ILineSymbolizer lineSymbolizer = symbolizer as ILineSymbolizer;
-            if (drawArgs == null || lineSymbolizer == null || geometry == null)
+            if (drawArgs == null || !(symbolizer is ILineSymbolizer lineSymbolizer) || geometry == null)
             {
                 return;
             }
-            drawArgs.Image.Mutate(context =>
+            float scaleSize = (float)symbolizer.GetScale(drawArgs);
+            using (GraphicsPath path = new GraphicsPath())
             {
-                float scaleSize = (float)symbolizer.GetScale(drawArgs);
-                PathBuilder pathBuilder = new PathBuilder();
-                GetLines(drawArgs, geometry, pathBuilder);
-                IPath path = pathBuilder.Build();
-                lineSymbolizer.DrawLine(context, scaleSize, path);
-            });
+                GetLines(drawArgs, geometry, path);
+                lineSymbolizer.DrawLine(drawArgs.Device, scaleSize, path);
+            }
         }
-        private void GetLines(MapArgs drawArgs, Geometry geometry, PathBuilder pathBuilder)
+        private void GetLines(MapArgs drawArgs, Geometry geometry, GraphicsPath path)
         {
             int geoCount = geometry.GetGeometryCount();
             var geometryType = geometry.GetGeometryType();
@@ -62,8 +52,8 @@ namespace EMap.Gis.Symbology
                     {
                         using (var partGeo = geometry.GetGeometryRef(i))
                         {
-                            pathBuilder.StartFigure();
-                            GetLines(drawArgs, partGeo, pathBuilder);
+                            path.StartFigure();
+                            GetLines(drawArgs, partGeo, path);
                         }
                     }
                     break;
@@ -80,7 +70,7 @@ namespace EMap.Gis.Symbology
                         PointF point = drawArgs.ProjToPixelPointF(coord);
                         points[j] = point;
                     }
-                    pathBuilder.AddLines(points);
+                    path.AddLines(points);
                     break;
                 default:
                     throw new Exception("不支持的几何类型");

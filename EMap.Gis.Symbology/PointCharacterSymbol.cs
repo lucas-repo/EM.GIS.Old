@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using SixLabors.Fonts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
-using SixLabors.Shapes;
 
 namespace EMap.Gis.Symbology
 {
@@ -21,55 +14,40 @@ namespace EMap.Gis.Symbology
 
         public char Character { get; set; }
         public string FontFamilyName { get; set; }
-        [NonSerialized]
-        private FontFamily _fontFamily;
-        public FontFamily FontFamily
-        {
-            get
-            {
-                if (_fontFamily?.Name != FontFamilyName)
-                {
-                    _fontFamily = SystemFonts.Find(FontFamilyName);
-                }
-                return _fontFamily;
-            }
-            set
-            {
-                FontFamilyName = value?.Name;
-                _fontFamily = value;
-            }
-        }
 
-        public FontStyle Style { get; set; }
-        public static RectangleF MeasureText(string text, Font fnt)
-        {
-            RendererOptions rendererOptions = new RendererOptions(fnt);
-            IPathCollection paths = TextBuilder.GenerateGlyphs(text, rendererOptions);
-            return paths.Bounds;
-        }
+        public FontStyle FontStyle { get; set; }
         protected override void OnRandomize(Random generator)
         {
             Color = generator.NextColor();
             Opacity = generator.NextFloat();
             Character = (char)generator.Next(0, 255);
-            int fontCount = SystemFonts.Families.Count();
-            FontFamilyName = SystemFonts.Families.ElementAt(generator.Next(0, fontCount - 1)).Name;
-            Style = generator.NextEnum<FontStyle>();
+            FontFamilyName = FontFamily.Families[generator.Next(0, FontFamily.Families.Length - 1)].Name;
+            FontStyle = generator.NextEnum<FontStyle>();
             base.OnRandomize(generator);
         }
 
-        public override void DrawPoint(IImageProcessingContext context, float scale, PointF point)
+        protected override void OnDrawPoint(Graphics g, float scale)
         {
-            string text = new string(new[] { Character });
-            float fontPointSize = Size.Height * scale;
-            Font font = new Font(FontFamily, fontPointSize, Style);
-            RectangleF bounds = MeasureText(text, font);
-            float x = point.X - bounds.Width / 2;
-            float y = point.Y - bounds.Height / 2;
-            PointF location = new PointF(x, y);
-            context.DrawText(text, font, Color, location);
-            PointF[] points = bounds.ToPoints();
-            DrawOutLine(context, scale, points.ToPath());
+            using (Brush b = new SolidBrush(Color))
+            {
+                string txt = new string(new[] { Character });
+                float fontPointSize = Size.Height * scale;
+                Font fnt = new Font(FontFamilyName, fontPointSize, FontStyle, GraphicsUnit.Pixel);
+                SizeF fSize = g.MeasureString(txt, fnt);
+                float x = -fSize.Width / 2;
+                float y = -fSize.Height / 2;
+                if (fSize.Height > fSize.Width * 5)
+                {
+                    // Defective fonts sometimes are created with a bad height.
+                    // Use the width instead
+                    y = -fSize.Width / 2;
+                }
+                g.DrawString(txt, fnt, b, new PointF(x, y));
+                using (var path = fSize.ToPath())
+                {
+                    DrawOutLine(g, scale, path);
+                }
+            }
         }
     }
 }

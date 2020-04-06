@@ -4,12 +4,7 @@ using System.Text;
 
 namespace EMap.Gis.Symbology
 {
-    public interface ILayerCollection:ILegendItemCollection
+    public interface ILayerCollection : IItemCollection<IGroup, IBaseLayer>
     {
-        IFrame MapFrame { get; set; }
-
-        new IBaseLayer this[int index] { get; set; }
-        new IGroup Parent { get; set; }
-        new IEnumerator<IBaseLayer> GetEnumerator();
     }
 }

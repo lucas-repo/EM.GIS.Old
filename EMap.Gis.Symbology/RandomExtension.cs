@@ -1,5 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
-using System;
+﻿using System;
+using System.Drawing;
 
 namespace EMap.Gis.Symbology
 {
@@ -24,14 +24,14 @@ namespace EMap.Gis.Symbology
             return result;
         }
 
-        public static Rgba32 NextColor(this Random generator)
+        public static Color NextColor(this Random generator)
         {
             //byte a = (byte)generator.Next(0, 255);
             byte r = (byte)generator.Next(0, 255);
             byte g = (byte)generator.Next(0, 255);
             byte b = (byte)generator.Next(0, 255);
-            Rgba32 rgba32 = new Rgba32( r, g, b);
-            return rgba32;
+            Color color = Color.FromArgb( r, g, b);
+            return color;
         }
 
         public static T NextEnum<T>(this Random generator) where T : Enum

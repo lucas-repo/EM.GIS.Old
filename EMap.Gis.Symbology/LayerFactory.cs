@@ -51,11 +51,11 @@ namespace EMap.Gis.Symbology
             Dataset dataset = null;
             try
             {
-                dataset = Gdal.Open(dataPath, (Access)update);
+                dataset = Gdal.Open(dataPath, (Access)update); 
             }
             catch(Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Trace.WriteLine(e.Message);
             }
             return dataset;
         }
@@ -68,7 +68,7 @@ namespace EMap.Gis.Symbology
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Trace.WriteLine(e.Message);
             }
             return dataSource;
         }
