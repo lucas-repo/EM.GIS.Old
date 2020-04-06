@@ -11,8 +11,8 @@ namespace EMap.Gis.Symbology
     [Serializable]
     public abstract class BaseLayer : IBaseLayer
     {
-        public bool Name { get; set; }
-        public bool AliasName { get; set; }
+        public string Name { get; set; }
+        public string AliasName { get; set; }
         public virtual Extent Extent { get;}
         public bool IsVisible { get; set; } = true;
 
