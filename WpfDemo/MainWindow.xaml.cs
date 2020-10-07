@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace WpfDemo
             });
             Dispatcher.BeginInvoke(action);
         }
-        private void Map_GeoMouseMove(object sender, EMap.Gis.Controls.GeoMouseArgs e)
+        private void Map_GeoMouseMove(object sender, EM.GIS.Controls.GeoMouseArgs e)
         {
             coordTBlock.Text = $"{e.GeographicLocation.X},{e.GeographicLocation.Y}";
         }

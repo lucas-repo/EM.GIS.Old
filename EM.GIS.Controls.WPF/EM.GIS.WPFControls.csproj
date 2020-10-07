@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>EM.GIS.WpfControls</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EM.GIS.Controls\EM.GIS.Controls.csproj" />
+    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EM.GIS">
+      <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
+    </Reference>
+    <Reference Include="EMap">
+      <HintPath>..\EM.GIS.Resources\Dependencies\EMap.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

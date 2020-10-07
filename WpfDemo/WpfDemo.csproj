@@ -15,12 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GDAL" Version="2.4.4" />
     <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
     <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EMap.Gis.Controls.WPF\EMap.Gis.WpfControls.csproj" />
+    <ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WpfControls.csproj" />
   </ItemGroup>
 
   <ItemGroup>

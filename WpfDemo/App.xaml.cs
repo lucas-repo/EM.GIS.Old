@@ -22,8 +22,8 @@ namespace WpfDemo
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);//todo 注册编码，注册gdal使用的GBK编码
-            Gdal.AllRegister();
-            Ogr.RegisterAll();
+            GdalConfiguration.ConfigureGdal();
+            GdalConfiguration.ConfigureOgr();
             // 为了支持中文路径，请添加下面这句代码  
             if (Encoding.Default.EncodingName == Encoding.UTF8.EncodingName && Encoding.Default.CodePage == Encoding.UTF8.CodePage)
             {
