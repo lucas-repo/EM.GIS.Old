@@ -25,7 +25,7 @@ namespace EM.GIS.Data
         /// This is designed to be a virtual member to be overridden by subclasses,
         /// and should not be called directly by the constructor of inheriting classes.
         /// </summary>
-        public virtual IExtent Extent { get; set; }
+        public virtual IExtent Extent { get; }
 
         private string _filename;
         /// <summary>

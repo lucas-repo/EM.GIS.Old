@@ -1,6 +1,8 @@
 ﻿using EM.GIS.Data;
 using EM.GIS.Geometries;
+using EM.GIS.Projection;
 using OSGeo.OGR;
+using OSGeo.OSR;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,23 +12,83 @@ namespace EM.GIS.Gdals
 {
     public class GdalFeatureSet : FeatureSet
     {
-        public DataSource DataSource { get; set; }
-        private Layer _layer;
-        public Layer Layer
+        private DataSource _dataSource;
+
+        public DataSource DataSource
         {
-            get { return _layer; }
-            set
+            get { return _dataSource; }
+            private set 
             {
-                _layer = value;
-                if (FeatureDefn != null)
+                if (_dataSource != null)
                 {
-                    FeatureDefn.Dispose();
+                    _dataSource.Dispose();
                 }
-                FeatureDefn = _layer?.GetLayerDefn();
+                _dataSource = value;
+                if (_dataSource?.GetLayerCount() > 0)
+                {
+                    Layer = _dataSource.GetLayerByIndex(0);
+                }
+                else
+                {
+                    Layer = null;
+                }
             }
         }
 
-        FeatureDefn FeatureDefn { get; set; }
+        private Layer _layer;
+        public Layer Layer 
+        {
+            get { return _layer; }
+            private set
+            {
+                if (_layer != value)
+                {
+                    if (_layer != null)
+                    {
+                        _layer.Dispose();
+                    }
+                    _layer = value;
+                    FeatureDefn = _layer?.GetLayerDefn();
+                }
+            }
+        }
+        private FeatureDefn _featureDefn;
+
+        public FeatureDefn FeatureDefn=> Layer.GetLayerDefn();
+
+        public override IExtent Extent => Layer.GetExtent();
+        public override string Filename { get => DataSource.; set => base.Filename = value; }
+        public override ProjectionInfo Projection 
+        {
+            get
+            {
+                SpatialReference spatialReference = null;
+                if (Layer != null)
+                {
+                    spatialReference = Layer.GetSpatialRef();
+                }
+                if (base.Projection == null)
+                {
+                    base.Projection = new GdalProjectionInfo(spatialReference);
+                }
+                else if (base.Projection is GdalProjectionInfo gdalProjectionInfo)
+                {
+                    if (!gdalProjectionInfo.SpatialReference.Equals(spatialReference))//待测试
+                    {
+                        gdalProjectionInfo.SpatialReference = spatialReference;
+                    }
+                }
+                return base.Projection; ;
+            }
+            set
+            {
+                if (base.Projection != null)
+                {
+                    base.Projection.Dispose();
+                }
+                base.Projection = value;
+            }
+        }
         public override int FeatureCount => (int)Layer.GetFeatureCount(1);
 
         public override IGeometry SpatialFilter

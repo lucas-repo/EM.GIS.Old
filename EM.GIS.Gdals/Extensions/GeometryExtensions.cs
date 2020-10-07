@@ -1,18 +1,66 @@
-﻿using EM.GIS.Gdals;
-using EM.GIS.Geometries;
+﻿using EM.GIS.Geometries;
+using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EM.GIS.Gdals
 {
-    /// <summary>
-    /// 几何扩展
-    /// </summary>
     public static class GeometryExtensions
     {
+        #region 几何体
+        public static int GetPointCount(this Feature feature)
+        {
+            int count = 0;
+            if (feature != null)
+            {
+                using (var geometry = feature.GetGeometryRef())
+                {
+                    geometry.GetPointCount(ref count);
+                }
+            }
+            return count;
+        }
+        public static void GetPointCount(this OSGeo.OGR.Geometry geometry, ref int count)
+        {
+            if (geometry != null)
+            {
+                int geoCount = geometry.GetGeometryCount();
+                if (geoCount > 0)
+                {
+                    for (int i = 0; i < geoCount; i++)
+                    {
+                        using (var childGeo = geometry.GetGeometryRef(i))
+                        {
+                            childGeo.GetPointCount(ref count);
+                        }
+                    }
+                }
+                else
+                {
+                    count += geometry.GetPointCount();
+                }
+            }
+        }
+        public static ICoordinate ToCoordinate(this IEnumerable<double> array)
+        {
+            ICoordinate coordinate = null;
+            if (array == null)
+            {
+                return coordinate;
+            }
+            var count = array.Count();
+            if (count >= 0)
+            {
+                coordinate = new Coordinate();
+                for (int i = 0; i < coordinate.MaxPossibleOrdinates && i < count; i++)
+                {
+                    coordinate[i] = array.ElementAt(i);
+                }
+            }
+            return coordinate;
+        }
+        #endregion
         private static void AddPoint(this OSGeo.OGR.Geometry geometry, double x, double y, double z = double.NaN, double m = double.NaN)
         {
             if (geometry != null)
@@ -47,6 +95,12 @@ namespace EM.GIS.Gdals
             {
                 geometry.AddPoint(coordinate.X, coordinate.Y, coordinate.Z, coordinate.M);
             }
+        }
+        #region 转成OGR的几何体
+        public static OSGeo.OGR.Geometry ToGeometry(this IGeometry geometry)
+        {
+            OSGeo.OGR.Geometry destGeometry = (geometry as Geometry)?.OgrGeometry;
+            return destGeometry;
         }
         public static OSGeo.OGR.Geometry ToPointGeometry(double x, double y, double z = double.NaN, double m = double.NaN)
         {
@@ -111,6 +165,8 @@ namespace EM.GIS.Gdals
             }
             return geometry;
         }
+        #endregion
+
         public static ICoordinate GetCoordinate(this OSGeo.OGR.Geometry geometry, int index)
         {
             ICoordinate coordinate = null;
@@ -127,7 +183,7 @@ namespace EM.GIS.Gdals
         }
         public static void SetCoordinate(this OSGeo.OGR.Geometry geometry, int index, ICoordinate coordinate)
         {
-            if (geometry != null&& coordinate!=null)
+            if (geometry != null && coordinate != null)
             {
                 if (index >= 0 && index < geometry.GetPointCount())
                 {
@@ -238,11 +294,6 @@ namespace EM.GIS.Gdals
 
 
         #region 自定义的几何转成DotSpatial的几何
-        public static OSGeo.OGR.Geometry ToGeometry(this IGeometry geometry)
-        {
-            OSGeo.OGR.Geometry destGeometry = (geometry as Geometry)?.OgrGeometry;
-            return destGeometry;
-        }
         public static ICoordinate ToCoordinate(this IPoint point)
         {
             ICoordinate coordinate = null;
@@ -254,6 +305,5 @@ namespace EM.GIS.Gdals
             return coordinate;
         }
         #endregion
-
     }
 }

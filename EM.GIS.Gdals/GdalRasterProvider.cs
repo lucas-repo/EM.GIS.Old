@@ -10,7 +10,7 @@ namespace EM.GIS.Gdals
     /// <summary>
     /// GdalRasterProvider
     /// </summary>
-    public class GdalRasterProvider : IRasterSetProvider
+    public class GdalRasterProvider 
     {
         #region Constructors
 

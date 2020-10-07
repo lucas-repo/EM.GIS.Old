@@ -690,7 +690,7 @@ namespace EM.GIS.Gdals
             Bitmap result = null;
             Action action = new Action(() =>
             {
-                switch (NumBands)
+                switch (BandCount)
                 {
                     case 0:
                         break;

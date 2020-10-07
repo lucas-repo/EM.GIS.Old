@@ -12,7 +12,7 @@ namespace EM.GIS.Data
         /// <summary>
         /// 范围
         /// </summary>
-        IExtent Extent { get; set; }
+        IExtent Extent { get; }
         /// <summary>
         /// 路径
         /// </summary>

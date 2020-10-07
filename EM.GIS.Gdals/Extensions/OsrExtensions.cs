@@ -1,4 +1,5 @@
-﻿using OSGeo.OSR;
+﻿using EM.GIS.Geometries;
+using OSGeo.OSR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +7,11 @@ using System.Text;
 
 namespace EM.GIS.Gdals
 {
-    public static class OsrExtension
+    public static class OsrExtensions
     {
-        public static Coordinate TransformPoint(this CoordinateTransformation coordinateTransformation, Coordinate coord)
+        public static ICoordinate TransformPoint(this CoordinateTransformation coordinateTransformation, ICoordinate coord)
         {
-            Coordinate destCoord = null;
+            ICoordinate destCoord = null;
             if (coordinateTransformation != null && coord != null)
             {
                 var array = coord.ToDoubleArray(coord.NumOrdinates);
@@ -19,9 +20,9 @@ namespace EM.GIS.Gdals
             }
             return destCoord;
         }
-        public static List<Coordinate> TransformPoints(this CoordinateTransformation coordinateTransformation, IEnumerable<Coordinate> coords)
+        public static List<ICoordinate> TransformPoints(this CoordinateTransformation coordinateTransformation, IEnumerable<Coordinate> coords)
         {
-            List<Coordinate> destCoords = new List<Coordinate>();
+            List<ICoordinate> destCoords = new List<ICoordinate>();
             if (coordinateTransformation != null && coords != null  )
             {
                 var firstCoord = coords.FirstOrDefault();

@@ -11,10 +11,42 @@ namespace EM.GIS.Gdals
     /// </summary>
     public class GdalProjectionInfo : ProjectionInfo
     {
+        private SpatialReference _spatialReference;
         /// <summary>
         /// 空间参考
         /// </summary>
-        public SpatialReference SpatialReference { get; set; }
+        public SpatialReference SpatialReference
+        {
+            get { return _spatialReference; }
+            set 
+            {
+                if (_spatialReference != null)
+                {
+                    _spatialReference.Dispose();
+                }
+                _spatialReference = value;
+            }
+        }
+
+        public GdalProjectionInfo(SpatialReference spatialReference)
+        {
+            SpatialReference = spatialReference;
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    if (SpatialReference != null)
+                    {
+                        SpatialReference.Dispose();
+                        SpatialReference = null;
+                    }
+                }
+            }
+            base.Dispose(disposing);
+        }
         public override string Authority
         {
             get => SpatialReference?.GetAuthorityName(null);

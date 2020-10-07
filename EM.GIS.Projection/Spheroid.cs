@@ -11,7 +11,7 @@
         /// Sets the value by using the current semi-major axis (Equatorial Radius) in order to
         /// calculate the semi-minor axis (Polar Radius).
         /// </summary>
-        public virtual double InverseFlattening { get; s}
+        public virtual double InverseFlattening { get; set; }
 
         /// <summary>
         /// Gets or sets the string name of the spheroid.
