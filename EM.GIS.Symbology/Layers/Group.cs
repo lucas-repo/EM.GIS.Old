@@ -34,24 +34,11 @@ namespace EM.GIS.Symbology
             return layer;
         }
 
-        public IEnumerable<ILayer> GetLayers(Func<ILayer, bool> func = null)
+        public IEnumerable<ILayer> GetLayers()
         {
-            if (func == null)
+            foreach (ILayer item in Items)
             {
-                foreach (ILayer item in Items)
-                {
-                    yield return item;
-                }
-            }
-            else
-            {
-                foreach (ILayer item in Items)
-                {
-                    if (func(item))
-                    {
-                        yield return item;
-                    }
-                }
+                yield return item;
             }
         }
 
@@ -78,32 +65,109 @@ namespace EM.GIS.Symbology
         }
         public IEnumerable<IRasterLayer> GetAllRasterLayers()
         {
-            throw new NotImplementedException();
+            return GetAllLayers<IRasterLayer>(GetLayers());
         }
 
-        public void AddLayer(ILayer layer, int? index = null)
+        public bool AddLayer(ILayer layer, int? index = null)
         {
-            throw new NotImplementedException();
+            bool ret = false;
+            if (layer == null)
+            {
+                return ret;
+            }
+            if (index.HasValue)
+            {
+                if (index.Value < 0 || index.Value > Items.Count)
+                {
+                    return ret;
+                }
+                Items.Insert(index.Value, layer);
+            }
+            else
+            {
+                Items.Add(layer);
+            }
+            if (layer.ProgressHandler == null && ProgressHandler != null)
+            {
+                layer.ProgressHandler = ProgressHandler;
+            }
+            ret = true;
+            return ret;
         }
 
         public ILayer AddLayer(string filename, int? index = null)
         {
-            throw new NotImplementedException();
+            IDataSet dataSet = DataManager.Default.Open(filename);
+            return AddLayer(dataSet, index);
         }
 
         public ILayer AddLayer(IDataSet dataSet, int? index = null)
         {
-            throw new NotImplementedException();
+            ILayer layer = null;
+            if (dataSet is IFeatureSet featureSet)
+            {
+                layer = AddLayer(featureSet, index);
+            }
+            else if (dataSet is IRasterSet rasterSet)
+            {
+                layer = AddLayer(rasterSet, index);
+            }
+            return layer;
         }
 
-        public IFeatureLayer AddLayer(IFeatureSet dataSet, int? index = null)
+        public IFeatureLayer AddLayer(IFeatureSet featureSet, int? index = null)
         {
-            throw new NotImplementedException();
+            IFeatureLayer featureLayer = null;
+            if (featureSet == null) return null;
+
+            featureSet.ProgressHandler = ProgressHandler;
+            if (featureSet.FeatureType == FeatureType.Point || featureSet.FeatureType == FeatureType.MultiPoint)
+            {
+                featureLayer = new PointLayer(featureSet);
+            }
+            else if (featureSet.FeatureType == FeatureType.Line)
+            {
+                featureLayer = new LineLayer(featureSet);
+            }
+            else if (featureSet.FeatureType == FeatureType.Polygon)
+            {
+                featureLayer = new PolygonLayer(featureSet);
+            }
+
+            if (featureLayer != null)
+            {
+                if (AddLayer(featureLayer, index))
+                {
+                    if (featureSet.ProgressHandler == null && ProgressHandler != null)
+                    {
+                        featureSet.ProgressHandler = ProgressHandler;
+                    }
+                }
+            }
+            return featureLayer;
         }
 
-        public IRasterLayer AddLayer(IRasterSet dataSet, int? index = null)
+        public IRasterLayer AddLayer(IRasterSet rasterSet, int? index = null)
         {
-            throw new NotImplementedException();
+            IRasterLayer rasterLayer = null;
+            if (rasterSet != null)
+            {
+                rasterSet.ProgressHandler = ProgressHandler;
+                rasterLayer = new RasterLayer(rasterSet);
+                if (AddLayer(rasterLayer, index))
+                {
+                    if (rasterSet.ProgressHandler == null && ProgressHandler != null)
+                    {
+                        rasterSet.ProgressHandler = ProgressHandler;
+                    }
+                }
+            }
+            return rasterLayer;
+        }
+
+        public IEnumerable<ILayer> GetAllLayers()
+        {
+            return GetAllLayers<ILayer>(GetLayers());
         }
 
         public override IExtent Extent
@@ -111,9 +175,9 @@ namespace EM.GIS.Symbology
             get
             {
                 IExtent extent = new Extent();
-                for (int i = 0; i < Layers.Count; i++)
+                int i = 0;
+                foreach (var layer in GetAllLayers())
                 {
-                    var layer = Layers[i];
                     if (i == 0)
                     {
                         extent.MinX = layer.Extent.MinX;
@@ -128,6 +192,7 @@ namespace EM.GIS.Symbology
                         extent.MaxX = Math.Max(extent.MaxX, layer.Extent.MaxX);
                         extent.MaxY = Math.Max(extent.MaxY, layer.Extent.MaxY);
                     }
+                    i++;
                 }
                 return extent;
             }
