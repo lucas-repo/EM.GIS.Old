@@ -4,6 +4,9 @@ using System.Text;
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 分类接口
+    /// </summary>
     public interface ICategory: ILegendItem
     {
         #region Properties

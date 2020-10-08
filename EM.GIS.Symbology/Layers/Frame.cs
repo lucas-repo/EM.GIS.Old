@@ -34,7 +34,7 @@ namespace EM.GIS.Symbology
         {
             get
             {
-                return _viewExtents ?? (_viewExtents = Extent != null ? Extent.Copy() : new Extent(-180, -90, 180, 90));
+                return _viewExtents ?? (_viewExtents = Extent != null ? Extent.Copy() :  new Extent(-180, -90, 180, 90));
             }
 
             set

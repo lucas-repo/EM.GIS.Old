@@ -10,7 +10,7 @@ namespace EM.GIS.Gdals
     /// <summary>
     /// 矢量数据驱动类
     /// </summary>
-    public class VectorDriver : Driver, IVectorDriver
+    public class GdalVectorDriver : Driver, IVectorDriver
     {
         public override bool CopyFiles(string srcFileName, string destFileName)
         {
@@ -28,29 +28,15 @@ namespace EM.GIS.Gdals
         IFeatureSet IVectorDriver.Open(string fileName, bool update)
         {
             IFeatureSet featureSet = null;
-            var ds = OSGeo.OGR.Ogr.Open(fileName, 0);
+            int updateValue = update ? 1 : 0;
+            var ds = OSGeo.OGR.Ogr.Open(fileName, updateValue);
             if (ds != null)
             {
                 using var driver = ds.GetDriver();
                 switch (driver.name)
                 {
                     case "ESRI Shapefile":
-                        if (ds.GetLayerCount() > 0)
-                        {
-                            var layer = ds.GetLayerByIndex(0);
-                            switch (layer.GetGeomType())
-                            {
-                                case OSGeo.OGR.wkbGeometryType.wkbPoint:
-                                    featureSet = new PointShapeFile();
-                                    break;
-                                case OSGeo.OGR.wkbGeometryType.wkbLineString:
-                                    break;
-                                case OSGeo.OGR.wkbGeometryType.wkbPolygon:
-                                    break;
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        }
+                        featureSet = new GdalFeatureSet(fileName, ds);
                         break;
                     default:
                         throw new NotImplementedException();

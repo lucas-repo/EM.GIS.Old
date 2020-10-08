@@ -7,7 +7,7 @@ namespace EM.GIS.Symbology
 {
     public interface ISelection:IDisposable
     {
-        Extent Extent { get; }
+        IExtent IExtent { get; }
         List<Feature> Features { get; }
     }
 }

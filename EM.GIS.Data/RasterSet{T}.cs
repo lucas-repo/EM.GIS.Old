@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace EM.GIS.Data
@@ -7,6 +8,7 @@ namespace EM.GIS.Data
     /// A raster of the given type.
     /// </summary>
     /// <typeparam name="T">Type of the raster.</typeparam>
+    [Serializable]
     public class RasterSet<T> : RasterSet
         where T : IEquatable<T>, IComparable<T>
     {
@@ -17,27 +19,9 @@ namespace EM.GIS.Data
         /// </summary>
         public RasterSet()
         {
-            DataType = typeof(T);
+            NoDataValue = Global.ToDouble(Global.MinimumValue<T>());
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RasterSet{T}"/> class.
-        /// </summary>
-        /// <param name="numRows">The number of rows in the raster</param>
-        /// <param name="numColumns">The number of columns in the raster</param>
-        public RasterSet(int numRows, int numColumns)
-        {
-            NumRows = numRows;
-            NumColumns = numColumns;
-            DataType = typeof(T);
-            NoDataValue = Global.ToDouble(Global.MinimumValue<T>());
-            DataType = typeof(T);
-        }
-        protected void Initialize()
-        {
-            NoDataValue = Global.ToDouble(Global.MinimumValue<T>());
-            DataType = typeof(T);
-        }
         #endregion
 
         #region Properties

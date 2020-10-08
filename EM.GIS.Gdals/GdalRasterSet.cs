@@ -1,5 +1,6 @@
 ﻿using EM.GIS.Data;
 using EM.GIS.Geometries;
+using EM.GIS.Projection;
 using OSGeo.GDAL;
 using OSGeo.OGR;
 using OSGeo.OSR;
@@ -18,13 +19,86 @@ namespace EM.GIS.Gdals
     /// A GDAL raster.
     /// </summary>
     /// <typeparam name="T">Type of the contained items.</typeparam>
+    [Serializable]
     public class GdalRasterSet<T> : RasterSet<T>
         where T : IEquatable<T>, IComparable<T>
     {
+        private Dataset _dataset;
+        /// <summary>
+        /// 数据源
+        /// </summary>
+        public Dataset Dataset
+        {
+            get { return _dataset; }
+            private set
+            {
+                if (_dataset != null)
+                {
+                    _dataset.Dispose();
+                }
+                _dataset = value;
+                OnDatasetChanged();
+            }
+        }
+        public override ProjectionInfo Projection 
+        {
+            get
+            {
+                if (base.Projection == null)
+                {
+                    base.Projection = new GdalProjectionInfo(_dataset.GetProjection());
+                }
+                return base.Projection;
+            }
+        }
+        private void OnDatasetChanged()
+        {
+            int numBands = _dataset.RasterCount;
+            for (int i = 1; i <= numBands; i++)
+            {
+                Band band = _dataset.GetRasterBand(i);
+                if (i == 1)
+                {
+                    _band = band;
+                }
+                Bands.Add(new GdalRasterSet<T>(Filename, _dataset, band));
+            }
+            Projection = new GdalProjectionInfo(_dataset.GetProjection());
+            ReadHeader();
+        }
+        bool _ignoreChangeDataset;
+        public override string RelativeFilename
+        {
+            get => base.RelativeFilename;
+            protected set
+            {
+                base.RelativeFilename = value;
+                if (!_ignoreChangeDataset)
+                {
+                    if (File.Exists(value))
+                    {
+                        try
+                        {
+                            Dataset = Gdal.Open(value, Access.GA_Update);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine(e);
+                            Dataset = Gdal.Open(value, Access.GA_ReadOnly);
+                        }
+                    }
+                    else
+                    {
+                        Dataset = null;
+                    }
+                }
+            }
+        }
+        public override int NumRows => _dataset.RasterYSize;
+        public override int NumColumns => _dataset.RasterXSize;
         #region Fields
 
-        private readonly Band _band;
-        private readonly Dataset _dataset;
+        private Band _band;
         private int _overviewCount;
         private ColorInterp _colorInterp;
         private int _overview;
@@ -38,22 +112,13 @@ namespace EM.GIS.Gdals
         /// <param name="fileName">The file name.</param>
         /// <param name="fromDataset">The dataset.</param>
         public GdalRasterSet(string fileName, Dataset fromDataset)
-            : base(fromDataset.RasterYSize, fromDataset.RasterXSize)
         {
-            _dataset = fromDataset;
+            _ignoreChangeDataset = true;
             Filename = fileName;
+            _ignoreChangeDataset = false;
             Name = Path.GetFileNameWithoutExtension(fileName);
-            int numBands = _dataset.RasterCount;
-            for (int i = 1; i <= numBands; i++)
-            {
-                Band band = _dataset.GetRasterBand(i);
-                if (i == 1)
-                {
-                    _band = band;
-                }
-                Bands.Add(new GdalRasterSet<T>(fileName, fromDataset, band));
-            }
-            ReadHeader();
+            _dataset = fromDataset;
+            OnDatasetChanged();
         }
 
         /// <summary>
@@ -64,11 +129,12 @@ namespace EM.GIS.Gdals
         /// <param name="fromDataset">The dataset.</param>
         /// <param name="fromBand">The band.</param>
         public GdalRasterSet(string fileName, Dataset fromDataset, Band fromBand)
-            : base(fromDataset.RasterYSize, fromDataset.RasterXSize)
         {
             _dataset = fromDataset;
             _band = fromBand;
+            _ignoreChangeDataset = true;
             Filename = fileName;
+            _ignoreChangeDataset = false;
             Name = Path.GetFileNameWithoutExtension(fileName);
             ReadHeader();
         }
@@ -77,95 +143,10 @@ namespace EM.GIS.Gdals
 
         #region Properties
 
-        public Dataset Dataset { get; set; }
         /// <summary>
         /// Gets the GDAL data type.
         /// </summary>
         public DataType GdalDataType => _band.DataType;
-
-        /// <summary>
-        /// Gets or sets the maximum.
-        /// </summary>
-        public override double Maximum
-        {
-            get
-            {
-                return base.Maximum;
-            }
-
-            protected set
-            {
-                base.Maximum = value;
-                if (_band != null)
-                {
-                    _band.SetStatistics(Minimum, value, Mean, StdDeviation);
-                    _band.SetMetadataItem("STATISTICS_MAXIMUM", Maximum.ToString(), string.Empty);
-                }
-                else
-                {
-                    foreach (GdalRasterSet<T> raster in Bands)
-                    {
-                        raster.Maximum = value;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the mean.
-        /// </summary>
-        public override double Mean
-        {
-            get
-            {
-                return base.Mean;
-            }
-
-            protected set
-            {
-                base.Mean = value;
-                if (_band != null)
-                {
-                    _band.SetStatistics(Minimum, Maximum, value, StdDeviation);
-                    _band.SetMetadataItem("STATISTICS_MEAN", Mean.ToString(), string.Empty);
-                }
-                else
-                {
-                    foreach (GdalRasterSet<T> raster in Bands)
-                    {
-                        raster.Mean = value;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum.
-        /// </summary>
-        public override double Minimum
-        {
-            get
-            {
-                return base.Minimum;
-            }
-
-            protected set
-            {
-                base.Minimum = value;
-                if (_band != null)
-                {
-                    _band.SetStatistics(value, Maximum, Mean, StdDeviation);
-                    _band.SetMetadataItem("STATISTICS_MINIMUM", Minimum.ToString(), string.Empty);
-                }
-                else
-                {
-                    foreach (GdalRasterSet<T> raster in Bands)
-                    {
-                        raster.Minimum = value;
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Gets or sets the NoDataValue.
@@ -189,34 +170,6 @@ namespace EM.GIS.Gdals
                     foreach (var raster in Bands)
                     {
                         raster.NoDataValue = value;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the standard deviation.
-        /// </summary>
-        public override double StdDeviation
-        {
-            get
-            {
-                return base.StdDeviation;
-            }
-
-            protected set
-            {
-                base.StdDeviation = value;
-                if (_band != null)
-                {
-                    _band.SetStatistics(Minimum, Maximum, Mean, value);
-                    _band.SetMetadataItem("STATISTICS_STDDEV", StdDeviation.ToString(), string.Empty);
-                }
-                else
-                {
-                    foreach (GdalRasterSet<T> raster in Bands)
-                    {
-                        raster.StdDeviation = value;
                     }
                 }
             }
@@ -787,8 +740,9 @@ namespace EM.GIS.Gdals
         /// <summary>
         /// Gets the mean, standard deviation, minimum and maximum
         /// </summary>
-        public override void GetStatistics()
+        public override Statistics GetStatistics()
         {
+            Statistics statistics = new Statistics();
             if (_band != null)
             {
                 double min, max, mean, std;
@@ -800,10 +754,10 @@ namespace EM.GIS.Gdals
                     {
                         err = _band.ComputeStatistics(false, out min, out max, out mean, out std, null, null);
                     }
-                    Minimum = min;
-                    Maximum = max;
-                    Mean = mean;
-                    StdDeviation = std;
+                    statistics.Minimum = min;
+                    statistics.Maximum = max;
+                    statistics.Mean = mean;
+                    statistics.StdDeviation = std;
                 }
                 catch (Exception ex)
                 {
@@ -821,9 +775,10 @@ namespace EM.GIS.Gdals
                 // ?? doesn't this mean the stats get overwritten several times.
                 foreach (IRasterSet raster in Bands)
                 {
-                    raster.GetStatistics();
+                    statistics = raster.GetStatistics();
                 }
             }
+            return statistics;
         }
 
         protected override void Dispose(bool disposing)
@@ -887,17 +842,12 @@ namespace EM.GIS.Gdals
 
         private void ReadHeader()
         {
-            DataType = typeof(T);
-            NumColumns = _dataset.RasterXSize;
-            NumRows = _dataset.RasterYSize;
-
             // Todo: look for prj file if GetProjection returns null.
             // Do we need to read this as an Esri string if we don't get a proj4 string?
-            string projString = _dataset.GetProjection();
-            SpatialReference =new SpatialReference(projString);
             if (_band != null)
             {
-                double val;
+                RasterType = _band.DataType.ToRasterType();
+                   double val;
                 _band.GetNoDataValue(out val, out int hasVal);
                 if (hasVal == 1)
                 {

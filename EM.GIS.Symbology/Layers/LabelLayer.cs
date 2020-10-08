@@ -8,7 +8,7 @@ using OSGeo.OGR;
 
 namespace EM.GIS.Symbology
 {
-    public class LabelLayer : BaseLayer, ILabelLayer
+    public class LabelLayer : Layer, ILabelLayer
     {
         public DataSource DataSource { get => FeatureLayer.DataSource; }
         public IFeatureLayer FeatureLayer { get; set; }
@@ -27,11 +27,11 @@ namespace EM.GIS.Symbology
         {
             throw new NotImplementedException();
         }
-        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false,CancellationTokenSource cancellationTokenSource = null)
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false,CancellationTokenSource cancellationTokenSource = null)
         {
             throw new NotImplementedException();
         }
-        public bool Select(Extent region)
+        public bool Select(IExtent region)
         {
             throw new NotImplementedException();
         }

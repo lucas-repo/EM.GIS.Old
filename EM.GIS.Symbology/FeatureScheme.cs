@@ -80,7 +80,7 @@ namespace EM.GIS.Symbology
 
                 if (cat != null)
                 {
-                    cat.LegendText = brk.Name;
+                    cat.Text = brk.Name;
 
                     if (isStringField) cat.FilterExpression = fieldExpression + "= '" + brk.Name.Replace("'", "''") + "'";
                     else cat.FilterExpression = fieldExpression + "=" + brk.Name;
@@ -129,7 +129,7 @@ namespace EM.GIS.Symbology
                 }
             }
 
-            LegendText = fieldName;
+            Text = fieldName;
         }
         public void GetValues(DataTable table)
         {

@@ -310,7 +310,7 @@ namespace EM.GIS.Symbology
 
             Coordinate topLeft = BufferToProj(tl);
             Coordinate bottomRight = BufferToProj(br);
-            return new Extent(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
+            return  new Extent(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
         }
         public Coordinate BufferToProj(Point position)
         {
@@ -351,7 +351,7 @@ namespace EM.GIS.Symbology
         {
             // to prevent exception when zoom to map with one layer with one point
             const double Eps = 1e-7;
-            var maxExtent = Extent.Width < Eps || Extent.Height < Eps ? new Extent(Extent.MinX - Eps, Extent.MinY - Eps, Extent.MaxX + Eps, Extent.MaxY + Eps) : Extent;
+            var maxExtent = Extent.Width < Eps || Extent.Height < Eps ?  new Extent(Extent.MinX - Eps, Extent.MinY - Eps, Extent.MaxX + Eps, Extent.MaxY + Eps) : Extent;
             if (expand) maxExtent.ExpandBy(maxExtent.Width / 10, maxExtent.Height / 10);
             return maxExtent;
         }

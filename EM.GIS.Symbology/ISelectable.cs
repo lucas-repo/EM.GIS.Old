@@ -35,7 +35,7 @@ namespace EM.GIS.Symbology
         /// <param name="affectedArea">The affected area.</param>
         /// <param name="force">Indicates whether the selection should be cleared although SelectionEnabled is false.</param>
         /// <returns>Boolean, true if members were removed from the selection</returns>
-        bool ClearSelection(out Extent affectedArea, bool force);
+        bool ClearSelection(out IExtent affectedArea, bool force);
 
         /// <summary>
         /// Inverts the selected state of any members in the specified region.
@@ -45,7 +45,7 @@ namespace EM.GIS.Symbology
         /// <param name="mode">The selection mode determining how to test for intersection</param>
         /// <param name="affectedArea">The geographic region encapsulating the changed members</param>
         /// <returns>Boolean, true if members were changed by the selection process.</returns>
-        bool InvertSelection(Extent tolerant, Extent strict, SelectionMode mode, out Extent affectedArea);
+        bool InvertSelection(IExtent tolerant, IExtent strict, SelectionMode mode, out IExtent affectedArea);
 
         /// <summary>
         /// Adds any members found in the specified region to the selected state as long as
@@ -57,7 +57,7 @@ namespace EM.GIS.Symbology
         /// <param name="affectedArea">The envelope affected area</param>
         /// <param name="clear">Indicates whether prior selected features should be cleared.</param>
         /// <returns>Boolean, true if any members were added to the selection</returns>
-        bool Select(Extent tolerant, Extent strict, SelectionMode mode, out Extent affectedArea, ClearStates clear);
+        bool Select(IExtent tolerant, IExtent strict, SelectionMode mode, out IExtent affectedArea, ClearStates clear);
 
         /// <summary>
         /// Removes any members found in the specified region from the selection
@@ -67,7 +67,7 @@ namespace EM.GIS.Symbology
         /// <param name="mode">The selection mode to use for selecting items</param>
         /// <param name="affectedArea">The geographic region containing all the shapes that were altered</param>
         /// <returns>Boolean, true if any members were removed from the selection</returns>
-        bool UnSelect(Extent tolerant, Extent strict, SelectionMode mode, out Extent affectedArea);
+        bool UnSelect(IExtent tolerant, IExtent strict, SelectionMode mode, out IExtent affectedArea);
 
         #endregion
     }

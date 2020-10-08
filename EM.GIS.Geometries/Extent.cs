@@ -464,14 +464,10 @@ namespace EM.GIS.Geometries
         /// This only applies to the X and Y terms. Check HasM or HasZ for higher dimensions.
         /// </summary>
         /// <returns>Boolean, true if the envelope has not had values set for it yet.</returns>
-        public bool IsEmpty
+        public bool IsEmpty()
         {
-            get
-            {
-                if (double.IsNaN(MinX) || double.IsNaN(MaxX) || double.IsNaN(MinY) || double.IsNaN(MaxY)) return true;
-
-                return MinX > MaxX || MinY > MaxY; // Simplified 
-            }
+            if (double.IsNaN(MinX) || double.IsNaN(MaxX) || double.IsNaN(MinY) || double.IsNaN(MaxY)) return true;
+            return MinX > MaxX || MinY > MaxY; // Simplified 
         }
 
         /// <summary>

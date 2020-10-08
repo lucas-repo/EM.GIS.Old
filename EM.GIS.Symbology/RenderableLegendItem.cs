@@ -19,7 +19,7 @@ namespace EM.GIS.Symbology
         /// </summary>
         public RenderableLegendItem()
         {
-            Checked = true;
+            IsChecked = true;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace EM.GIS.Symbology
         /// </summary>
         [Category("General")]
         [Description("Obtains an Envelope that contains this object")]
-        public virtual Extent Extent { get;  }
+        public virtual IExtent IExtent { get;  }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the unmanaged drawing structures have been created for this item

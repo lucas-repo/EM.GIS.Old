@@ -36,7 +36,7 @@ namespace EM.GIS.Symbology
             var fillColor = CreateRandomColor();
             result.Symbolizer = new LineSymbolizer(fillColor, 2);
             result.FilterExpression = filterExpression;
-            result.LegendText = filterExpression;
+            result.Text = filterExpression;
             return result;
         }
 

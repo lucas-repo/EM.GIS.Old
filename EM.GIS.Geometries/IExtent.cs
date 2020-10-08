@@ -8,10 +8,6 @@ namespace EM.GIS.Geometries
     public interface IExtent:ICloneable
     {
         /// <summary>
-        /// 是否为空
-        /// </summary>
-        bool IsEmpty { get; }
-        /// <summary>
         /// 最小X
         /// </summary>
         double MinX { get; set; }
@@ -72,6 +68,10 @@ namespace EM.GIS.Geometries
         /// 中心点
         /// </summary>
         ICoordinate Center { get; set; }
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        bool IsEmpty();
         /// <summary>
         /// 是否包含点
         /// </summary>

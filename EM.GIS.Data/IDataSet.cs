@@ -20,7 +20,7 @@ namespace EM.GIS.Data
         /// <summary>
         /// 相对路径
         /// </summary>
-        string RelativeFilename { get; set; }
+        string RelativeFilename { get; }
         /// <summary>
         /// 已经释放
         /// </summary>
@@ -32,7 +32,7 @@ namespace EM.GIS.Data
         /// <summary>
         /// 投影
         /// </summary>
-        ProjectionInfo Projection { get; set; }
+        ProjectionInfo Projection { get; }
         /// <summary>
         /// 进度
         /// </summary>
@@ -41,11 +41,6 @@ namespace EM.GIS.Data
         /// 坐标转换类
         /// </summary>
         ITransformation Transformation { get; set; }
-        /// <summary>
-        /// 重新加载
-        /// </summary>
-        /// <param name="filename"></param>
-        void ReLoad(string filename);
         /// <summary>
         /// 保存
         /// </summary>

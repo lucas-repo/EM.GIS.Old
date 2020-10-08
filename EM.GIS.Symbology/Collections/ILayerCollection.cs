@@ -1,9 +1,6 @@
 ﻿using EM.GIS.Data;
-using OSGeo.GDAL;
-using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EM.GIS.Symbology
 {
@@ -13,6 +10,7 @@ namespace EM.GIS.Symbology
         /// Gets or sets the progress handler to report progress for time consuming actions.
         /// </summary>
         IProgressHandler ProgressHandler { get; set; }
+
         /// <summary>
         /// Adds the specified fileName to the map as a new layer.
         /// </summary>

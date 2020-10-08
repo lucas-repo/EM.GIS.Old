@@ -1,39 +1,28 @@
 ﻿using EM.GIS.Data;
 using EM.GIS.Geometries;
-using OSGeo.OSR;
 using System;
 using System.Drawing;
 using System.Threading;
 
 namespace EM.GIS.Symbology
 {
-    public interface ILayer :  IDisposable,IDynamicVisibility
+    /// <summary>
+    /// 图层集合
+    /// </summary>
+    public interface ILayer : ILegendItem, IDisposable,IDynamicVisibility
     {
+        /// <summary>
+        /// 数据集
+        /// </summary>
         IDataSet DataSet { get; set; }
         /// <summary>
-        /// Gets or sets the progress handler
+        /// 进度处理
         /// </summary>
         IProgressHandler ProgressHandler { get; set; }
-        /// <summary>
-        /// 名称
-        /// </summary>
-        string Name { get; set; }
-        /// <summary>
-        /// 别名
-        /// </summary>
-        string AliasName { get; set; }
-        /// <summary>
-        /// 是否可见
-        /// </summary>
-        bool IsVisible { get; set; }
         /// <summary>
         /// 范围
         /// </summary>
         IExtent Extent { get;  }
-        /// <summary>
-        /// 空间参考
-        /// </summary>
-        SpatialReference SpatialReference { get; }
         /// <summary>
         /// 符号
         /// </summary>

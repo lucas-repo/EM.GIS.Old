@@ -13,6 +13,7 @@ namespace EM.GIS.Data
     /// <summary>
     /// DataSet
     /// </summary>
+    [Serializable]
     public abstract class DataSet : BaseCopy, IDataSet
     {
 
@@ -32,16 +33,20 @@ namespace EM.GIS.Data
         /// Gets or sets the file name of a file based data set. The file name should be the absolute path including
         /// the file extension. For data sets coming from a database or a web service, the Filename property is NULL.
         /// </summary>
-        public virtual string Filename
+        public string Filename
         {
-            get
-            {
-                return _filename;
-            }
-
+            get => _filename;
             set
             {
-                _filename = string.IsNullOrEmpty(value) ? null : Path.GetFullPath(value);
+                _filename = value;
+                if (File.Exists(Filename))
+                {
+                    RelativeFilename = FilePathUtils.RelativePathTo(Filename);
+                }
+                else
+                {
+                    RelativeFilename = Filename;
+                }
             }
         }
 
@@ -61,15 +66,11 @@ namespace EM.GIS.Data
 
         #endregion
 
-        public string RelativeFilename
-        {
-            get => string.IsNullOrEmpty(Filename) ? null : FilePathUtils.RelativePathTo(Filename);
-            set => Filename = value;
-        }
+        public virtual string RelativeFilename { get; protected set; }
 
         public virtual bool CanReproject { get; }
 
-        public virtual ProjectionInfo Projection { get; set; }
+        public virtual ProjectionInfo Projection { get; protected set; }
         public virtual ITransformation Transformation { get; set; }
 
         #region IDisposable Support
@@ -103,11 +104,6 @@ namespace EM.GIS.Data
             Dispose(true);
             // TODO: 如果在以上内容中替代了终结器，则取消注释以下行。
             // GC.SuppressFinalize(this);
-        }
-
-        public virtual void ReLoad(string filename)
-        {
-
         }
 
         public virtual void Save() { }

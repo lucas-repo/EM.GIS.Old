@@ -33,7 +33,7 @@ namespace EM.GIS.Symbology
         /// Gets an Envelope in world coordinates that contains this object.
         /// </summary>
         /// <returns>The extent that contains this object.</returns>
-        Extent Extent { get; }
+        IExtent IExtent { get; }
 
         /// <summary>
         /// Gets a value indicating whether or not the unmanaged drawing structures have been created for this item.

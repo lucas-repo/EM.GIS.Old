@@ -33,7 +33,7 @@ namespace EM.GIS.Symbology
             var fillColor = CreateRandomColor();
             result.Symbolizer = new PointSymbolizer(fillColor, PointShape.Ellipse, 10);
             result.FilterExpression = filterExpression;
-            result.LegendText = filterExpression;
+            result.Text = filterExpression;
             return result;
         }
 

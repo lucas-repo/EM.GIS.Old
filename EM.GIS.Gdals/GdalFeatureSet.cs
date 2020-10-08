@@ -5,6 +5,7 @@ using OSGeo.OGR;
 using OSGeo.OSR;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -13,7 +14,9 @@ namespace EM.GIS.Gdals
     public class GdalFeatureSet : FeatureSet
     {
         private DataSource _dataSource;
-
+        /// <summary>
+        /// 数据源
+        /// </summary>
         public DataSource DataSource
         {
             get { return _dataSource; }
@@ -24,40 +27,39 @@ namespace EM.GIS.Gdals
                     _dataSource.Dispose();
                 }
                 _dataSource = value;
-                if (_dataSource?.GetLayerCount() > 0)
-                {
-                    Layer = _dataSource.GetLayerByIndex(0);
-                }
-                else
-                {
-                    Layer = null;
-                }
             }
         }
-
-        private Layer _layer;
-        public Layer Layer 
-        {
-            get { return _layer; }
-            private set
-            {
-                if (_layer != value)
-                {
-                    if (_layer != null)
-                    {
-                        _layer.Dispose();
-                    }
-                    _layer = value;
-                    FeatureDefn = _layer?.GetLayerDefn();
-                }
-            }
-        }
-        private FeatureDefn _featureDefn;
-
+        public Layer Layer => DataSource.GetLayerByIndex(0);
         public FeatureDefn FeatureDefn=> Layer.GetLayerDefn();
-
         public override IExtent Extent => Layer.GetExtent();
-        public override string Filename { get => DataSource.; set => base.Filename = value; }
+        private bool _ignoreChangeDataSource;
+        public override string RelativeFilename
+        { 
+            get => base.RelativeFilename;
+            protected set
+            {
+                base.RelativeFilename = value;
+                if (!_ignoreChangeDataSource)
+                {
+                    if (File.Exists(value))
+                    {
+                        try
+                        {
+                            DataSource = Ogr.Open(value, 1);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine(e);
+                            DataSource = Ogr.Open(value, 0);
+                        }
+                    }
+                    else
+                    {
+                        DataSource = null;
+                    }
+                }
+            }
+        }
         public override ProjectionInfo Projection 
         {
             get
@@ -79,14 +81,6 @@ namespace EM.GIS.Gdals
                     }
                 }
                 return base.Projection; ;
-            }
-            set
-            {
-                if (base.Projection != null)
-                {
-                    base.Projection.Dispose();
-                }
-                base.Projection = value;
             }
         }
         public override int FeatureCount => (int)Layer.GetFeatureCount(1);
@@ -116,22 +110,18 @@ namespace EM.GIS.Gdals
             }
         }
 
+        public GdalFeatureSet(string filename,DataSource dataSource)
+        {
+            _ignoreChangeDataSource = true;
+            Filename = filename;
+            _dataSource = dataSource;
+        }
         protected override void Dispose(bool disposing)
         {
             if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    if (FeatureDefn != null)
-                    {
-                        FeatureDefn.Dispose();
-                        FeatureDefn = null;
-                    }
-                    if (_layer != null)
-                    {
-                        _layer.Dispose();
-                        _layer = null;
-                    }
                     if (DataSource != null)
                     {
                         DataSource.Dispose();

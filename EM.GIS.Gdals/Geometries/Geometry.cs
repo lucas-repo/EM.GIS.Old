@@ -65,7 +65,7 @@ namespace EM.GIS.Gdals
 
         public ICoordinate Coord => OgrGeometry.GetCoordinate(0);
 
-        public bool IsEmpty => OgrGeometry.IsEmpty();
+        public bool IsEmpty() => OgrGeometry.IsEmpty();
 
         public IGeometry GetGeometry(int index)
         {
@@ -186,5 +186,12 @@ namespace EM.GIS.Gdals
             }
             return ret;
         }
+
+        public override int GetHashCode()
+        {
+            int hashCode = GeometryType.GetHashCode() ^ OgrGeometry.GetHashCode();
+            return hashCode;
+        }
+        
     }
 }

@@ -542,16 +542,13 @@ namespace EM.GIS.Geometries
         // 摘要:
         //     /// If either X or Y is defined as NaN, then this coordinate is considered empty.
         //     ///
-        public bool IsEmpty
+        public bool IsEmpty()
         {
-            get
+            if (!double.IsNaN(X))
             {
-                if (!double.IsNaN(X))
-                {
-                    return double.IsNaN(Y);
-                }
-                return true;
+                return double.IsNaN(Y);
             }
+            return true;
         }
         public double[] ToDoubleArray(int dimension = 2)
         {

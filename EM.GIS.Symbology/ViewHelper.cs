@@ -14,7 +14,7 @@ namespace EM.GIS.Symbology
         /// </summary>
         /// <param name="envelope"></param>
         /// <param name="view"></param>
-        public static void GetViewEnvelope(Extent envelope,Rectangle view)
+        public static void GetViewEnvelope(IExtent envelope,Rectangle view)
         {
             // Aspect Ratio Handling
             if (envelope == null) return;

@@ -10,6 +10,12 @@ namespace EM.GIS.Data
     /// </summary>
     public interface IRasterDriver : IDriver
     {
+        /// <summary>
+        /// 打开栅格
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="update"></param>
+        /// <returns></returns>
         new IRasterSet Open(string fileName, bool update);
         /// <summary>
         /// 创建栅格

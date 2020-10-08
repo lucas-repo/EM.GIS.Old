@@ -1,17 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 
 namespace EM.GIS.Symbology
 {
-    public interface ILegendItem : IDescriptor, IChangeItem, IParentItem<ILegendItem>
+    /// <summary>
+    /// 图例元素接口
+    /// </summary>
+    public interface ILegendItem : IChangeItem, IParentItem<ILegendItem>,ICloneable
     {
         /// <summary>
-        /// Gets or sets a value indicating whether or not this legend item should be visible.
-        /// This will not be altered unless the LegendSymbolMode is set to CheckBox.
+        /// 是否展开
         /// </summary>
-        bool Checked { get; set; }
-
+        bool IsExpanded { get; set; }
+        /// <summary>
+        /// 是否选择
+        /// </summary>
+        bool IsSelected { get; set; }
+        /// <summary>
+        /// 图例类型
+        /// </summary>
+        LegendType LegendType { get; set; }
+        /// <summary>
+        /// 是否可见
+        /// </summary>
+        bool IsVisible { get; set; }
+        /// <summary>
+        /// 文字
+        /// </summary>
+        string Text { get; set; }
+        /// <summary>
+        /// 子元素集合
+        /// </summary>
+        ILegendItemCollection Items { get; }
         /// <summary>
         /// Gets or sets a list of menu items that should appear for this layer.
         /// These are in addition to any that are supported by default.
@@ -19,21 +41,8 @@ namespace EM.GIS.Symbology
         /// </summary>
         List<SymbologyMenuItem> ContextMenuItems { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this legend item is expanded.
-        /// </summary>
-        bool IsExpanded { get; set; }
+        LegendMode LegendSymbolMode { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this legend item is currently selected (and therefore drawn differently).
-        /// </summary>
-        bool IsSelected { get; set; }
-        SymbolMode LegendSymbolMode { get; set; }
-        LegendType LegendType { get; set; }
-        bool IsVisible { get; set; }
-        bool LegendItemVisible { get; set; }
-        string LegendText { get; set; }
-        Size GetLegendSymbolSize();
         void DrawLegend(Graphics context, Rectangle rectangle);
     }
 }

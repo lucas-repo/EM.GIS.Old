@@ -7,10 +7,10 @@ namespace EM.GIS.Projection
     /// <summary>
     /// 投影信息
     /// </summary>
-    public class ProjectionInfo : BaseCopy,IDisposable
+    public abstract class ProjectionInfo : BaseCopy,IDisposable
     {
         public bool IsDisposed { get; private set; }
-
+        
         /// <summary>
         ///   Gets or sets the athority, for example EPSG
         /// </summary>
@@ -283,7 +283,31 @@ namespace EM.GIS.Projection
         {
             return MemberwiseClone();
         }
-
+        /// <summary>
+        /// 从wkt导入
+        /// </summary>
+        /// <param name="wkt"></param>
+        public abstract void ImportFromWkt(string wkt);
+        /// <summary>
+        /// 导出成wkt
+        /// </summary>
+        /// <returns></returns>
+        public abstract string ExportToWkt();
+        /// <summary>
+        /// 从ESRI字符串导入
+        /// </summary>
+        /// <param name="wkt"></param>
+        public abstract void ImportFromESRI(string wkt);
+        /// <summary>
+        /// 导入proj4
+        /// </summary>
+        /// <param name="proj4"></param>
+        public abstract void ImportFromProj4(string proj4);
+        /// <summary>
+        /// 导出为Proj4
+        /// </summary>
+        /// <returns></returns>
+        public abstract string ExportToProj4();
         protected virtual void Dispose(bool disposing)
         {
             if (!IsDisposed)

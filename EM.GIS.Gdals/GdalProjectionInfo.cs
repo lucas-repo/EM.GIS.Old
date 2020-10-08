@@ -1,4 +1,5 @@
 ﻿using EM.GIS.Projection;
+using OSGeo.OGR;
 using OSGeo.OSR;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace EM.GIS.Gdals
     public class GdalProjectionInfo : ProjectionInfo
     {
         private SpatialReference _spatialReference;
+
         /// <summary>
         /// 空间参考
         /// </summary>
@@ -24,13 +26,18 @@ namespace EM.GIS.Gdals
                 {
                     _spatialReference.Dispose();
                 }
-                _spatialReference = value;
+                _spatialReference = value; 
             }
         }
 
+
         public GdalProjectionInfo(SpatialReference spatialReference)
         {
-            SpatialReference = spatialReference;
+            SpatialReference = spatialReference; 
+        }
+        public GdalProjectionInfo(string wkt)
+        {
+            SpatialReference = new SpatialReference(wkt);
         }
         protected override void Dispose(bool disposing)
         {
@@ -41,11 +48,39 @@ namespace EM.GIS.Gdals
                     if (SpatialReference != null)
                     {
                         SpatialReference.Dispose();
-                        SpatialReference = null;
                     }
                 }
             }
             base.Dispose(disposing);
+        }
+        public override bool IsValid => SpatialReference.Validate()== 0;
+        public override void ImportFromWkt(string wkt)
+        {
+            var destWkt = wkt;
+            var ret= SpatialReference.ImportFromWkt(ref destWkt); 
+        }
+
+        public override string ExportToWkt()
+        {
+            var ret = SpatialReference.ExportToWkt(out string wkt);
+            return wkt;
+        }
+
+        public override void ImportFromESRI(string wkt)
+        {
+            string[] arry = { wkt };
+            var ret = SpatialReference.ImportFromESRI(arry);
+        }
+
+        public override void ImportFromProj4(string proj4)
+        {
+            var ret = SpatialReference.ImportFromProj4(proj4);
+        }
+
+        public override string ExportToProj4()
+        {
+            var ret = SpatialReference.ExportToProj4(out string proj4);
+            return proj4;
         }
         public override string Authority
         {
@@ -271,6 +306,21 @@ namespace EM.GIS.Gdals
             {
                 base.Unit = value;
             }
+        }
+        public override bool Equals(object obj)
+        {
+            bool ret = false;
+            if (obj is GdalProjectionInfo gdalProjectionInfo)
+            {
+                ret = SpatialReference.Equals(gdalProjectionInfo.SpatialReference);
+            }
+            return ret;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = "GdalProjectionInfo".GetHashCode() ^ SpatialReference.GetHashCode();
+            return hashCode;
         }
     }
 }

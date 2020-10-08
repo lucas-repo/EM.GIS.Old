@@ -11,10 +11,10 @@ namespace EM.GIS.Gdals
     public static class GdalExtentions
     {
         /// <summary>
-        /// Opens the given file.
+        /// 尝试以读写打开数据，若失败则以只读打开
         /// </summary>
-        /// <param name="fileName">File that gets opened.</param>
-        /// <returns>Opened file as data set.</returns>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static Dataset Open(string fileName)
         {
             Dataset dataset = null;
@@ -24,15 +24,16 @@ namespace EM.GIS.Gdals
                 {
                     dataset = Gdal.Open(fileName, Access.GA_Update);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Debug.WriteLine($"以读写打开“{fileName}”失败，将尝试以只读打开，错误信息：{e}");
                     try
                     {
                         dataset = Gdal.Open(fileName, Access.GA_ReadOnly);
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine($"打开“{fileName}”失败，{ex.Message}");
+                        Debug.WriteLine($"以只读打开“{fileName}”失败，错误信息：{ex}");
                     }
                 }
             }
@@ -271,6 +272,68 @@ namespace EM.GIS.Gdals
                     throw new NotImplementedException();
             }
             return buffer;
+        }
+        public static RasterType ToRasterType(this DataType dataType)
+        {
+            RasterType rasterType = RasterType.Unknown;
+            switch (dataType)
+            {
+                case DataType.GDT_Byte:
+                    rasterType = RasterType.Byte;
+                    break;
+                case DataType.GDT_CInt16:
+                    rasterType = RasterType.Int16;
+                    break;
+                case DataType.GDT_CInt32:
+                    rasterType = RasterType.Int32;
+                    break;
+                case DataType.GDT_UInt16:
+                    rasterType = RasterType.UInt16;
+                    break;
+                case DataType.GDT_UInt32:
+                    rasterType = RasterType.UInt32;
+                    break;
+                case DataType.GDT_CFloat32:
+                    rasterType = RasterType.Float;
+                    break;
+                case DataType.GDT_CFloat64:
+                    rasterType = RasterType.Double;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return rasterType;
+        }
+        public static DataType ToRasterType(this RasterType rasterType)
+        {
+            DataType dataType = DataType.GDT_Unknown;
+            switch (rasterType)
+            {
+                case RasterType.Byte:
+                    dataType = DataType.GDT_Byte;
+                    break;
+                case RasterType.Int16:
+                    dataType = DataType.GDT_CInt16;
+                    break;
+                case RasterType.Int32:
+                    dataType = DataType.GDT_CInt32;
+                    break;
+                case RasterType.UInt16:
+                    dataType = DataType.GDT_UInt16;
+                    break;
+                case RasterType.UInt32:
+                    dataType = DataType.GDT_UInt32;
+                    break;
+                case RasterType.Float:
+                    dataType = DataType.GDT_CFloat32;
+                    break;
+                case RasterType.Double:
+                    dataType = DataType.GDT_CFloat64;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return dataType;
         }
     }
 }

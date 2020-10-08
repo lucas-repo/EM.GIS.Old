@@ -22,10 +22,6 @@ namespace EM.GIS.Geometries
         /// </summary>
         int NumOrdinates { get; }
         /// <summary>
-        /// 是否为空
-        /// </summary>
-        bool IsEmpty { get; }
-        /// <summary>
         /// X值
         /// </summary>
         double X { get; set; }
@@ -41,6 +37,10 @@ namespace EM.GIS.Geometries
         /// M值
         /// </summary>
         double M { get; set; }
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        bool IsEmpty();
         /// <summary>
         /// 判断相等
         /// </summary>

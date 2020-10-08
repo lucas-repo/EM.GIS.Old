@@ -18,7 +18,7 @@ namespace EM.GIS.Data
         public static ICoordinate TransformCoordinate(this ITransformation transformation, ICoordinate coordinate)
         {
             ICoordinate destCoord = coordinate;
-            if (transformation == null || coordinate == null || coordinate.IsEmpty)
+            if (transformation == null || coordinate == null || coordinate.IsEmpty())
             {
                 return destCoord;
             }

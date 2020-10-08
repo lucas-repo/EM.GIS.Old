@@ -20,14 +20,15 @@ namespace EM.GIS.Data
         /// 波段数
         /// </summary>
         int BandCount { get; }
-        /// <summary>
-        /// 长度
-        /// </summary>
-        int Width { get; }
+
         /// <summary>
         /// 高度
         /// </summary>
-        int Height { get; }
+        int NumRows { get; }
+        /// <summary>
+        /// 长度
+        /// </summary>
+        int NumColumns { get; }
         /// <summary>
         /// 无数据值
         /// </summary>

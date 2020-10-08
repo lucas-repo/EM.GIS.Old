@@ -1,6 +1,9 @@
 ﻿namespace EM.GIS.Symbology
 {
-    public enum SymbolMode
+    /// <summary>
+    /// 图例类型
+    /// </summary>
+    public enum LegendMode
     {
         /// <summary>
         /// Display a checkbox next to the legend item

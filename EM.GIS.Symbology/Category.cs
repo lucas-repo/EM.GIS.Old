@@ -42,7 +42,7 @@ namespace EM.GIS.Symbology
         public  object Tag { get; set; }
         public virtual void ApplyMinMax(EditorSettings settings)
         {
-            LegendText = Range.ToString(settings.IntervalSnapMethod, settings.IntervalRoundingDigits);
+            Text = Range.ToString(settings.IntervalSnapMethod, settings.IntervalRoundingDigits);
         }
         public void ApplySnapping(IntervalSnapMethod method, int numDigits, List<double> values)
         {

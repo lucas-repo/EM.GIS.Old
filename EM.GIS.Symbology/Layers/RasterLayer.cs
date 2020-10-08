@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace EM.GIS.Symbology
 {
-    public class RasterLayer : BaseLayer, IRasterLayer
+    public class RasterLayer : Layer, IRasterLayer
     {
         public RasterLayer()
         {
@@ -33,7 +33,7 @@ namespace EM.GIS.Symbology
             }
             base.Dispose(disposing);
         }
-        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
             using (var bmp = DataSet.GetBitmap(extent, rectangle))
             {

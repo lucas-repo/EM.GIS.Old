@@ -191,7 +191,7 @@ namespace EM.GIS.Symbology
                 if (cat != null)
                 {
                     // cat.SelectionSymbolizer = _selectionSymbolizer.Copy();
-                    cat.LegendText = brk.Name;
+                    cat.Text = brk.Name;
                     if (prevBreak != null) cat.Minimum = prevBreak.Maximum;
                     cat.Maximum = brk.Maximum;
                     cat.Range.MaxIsInclusive = true;

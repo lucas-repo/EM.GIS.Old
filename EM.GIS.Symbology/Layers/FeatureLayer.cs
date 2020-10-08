@@ -1,4 +1,5 @@
 ﻿using EM.GIS.Data;
+using EM.GIS.Geometries;
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading;
 
 namespace EM.GIS.Symbology
 {
-    public abstract class FeatureLayer : BaseLayer, IFeatureLayer
+    public abstract class FeatureLayer : Layer, IFeatureLayer
     {
         public DataSource DataSource { get; set; }
         private Layer _layer;
@@ -24,11 +25,11 @@ namespace EM.GIS.Symbology
                 return _layer;
             }
         }
-        public override Extent Extent
+        public override IExtent Extent
         {
             get
             {
-                Extent extent = null;
+                IExtent extent = null;
                 if (Layer != null)
                 {
                     using (Envelope envelope = new Envelope())
@@ -63,7 +64,7 @@ namespace EM.GIS.Symbology
             }
             base.Dispose(disposing);
         }
-        protected override void OnDraw(Graphics graphics, Rectangle rectangle, Extent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
+        protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
             using (Geometry polygon = extent.ToGeometry())
             {
@@ -81,7 +82,7 @@ namespace EM.GIS.Symbology
                 if (features.Count > 0)
                 {
                     percent = (int)(drawnFeatureCount * 100 / featureCount);
-                    ProgressHandler?.Invoke(percent, "绘制要素中...");
+                    ProgressHandler?.Progress(percent, "绘制要素中...");
                     MapArgs drawArgs = new MapArgs(rectangle, extent, graphics);
                     DrawFeatures(drawArgs, features, selected, ProgressHandler, cancellationTokenSource);
                     drawnFeatureCount += features.Count;
@@ -108,7 +109,7 @@ namespace EM.GIS.Symbology
             {
                 drawFeatuesAction();
             }
-            ProgressHandler?.Invoke(100, "绘制要素中...");
+            ProgressHandler?.Progress(100, "绘制要素中...");
         }
         private Dictionary<Feature, IFeatureCategory> GetFeatureAndCategoryDic(List<Feature> features)
         {

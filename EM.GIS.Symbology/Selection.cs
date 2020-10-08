@@ -7,14 +7,14 @@ namespace EM.GIS.Symbology
     public class Selection : Changeable, ISelection
     {
         public List<Feature> Features { get; }
-        private Extent _envelope;
-        public Extent Extent
+        private IExtent _envelope;
+        public IExtent IExtent
         {
             get
             {
                 if (_envelope == null)
                 {
-                    _envelope = new Extent();
+                    _envelope =  new Extent();
                 }
                 for (int i = 0; i < Features.Count; i++)
                 {

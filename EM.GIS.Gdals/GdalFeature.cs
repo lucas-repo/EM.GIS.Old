@@ -15,7 +15,7 @@ namespace EM.GIS.Gdals
         {
             get
             {
-                IGeometry geometry = Feature?.GetGeometryRef().ToGeometry();
+                IGeometry geometry = Feature?.GetGeometryRef().ToGeometry(); 
                 return geometry;
             }
             set
@@ -107,6 +107,12 @@ namespace EM.GIS.Gdals
                 ret = Feature == gdalFeature.Feature;
             }
             return ret;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = "GdalFeature".GetHashCode() ^ Feature.GetHashCode();
+            return hashCode;
         }
     }
 }

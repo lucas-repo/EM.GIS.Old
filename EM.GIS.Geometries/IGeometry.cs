@@ -10,10 +10,6 @@ namespace EM.GIS.Geometries
     public interface IGeometry:ICloneable
     {
         /// <summary>
-        /// 是否为空
-        /// </summary>
-        bool IsEmpty { get; }
-        /// <summary>
         /// 几何类型
         /// </summary>
         GeometryType GeometryType { get; }
@@ -25,6 +21,10 @@ namespace EM.GIS.Geometries
         /// 获取第一个点
         /// </summary>
         ICoordinate Coord { get; }
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        bool IsEmpty();
         /// <summary>
         /// 获取点
         /// </summary>
@@ -110,5 +110,6 @@ namespace EM.GIS.Geometries
         /// <returns></returns>
         double Distance(ICoordinate coord);
         #endregion
+        
     }
 }
