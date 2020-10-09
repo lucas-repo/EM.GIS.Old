@@ -7,7 +7,7 @@ using System.Threading;
 namespace EM.GIS.Symbology
 {
     /// <summary>
-    /// 图层集合
+    /// 图层接口
     /// </summary>
     public interface ILayer : ILegendItem, IDisposable,IDynamicVisibility
     {

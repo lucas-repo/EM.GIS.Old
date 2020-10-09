@@ -31,10 +31,20 @@ namespace EM.GIS.Symbology
         /// <returns></returns>
         IEnumerable<ILayer> GetAllLayers();
         /// <summary>
+        /// 获取要素图层集合
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IFeatureLayer> GetFeatureLayers();
+        /// <summary>
         /// 获取所有要素图层集合（包含子分组）
         /// </summary>
         /// <returns></returns>
         IEnumerable<IFeatureLayer> GetAllFeatureLayers();
+        /// <summary>
+        /// 获取所有栅格集合
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IRasterLayer> GetRasterLayers();
         /// <summary>
         /// 获取所有栅格图层集合（包含子分组）
         /// </summary>
@@ -74,5 +84,20 @@ namespace EM.GIS.Symbology
         /// <param name="index"></param>
         /// <returns></returns>
         public IRasterLayer AddLayer(IRasterSet rasterSet, int? index = null);
+        /// <summary>
+        /// 移除图层
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public bool RemoveLayer(ILayer layer);
+        /// <summary>
+        /// 移除图层
+        /// </summary>
+        /// <param name="index"></param>
+        public void RemoveLayerAt(int index);
+        /// <summary>
+        /// 清空图层
+        /// </summary>
+        void ClearLayers();
     }
 }

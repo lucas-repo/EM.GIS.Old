@@ -3,12 +3,16 @@ using EM.GIS.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 分组
+    /// </summary>
     public class Group : Layer, IGroup
     {
         public int LayerCount => GetLayers().Count();
@@ -44,17 +48,27 @@ namespace EM.GIS.Symbology
 
         public IEnumerable<IFeatureLayer> GetAllFeatureLayers()
         {
-            return GetAllLayers<IFeatureLayer>(GetLayers());
+            return GetLayers<IFeatureLayer>(GetLayers(),true);
         }
-        private IEnumerable<T> GetAllLayers<T>(IEnumerable<ILayer> layers) where T : ILayer
+        /// <summary>
+        /// 从指定图层集合获取指定类型的图层
+        /// </summary>
+        /// <typeparam name="T">图层类型</typeparam>
+        /// <param name="layers">图层集合</param>
+        /// <param name="searchChildren">是否查询子图层</param>
+        /// <returns></returns>
+        private IEnumerable<T> GetLayers<T>(IEnumerable<ILayer> layers,bool searchChildren) where T : ILayer
         {
             foreach (var layer in layers)
             {
                 if (layer is IGroup group)
                 {
-                    foreach (var item in GetAllLayers<T>(group.GetLayers()))
+                    if (searchChildren)
                     {
-                        yield return item;
+                        foreach (var item in GetLayers<T>(group.GetLayers(), searchChildren))
+                        {
+                            yield return item;
+                        }
                     }
                 }
                 else if(layer is T t)
@@ -65,7 +79,7 @@ namespace EM.GIS.Symbology
         }
         public IEnumerable<IRasterLayer> GetAllRasterLayers()
         {
-            return GetAllLayers<IRasterLayer>(GetLayers());
+            return GetLayers<IRasterLayer>(GetLayers(), true);
         }
 
         public bool AddLayer(ILayer layer, int? index = null)
@@ -167,7 +181,32 @@ namespace EM.GIS.Symbology
 
         public IEnumerable<ILayer> GetAllLayers()
         {
-            return GetAllLayers<ILayer>(GetLayers());
+            return GetLayers<ILayer>(GetLayers(),true);
+        }
+
+        public bool RemoveLayer(ILayer layer)
+        {
+           return  Items.Remove(layer); 
+        }
+
+        public void RemoveLayerAt(int index)
+        {
+             Items.RemoveAt(index);
+        }
+
+        public void ClearLayers()
+        {
+            Items.Clear();
+        }
+
+        public IEnumerable<IFeatureLayer> GetFeatureLayers()
+        {
+            return GetLayers<IFeatureLayer>(GetLayers(), false);
+        }
+
+        public IEnumerable<IRasterLayer> GetRasterLayers()
+        {
+            return GetLayers<IRasterLayer>(GetLayers(), false);
         }
 
         public override IExtent Extent
@@ -175,24 +214,9 @@ namespace EM.GIS.Symbology
             get
             {
                 IExtent extent = new Extent();
-                int i = 0;
                 foreach (var layer in GetAllLayers())
                 {
-                    if (i == 0)
-                    {
-                        extent.MinX = layer.Extent.MinX;
-                        extent.MinY = layer.Extent.MinY;
-                        extent.MaxX = layer.Extent.MaxX;
-                        extent.MaxY = layer.Extent.MaxY;
-                    }
-                    else
-                    {
-                        extent.MinX = Math.Min(extent.MinX, layer.Extent.MinX);
-                        extent.MinY = Math.Min(extent.MinY, layer.Extent.MinY);
-                        extent.MaxX = Math.Max(extent.MaxX, layer.Extent.MaxX);
-                        extent.MaxY = Math.Max(extent.MaxY, layer.Extent.MaxY);
-                    }
-                    i++;
+                    extent.ExpandToInclude(layer.Extent);
                 }
                 return extent;
             }

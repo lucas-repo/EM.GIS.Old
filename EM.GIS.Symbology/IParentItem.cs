@@ -4,7 +4,7 @@
     /// 带父元素的接口
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IParentItem<T>
+    public interface IParentItem<out T>
     {
         /// <summary>
         /// 父元素

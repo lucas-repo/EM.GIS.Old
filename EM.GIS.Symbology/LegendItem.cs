@@ -7,6 +7,9 @@ using System.Drawing;
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 图例元素
+    /// </summary>
     [Serializable]
     public abstract class LegendItem : Descriptor, ILegendItem
     {
@@ -24,9 +27,11 @@ namespace EM.GIS.Symbology
         public LegendMode LegendSymbolMode { get ; set ; }
         public LegendType LegendType { get; set; }
 
+        public ILegendItemCollection Items { get; }
+
         public LegendItem()
         {
-
+            Items = new LegendItemCollection(this);
         }
         public LegendItem(ILegendItem parent) : this()
         {

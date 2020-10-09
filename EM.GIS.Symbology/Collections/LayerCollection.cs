@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace EM.GIS.Symbology
 {
-    public class LayerCollection : LegendItemCollection, ILayerCollection
+    public class LayerCollection : ItemCollection<IGroup, ILayer>, ILayerCollection
     {
         ILayer IList<ILayer>.this[int index] { get => this[index] as ILayer; set => this[index] = value; }
 
@@ -71,40 +71,10 @@ namespace EM.GIS.Symbology
             return rasterLayer;
         }
 
-        public void Add(ILayer item)
-        {
-           base.Add(item);
-        }
-
         public ILayer AddLayer(string path)
         {
             IDataSet dataSet = DataManager.Default.Open(path);
             return Add(dataSet);
-        }
-
-        public bool Contains(ILayer item)
-        {
-            return base.Contains(item);
-        }
-
-        public void CopyTo(ILayer[] array, int arrayIndex)
-        {
-            base.CopyTo(array, arrayIndex);
-        }
-
-        public int IndexOf(ILayer item)
-        {
-            return base.IndexOf(item);
-        }
-
-        public void Insert(int index, ILayer item)
-        {
-            base.Insert(index, item);
-        }
-
-        public bool Remove(ILayer item)
-        {
-            return base.Remove(item);
         }
 
         IEnumerator<ILayer> IEnumerable<ILayer>.GetEnumerator()

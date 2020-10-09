@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace EM.GIS.Symbology
 {
-    public abstract class LegendItemCollection:ItemCollection<ILegendItem, ILegendItem>, ILegendItemCollection
+    /// <summary>
+    /// 图例元素集合
+    /// </summary>
+    public class LegendItemCollection:ItemCollection<ILegendItem, ILegendItem>, ILegendItemCollection
     {
         public new ILegendItem Parent
         {
@@ -25,7 +29,8 @@ namespace EM.GIS.Symbology
             }
         }
         public LegendItemCollection() 
-        { }
+        {
+        }
         public LegendItemCollection(ILegendItem parent) : base(parent)
         { }
     }

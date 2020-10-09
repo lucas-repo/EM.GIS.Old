@@ -6,8 +6,13 @@ using System.Collections.Specialized;
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 元素集合
+    /// </summary>
+    /// <typeparam name="TParent"></typeparam>
+    /// <typeparam name="TChild"></typeparam>
     [Serializable]
-    public abstract class ItemCollection<TParent, TChild> :  IItemCollection<TParent, TChild>
+    public abstract class ItemCollection< TParent, TChild> :  IItemCollection<TParent, TChild>
     {
         protected ObservableCollection<TChild> Items { get; }
         public TChild this[int index] { get => Items[index]; set => Items[index]=value; }

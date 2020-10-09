@@ -9,8 +9,11 @@ using System.Threading;
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 图层
+    /// </summary>
     [Serializable]
-    public abstract class Layer : BaseCopy, ILayer
+    public abstract class Layer : LegendItem, ILayer
     {
         public virtual IExtent Extent { get; }
         public bool IsVisible { get; set; } = true;
