@@ -15,9 +15,13 @@ namespace EM.GIS.Symbology
     /// </summary>
     public class Group : Layer, IGroup
     {
+        public ILayerCollection Layers { get; }
+
+        public override ILegendItemCollection Items => Layers;
         public int LayerCount => GetLayers().Count();
         public Group()
         {
+            Layers = new LayerCollection();
         }
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
@@ -111,7 +115,7 @@ namespace EM.GIS.Symbology
 
         public ILayer AddLayer(string filename, int? index = null)
         {
-            IDataSet dataSet = DataManager.Default.Open(filename);
+            IDataSet dataSet = DataFactor.Default.DriverFactory.Open(filename);
             return AddLayer(dataSet, index);
         }
 

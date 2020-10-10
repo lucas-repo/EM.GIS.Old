@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace EM.GIS.Data
 {
     /// <summary>
-    /// This can be used as a component to work as a DataManager. This also provides the very important DefaultDataManager property,
-    /// which is where the developer controls what DataManager should be used for their project.
+    /// 驱动工厂
     /// </summary>
-    public class DataManager : IDataManager
+    public class DriverFactory : IDriverFactory
     {
         [Browsable(false)]
         [ImportMany(AllowRecomposition = true)]
@@ -23,26 +20,26 @@ namespace EM.GIS.Data
         public IEnumerable<IVectorDriver> VectorDrivers => Drivers.Where(x => x is IVectorDriver).Select(x => x as IVectorDriver);
 
         public IEnumerable<IRasterDriver> RasterDrivers => Drivers.Where(x => x is IRasterDriver).Select(x => x as IRasterDriver);
+        private IProgressHandler _progressHandler;
 
         [Category("Handlers")]
         [Description("Gets or sets the object that implements the IProgressHandler interface for recieving status messages.")]
-        public virtual IProgressHandler ProgressHandler { get; set; }
-
-        private static IDataManager _default;
-        /// <summary>
-        /// 默认数据管理器
-        /// </summary>
-        public static IDataManager Default
+        public IProgressHandler ProgressHandler
         {
-            get
-            {
-                return _default ?? (_default = new DataManager());
-            }
+            get { return _progressHandler; }
             set
             {
-                _default = value;
+                _progressHandler = value;
+                if (Drivers != null)
+                {
+                    foreach (var item in Drivers)
+                    {
+                        item.ProgressHandler = value;
+                    }
+                }
             }
         }
+
         public IRasterSet OpenRaster(string fileName)
         {
             IRasterSet dataSet = null;
@@ -139,6 +136,5 @@ namespace EM.GIS.Data
             }
             return dataSet;
         }
-
     }
 }

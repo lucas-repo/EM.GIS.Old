@@ -1,6 +1,5 @@
 ﻿using EM.GIS.Data;
 using EM.GIS.Geometries;
-using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,41 +11,14 @@ namespace EM.GIS.Symbology
 {
     public abstract class FeatureLayer : Layer, IFeatureLayer
     {
-        public DataSource DataSource { get; set; }
-        private Layer _layer;
-        public Layer Layer
-        {
-            get
-            {
-                if (_layer == null)
-                {
-                    _layer = DataSource?.GetLayerByIndex(0);
-                }
-                return _layer;
-            }
-        }
         public override IExtent Extent
         {
-            get
-            {
-                IExtent extent = null;
-                if (Layer != null)
-                {
-                    using (Envelope envelope = new Envelope())
-                    {
-                        var ret = Layer.GetExtent(envelope, 0);
-                        extent = envelope.ToExtent();
-                    }
-                }
-                return extent;
-            }
+            get => DataSet.Extent;
         }
-        public new IFeatureScheme Symbology { get => base.Symbology as IFeatureScheme; set => base.Symbology = value; }
         public new IFeatureCategory DefaultCategory { get => base.DefaultCategory as IFeatureCategory; set => base.DefaultCategory = value; }
         public FeatureLayer(IFeatureSet featureSet)
         {
             DataSet = featureSet;
-            DataSource = featureSet.DataSource;
             Selection = new Selection();
         }
 
@@ -54,22 +26,13 @@ namespace EM.GIS.Symbology
         public ILabelLayer LabelLayer { get; set; }
         public new IFeatureSet DataSet { get => base.DataSet as IFeatureSet; set => base.DataSet = value; }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Layer?.Dispose();
-                DataSource?.Dispose();
-                DataSource = null;
-            }
-            base.Dispose(disposing);
-        }
+        public new IFeatureCategoryCollection Categories { get; }
+        public override ILegendItemCollection Items => Categories;
+      
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
-            using (Geometry polygon = extent.ToGeometry())
-            {
-                Layer.SetSpatialFilter(polygon);
-            }
+            IGeometry polygon = extent.ToGeometry();
+            Layer.SetSpatialFilter(polygon);
             List<Feature> features = new List<Feature>();
             Feature feature = Layer.GetNextFeature();
             long featureCount = Layer.GetFeatureCount(0);

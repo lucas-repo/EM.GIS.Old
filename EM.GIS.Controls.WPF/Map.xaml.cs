@@ -135,14 +135,14 @@ namespace EM.GIS.WpfControls
             //}
             //return layer;
 
-            if (DataManager.Default.ProgressHandler == null && MapFrame.ProgressHandler != null)
+            if (DataFactor.Default.ProgressHandler == null && MapFrame.ProgressHandler != null)
             {
-                DataManager.Default.ProgressHandler = MapFrame.ProgressHandler;
+                DataFactor.Default.ProgressHandler = MapFrame.ProgressHandler;
             }
 
             try
             {
-                return Layers.Add(DataManager.Default.OpenFile());
+                return Layers.AddLayer(DataFactor.Default.OpenFile());
             }
             catch (Exception ex)
             {

@@ -4,14 +4,27 @@ using System.Runtime.CompilerServices;
 
 namespace EM.GIS.Symbology
 {
-    public class LayerCollection : ItemCollection<IGroup, ILayer>, ILayerCollection
+    /// <summary>
+    /// 图层集合
+    /// </summary>
+    public class LayerCollection : LegendItemCollection, ILayerCollection
     {
-        ILayer IList<ILayer>.this[int index] { get => this[index] as ILayer; set => this[index] = value; }
+        #region 重写部分
+        public new ILayer this[int index] { get => Items[index] as ILayer; set => Items[index] = value; }
+        public new IGroup Parent { get => base.Parent as IGroup; set => base.Parent = value; }
+        public new IEnumerator<ILayer> GetEnumerator()
+        {
+            foreach (var item in Items)
+            {
+                yield return item as ILayer;
+            }
+        }
 
+        #endregion
         public IProgressHandler ProgressHandler { get; set; }
-        IGroup IParentItem<IGroup>.Parent { get => Parent as IGroup; set => Parent = value; }
 
-        public ILayer Add(IDataSet dataSet)
+
+        public ILayer AddLayer(IDataSet dataSet)
         {
             ILayer layer = null;
             //var ss = dataSet as ISelfLoadSet;
@@ -19,11 +32,11 @@ namespace EM.GIS.Symbology
 
             if (dataSet is IFeatureSet fs)
             {
-                layer = Add(fs);
+                layer = AddLayer(fs);
             }
             else if (dataSet is IRasterSet r)
             {
-                layer = Add(r);
+                layer = AddLayer(r);
             }
             return layer;
 
@@ -31,7 +44,7 @@ namespace EM.GIS.Symbology
             //return id != null ? Add(id) : null;
         }
 
-        public IFeatureLayer Add(IFeatureSet featureSet)
+        public IFeatureLayer AddLayer(IFeatureSet featureSet)
         {
             IFeatureLayer res = null;
             if (featureSet == null) return null;
@@ -59,7 +72,7 @@ namespace EM.GIS.Symbology
             return res;
         }
 
-        public IRasterLayer Add(IRasterSet raster)
+        public IRasterLayer AddLayer(IRasterSet raster)
         {
             IRasterLayer rasterLayer = null;
             if (raster != null)
@@ -73,16 +86,9 @@ namespace EM.GIS.Symbology
 
         public ILayer AddLayer(string path)
         {
-            IDataSet dataSet = DataManager.Default.Open(path);
-            return Add(dataSet);
+            IDataSet dataSet = DataFactor.Default.DriverFactory.Open(path);
+            return AddLayer(dataSet);
         }
 
-        IEnumerator<ILayer> IEnumerable<ILayer>.GetEnumerator()
-        {
-            foreach (var item in this)
-            {
-                yield return item as ILayer;
-            }
-        }
     }
 }

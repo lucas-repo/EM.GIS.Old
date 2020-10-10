@@ -23,12 +23,13 @@ namespace EM.GIS.Symbology
         /// 范围
         /// </summary>
         IExtent Extent { get;  }
+
         /// <summary>
-        /// 符号
+        /// 分类集合（要素或栅格等子图层才实现）
         /// </summary>
-        IScheme Symbology { get; set; }
+        ICategoryCollection Categories { get; }
         /// <summary>
-        /// 默认符号
+        /// 默认分类
         /// </summary>
         ICategory DefaultCategory { get; set; }
         /// <summary>

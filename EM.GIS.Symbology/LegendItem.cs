@@ -27,11 +27,10 @@ namespace EM.GIS.Symbology
         public LegendMode LegendSymbolMode { get ; set ; }
         public LegendType LegendType { get; set; }
 
-        public ILegendItemCollection Items { get; }
+        public abstract ILegendItemCollection Items { get; }
 
         public LegendItem()
         {
-            Items = new LegendItemCollection(this);
         }
         public LegendItem(ILegendItem parent) : this()
         {

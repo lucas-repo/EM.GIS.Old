@@ -11,6 +11,10 @@ namespace EM.GIS.Symbology
     public interface IGroup : ILayer
     {
         /// <summary>
+        /// 图层
+        /// </summary>
+        ILayerCollection Layers { get; }
+        /// <summary>
         /// 图层个数
         /// </summary>
         int LayerCount { get; }

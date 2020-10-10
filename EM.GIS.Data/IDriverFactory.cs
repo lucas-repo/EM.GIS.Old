@@ -5,9 +5,9 @@ using System.Text;
 namespace EM.GIS.Data
 {
     /// <summary>
-    /// 数据管理接口
+    /// 数据驱动工厂
     /// </summary>
-    public interface IDataManager
+    public interface IDriverFactory
     {
         /// <summary>
         /// 数据驱动集合
@@ -43,6 +43,5 @@ namespace EM.GIS.Data
         /// <param name="path"></param>
         /// <returns></returns>
         IRasterSet OpenRaster(string path);
-
     }
 }

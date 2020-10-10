@@ -21,7 +21,7 @@ namespace EM.GIS.Symbology
         public virtual ILayer OpenLayer(string dataPath)
         {
             ILayer layer = null;
-            var dataset = DataManager.Default.Open(dataPath);
+            var dataset = DataFactor.Default.DriverFactory.Open(dataPath);
             if ( dataset is IRasterSet rasterSet)
             {
                 layer = new RasterLayer(rasterSet);

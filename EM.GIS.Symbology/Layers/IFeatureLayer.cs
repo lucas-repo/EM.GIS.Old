@@ -7,9 +7,21 @@ namespace EM.GIS.Symbology
     /// </summary>
     public interface IFeatureLayer: ILayer
     {
-        new IFeatureScheme Symbology { get; set; }
+        /// <summary>
+        /// 分类集合
+        /// </summary>
+        new IFeatureCategoryCollection Categories { get; }
+        /// <summary>
+        /// 默认分类
+        /// </summary>
         new IFeatureCategory DefaultCategory { get; set; }
+        /// <summary>
+        /// 数据集
+        /// </summary>
         new IFeatureSet DataSet { get; set; }
+        /// <summary>
+        /// 选择器
+        /// </summary>
         ISelection Selection { get; }
         /// <summary>
         /// 标注图层

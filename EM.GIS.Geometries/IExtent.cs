@@ -52,6 +52,7 @@ namespace EM.GIS.Geometries
         /// X值
         /// </summary>
         double X { get; set; }
+
         /// <summary>
         /// Y值
         /// </summary>

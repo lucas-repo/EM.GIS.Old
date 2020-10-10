@@ -4,8 +4,29 @@ using System.Collections.Generic;
 
 namespace EM.GIS.Symbology
 {
-    public interface ILayerCollection : IItemCollection<IGroup, ILayer>
+    /// <summary>
+    /// 图层集合接口
+    /// </summary>
+    public interface ILayerCollection : ILegendItemCollection
     {
+        #region 需要重写的部分
+        /// <summary>
+        /// 获取或设置图层
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        new ILayer this[int index] { get;set; }
+        /// <summary>
+        /// 获取枚举器
+        /// </summary>
+        /// <returns></returns>
+        new IEnumerator<ILayer> GetEnumerator();
+        /// <summary>
+        /// 父元素
+        /// </summary>
+        new IGroup Parent { get; set; }
+        #endregion
+
         /// <summary>
         /// Gets or sets the progress handler to report progress for time consuming actions.
         /// </summary>
@@ -23,7 +44,7 @@ namespace EM.GIS.Symbology
         /// </summary>
         /// <param name="dataSet">A dataset</param>
         /// <returns>The IMapLayer to add</returns>
-        ILayer Add(IDataSet dataSet);
+        ILayer AddLayer(IDataSet dataSet);
         /// <summary>
         /// This overload automatically constructs a new MapLayer from the specified
         /// feature layer with the default drawing characteristics and returns a valid
@@ -33,12 +54,12 @@ namespace EM.GIS.Symbology
         /// <param name="featureSet">Any valid IFeatureSet that does not yet have drawing characteristics</param>
         /// <returns>A newly created valid implementation of FeatureLayer which at least gives a few more common
         /// drawing related methods and can also be cast into the appropriate Point, Line or Polygon layer.</returns>
-        IFeatureLayer Add(IFeatureSet featureSet);
+        IFeatureLayer AddLayer(IFeatureSet featureSet);
         /// <summary>
         /// Adds the specified raster as a new layer
         /// </summary>
         /// <param name="raster">The raster to add as a layer</param>
         /// <returns>the MapRasterLayer interface</returns>
-        IRasterLayer Add(IRasterSet raster);
+        IRasterLayer AddLayer(IRasterSet raster);
     }
 }

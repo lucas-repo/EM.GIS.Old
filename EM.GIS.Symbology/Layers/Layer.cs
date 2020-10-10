@@ -3,6 +3,7 @@ using EM.GIS.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -16,25 +17,34 @@ namespace EM.GIS.Symbology
     public abstract class Layer : LegendItem, ILayer
     {
         public virtual IExtent Extent { get; }
-        public bool IsVisible { get; set; } = true;
         public IProgressHandler ProgressHandler { get; set; }
-        public IScheme Symbology { get; set; }
-
-        public ICategory DefaultCategory { get; set; }
+        public ICategory DefaultCategory
+        {
+            get
+            {
+                ICategory category = Categories?.FirstOrDefault() as ICategory;
+                return category;
+            }
+            set
+            {
+                if (Categories != null)
+                {
+                    if (Categories.Count > 0)
+                    {
+                        Categories[0] = value;
+                    }
+                    else
+                    {
+                        Categories.Add(value);
+                    }
+                }
+            }
+        }
         public bool UseDynamicVisibility { get; set; }
         public double MaxInverseScale { get; set; }
         public double MinInverseScale { get; set; }
         public IDataSet DataSet { get; set; }
-        public bool IsExpanded { get; set; }
-        public bool IsSelected { get; set; }
-        public LegendType LegendType { get; set; }
-        public string Text { get; set; }
-
-        public ILegendItemCollection Items { get; }
-
-        public List<SymbologyMenuItem> ContextMenuItems { get; set; }
-        public LegendMode LegendSymbolMode { get; set; }
-        public ILegendItem Parent { get; set; }
+        public virtual ICategoryCollection Categories { get; }
 
         private void GetResolution(IExtent envelope, int pixelWidth, int pixelHeight, out double xRes, out double yRes)
         {
@@ -72,9 +82,6 @@ namespace EM.GIS.Symbology
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
 
-        public event EventHandler ItemChanged;
-        public event EventHandler RemoveItem;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -82,7 +89,6 @@ namespace EM.GIS.Symbology
                 if (disposing)
                 {
                     // TODO: 释放托管状态(托管对象)。
-                    Symbology = null;
                 }
                 // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
                 // TODO: 将大型字段设置为 null。
@@ -106,13 +112,6 @@ namespace EM.GIS.Symbology
             // TODO: 如果在以上内容中替代了终结器，则取消注释以下行。
             // GC.SuppressFinalize(this);
         }
-
-        public void DrawLegend(Graphics context, Rectangle rectangle)
-        {
-            throw new NotImplementedException();
-        }
-
-
         #endregion
     }
 }

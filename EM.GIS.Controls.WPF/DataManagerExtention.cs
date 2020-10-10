@@ -16,7 +16,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IFeatureSet with the data from the file specified in a dialog, or null if nothing load.</returns>
-        public static IFeatureSet OpenVector(this IDataManager self)
+        public static IFeatureSet OpenVector(this IDataFactory self)
         {
             IFeatureSet featureSet = null;
             var ofd = new OpenFileDialog { Filter = self.VectorReadFilter };
@@ -35,7 +35,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>The enumerable or vectors.</returns>
-        public static IEnumerable<IFeatureSet> OpenVectors(this IDataManager self)
+        public static IEnumerable<IFeatureSet> OpenVectors(this IDataFactory self)
         {
             var ofd = new OpenFileDialog { Filter = self.VectorReadFilter, Multiselect = true };
             var ret = ofd.ShowDialog();
@@ -55,7 +55,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IDataSet with the data from the file specified in an open file dialog</returns>
-        public static IDataSet OpenFile(this IDataManager self)
+        public static IDataSet OpenFile(this IDataFactory self)
         {
             var ofd = new OpenFileDialog { Filter = self.DialogReadFilter };
             var ret = ofd.ShowDialog();
@@ -70,7 +70,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An enumerable of all the files that were opened.</returns>
-        public static IEnumerable<IDataSet> OpenFiles(this IDataManager self)
+        public static IEnumerable<IDataSet> OpenFiles(this IDataFactory self)
         {
             var ofd = new OpenFileDialog { Multiselect = true, Filter = self.DialogReadFilter };
             var ret = ofd.ShowDialog();
@@ -94,7 +94,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IRaster with the data from the file specified in an open file dialog</returns>
-        public static IRasterSet OpenRaster(this IDataManager self)
+        public static IRasterSet OpenRaster(this IDataFactory self)
         {
             var ofd = new OpenFileDialog { Filter = self.RasterReadFilter };
             var ret = ofd.ShowDialog();
@@ -108,7 +108,7 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An enumerable or rasters.</returns>
-        public static IEnumerable<IRasterSet> OpenRasters(this IDataManager self)
+        public static IEnumerable<IRasterSet> OpenRasters(this IDataFactory self)
         {
             var ofd = new OpenFileDialog { Filter = self.RasterReadFilter, Multiselect = true };
             var ret = ofd.ShowDialog();
