@@ -8,14 +8,6 @@ namespace EM.GIS.Symbology
     public interface IFeatureLayer: ILayer
     {
         /// <summary>
-        /// 分类集合
-        /// </summary>
-        new IFeatureCategoryCollection Categories { get; }
-        /// <summary>
-        /// 默认分类
-        /// </summary>
-        new IFeatureCategory DefaultCategory { get; set; }
-        /// <summary>
         /// 数据集
         /// </summary>
         new IFeatureSet DataSet { get; set; }

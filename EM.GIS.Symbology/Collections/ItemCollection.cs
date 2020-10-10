@@ -14,6 +14,9 @@ namespace EM.GIS.Symbology
     [Serializable]
     public abstract class ItemCollection< TParent, TChild> :  IItemCollection<TParent, TChild>
     {
+        /// <summary>
+        /// 元素集合
+        /// </summary>
         protected ObservableCollection<TChild> Items { get; }
         public TChild this[int index] { get => Items[index]; set => Items[index]=value; }
         [NonSerialized]

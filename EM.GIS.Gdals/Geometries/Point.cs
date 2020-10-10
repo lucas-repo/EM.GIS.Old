@@ -3,6 +3,7 @@ using System;
 
 namespace EM.GIS.Gdals
 {
+    [Serializable]
     public class Point : Geometry, IPoint
     {
         public double X { get => OgrGeometry.GetX(0); set => OgrGeometry.SetPoint_2D(0, value, Y); }

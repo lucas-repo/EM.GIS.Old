@@ -5,6 +5,9 @@ using System.Text;
 
 namespace EM.GIS.Data
 {
+    /// <summary>
+    /// 要素集
+    /// </summary>
     public abstract class FeatureSet : DataSet, IFeatureSet
     {
         public FeatureType FeatureType { get;protected set; }

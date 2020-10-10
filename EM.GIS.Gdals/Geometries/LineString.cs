@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace EM.GIS.Gdals
 {
+    [Serializable]
     public class LineString : Geometry, ILineString
     {
         public IPoint StartPoint

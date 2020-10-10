@@ -100,8 +100,14 @@ namespace EM.GIS.Symbology
             }
             return featureCategoryDic;
         }
-        protected abstract void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry);
-        private void DrawFeatures(MapArgs drawArgs, List<Feature> features, bool selected, IProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
+        /// <summary>
+        /// 绘制几何要素
+        /// </summary>
+        /// <param name="drawArgs"></param>
+        /// <param name="symbolizer"></param>
+        /// <param name="geometry"></param>
+        protected abstract void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, IGeometry geometry);
+        private void DrawFeatures(MapArgs drawArgs, List<IFeature> features, bool selected, IProgressHandler progressHandler, CancellationTokenSource cancellationTokenSource)
         {
             if (drawArgs == null || features == null || cancellationTokenSource?.IsCancellationRequested == true)
             {

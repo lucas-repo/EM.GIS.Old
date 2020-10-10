@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EM.GIS.Gdals
 {
+    [Serializable]
     public abstract class GeometryCollection : Geometry, IGeometryCollection
     {
         public GeometryCollection(OSGeo.OGR.Geometry geometry) : base(geometry)

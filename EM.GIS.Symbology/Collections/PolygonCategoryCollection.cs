@@ -2,16 +2,16 @@
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 面分类集合
+    /// </summary>
     public class PolygonCategoryCollection :FeatureCategoryCollection, IPolygonCategoryCollection
     {
-
-        public new IPolygonCategory this[int index] { get => base[index] as IPolygonCategory; set => base[index] = value; }
-
-        public new IPolygonScheme Parent { get => base.Parent as IPolygonScheme; set => base.Parent = value; }
+        public new IPolygonCategory this[int index] { get => Items[index] as IPolygonCategory; set => Items[index] = value; }
 
         public PolygonCategoryCollection()
         { }
-        public PolygonCategoryCollection(IPolygonScheme parent) : base(parent)
+        public PolygonCategoryCollection(ILayer parent) : base(parent)
         { }
         public new IEnumerator<IPolygonCategory> GetEnumerator()
         {

@@ -9,11 +9,11 @@ namespace EM.GIS.Symbology
     /// <summary>
     /// 分类集合
     /// </summary>
-    public class CategoryCollection : LegendItemCollection, ICategoryCollection
+    public abstract class CategoryCollection : LegendItemCollection, ICategoryCollection
     {
         public CategoryCollection()
         { }
-        public CategoryCollection(IScheme parent) : base(parent)
+        public CategoryCollection(ILayer parent) : base(parent)
         { }
         #region 重写部分
         public new ICategory this[int index] { get => base[index] as ICategory; set => base[index] = value; }

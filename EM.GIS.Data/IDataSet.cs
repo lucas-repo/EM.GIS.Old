@@ -38,10 +38,6 @@ namespace EM.GIS.Data
         /// </summary>
         IProgressHandler ProgressHandler { get; set; }
         /// <summary>
-        /// 坐标转换类
-        /// </summary>
-        ITransformation Transformation { get; set; }
-        /// <summary>
         /// 保存
         /// </summary>
         void Save();

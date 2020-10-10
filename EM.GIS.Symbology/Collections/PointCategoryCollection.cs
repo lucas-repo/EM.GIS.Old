@@ -2,15 +2,16 @@
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 点分类集合
+    /// </summary>
     public class PointCategoryCollection : FeatureCategoryCollection,  IPointCategoryCollection
     {
-        public new IPointCategory this[int index] { get => base[index] as IPointCategory; set => base[index] = value; }
-
-        public new IPointScheme Parent { get => base.Parent as IPointScheme; set => base.Parent = value; }
+        public new IPointCategory this[int index] { get => Items[index] as IPointCategory; set => Items[index] = value; }
 
         public PointCategoryCollection()
         { }
-        public PointCategoryCollection(IPointScheme parent) : base(parent)
+        public PointCategoryCollection(ILayer parent) : base(parent)
         { }
         public new IEnumerator<IPointCategory> GetEnumerator()
         {

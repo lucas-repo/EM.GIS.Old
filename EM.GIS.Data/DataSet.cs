@@ -11,7 +11,7 @@ using System.Text;
 namespace EM.GIS.Data
 {
     /// <summary>
-    /// DataSet
+    /// 数据集
     /// </summary>
     [Serializable]
     public abstract class DataSet : BaseCopy, IDataSet
@@ -19,20 +19,9 @@ namespace EM.GIS.Data
 
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the extent for the dataset. Usages to Envelope were replaced
-        /// as they required an explicit using to DotSpatial.Topology which is not
-        /// as intuitive. Extent.ToEnvelope() and new Extent(myEnvelope) convert them.
-        /// This is designed to be a virtual member to be overridden by subclasses,
-        /// and should not be called directly by the constructor of inheriting classes.
-        /// </summary>
         public virtual IExtent Extent { get; }
 
         private string _filename;
-        /// <summary>
-        /// Gets or sets the file name of a file based data set. The file name should be the absolute path including
-        /// the file extension. For data sets coming from a database or a web service, the Filename property is NULL.
-        /// </summary>
         public string Filename
         {
             get => _filename;
@@ -50,14 +39,8 @@ namespace EM.GIS.Data
             }
         }
 
-        /// <summary>
-        /// Gets or sets the string name
-        /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the progress handler to use for internal actions taken by this dataset.
-        /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IProgressHandler ProgressHandler { get; set; }
@@ -68,10 +51,7 @@ namespace EM.GIS.Data
 
         public virtual string RelativeFilename { get; protected set; }
 
-        public virtual bool CanReproject { get; }
-
         public virtual ProjectionInfo Projection { get; protected set; }
-        public virtual ITransformation Transformation { get; set; }
 
         #region IDisposable Support
 

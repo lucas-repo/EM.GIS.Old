@@ -142,6 +142,24 @@ namespace EM.GIS.Data
                 return Point.Empty;
             }
         }
+        public static PointF ProjToPixelPointF(this IProj self, ICoordinate location)
+        {
+            if (self.Extent.Width == 0 || self.Extent.Height == 0) return Point.Empty;
+            if (self.Extent.Width == 0 || self.Extent.Height == 0) return Point.Empty;
+            try
+            {
+                int x = Convert.ToInt32(self.Bounds.X + (location.X - self.Extent.MinX) *
+                                    (self.Bounds.Width / self.Extent.Width));
+                int y = Convert.ToInt32(self.Bounds.Y + (self.Extent.MaxY - location.Y) *
+                                        (self.Bounds.Height / self.Extent.Height));
+
+                return new Point(x, y);
+            }
+            catch (OverflowException)
+            {
+                return Point.Empty;
+            }
+        }
         /// <summary>
         /// Converts a single geographic envelope into an equivalent Rectangle as it would be drawn on the screen.
         /// </summary>

@@ -2,15 +2,16 @@
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 线分类集合
+    /// </summary>
     public class LineCategoryCollection : FeatureCategoryCollection, ILineCategoryCollection
     {
-        public new ILineCategory this[int index] { get => base[index] as ILineCategory; set => base[index] = value; }
-
-        public new ILineScheme Parent { get => base.Parent as ILineScheme; set => base.Parent = value; }
+        public new ILineCategory this[int index] { get => Items[index] as ILineCategory; set => Items[index] = value; }
 
         public LineCategoryCollection()
         { }
-        public LineCategoryCollection(ILineScheme parent) : base(parent)
+        public LineCategoryCollection(ILayer parent) : base(parent)
         { }
         public new IEnumerator<ILineCategory> GetEnumerator()
         {

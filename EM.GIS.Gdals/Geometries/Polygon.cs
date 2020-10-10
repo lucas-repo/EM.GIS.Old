@@ -1,8 +1,10 @@
 ﻿using EM.GIS.Geometries;
+using System;
 using System.Collections.Generic;
 
 namespace EM.GIS.Gdals
 {
+    [Serializable]
     public class Polygon : Geometry, IPolygon
     {
         public ILinearRing Shell

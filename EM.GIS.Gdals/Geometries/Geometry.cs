@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EM.GIS.Gdals
 {
+    [Serializable]
     public abstract class Geometry : IGeometry
     {
         public OSGeo.OGR.Geometry OgrGeometry { get; }

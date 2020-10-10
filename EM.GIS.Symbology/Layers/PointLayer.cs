@@ -1,40 +1,39 @@
 ﻿using EM.GIS.Data;
-using OSGeo.OGR;
+using EM.GIS.Geometries;
 using System.Drawing;
 
 namespace EM.GIS.Symbology
 {
     public class PointLayer : FeatureLayer, IPointLayer
     {
-        public new IPointScheme Symbology
-        {
-            get => base.Symbology as IPointScheme;
-            set => base.Symbology = value;
-        }
         public new IPointCategory DefaultCategory
         {
             get => base.DefaultCategory as IPointCategory;
             set => base.DefaultCategory = value;
         }
+
+        public new IPointCategoryCollection Categories { get; }
+        public override ILegendItemCollection Items => Categories;
         public PointLayer(IFeatureSet featureSet) : base(featureSet)
         {
             DefaultCategory = new PointCategory();
-            Symbology = new PointScheme();
-            Symbology.Categories.Add(DefaultCategory);
+            Categories = new PointCategoryCollection(this)
+            { 
+                DefaultCategory
+            };
         }
 
-        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
+        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, IGeometry geometry)
         {
-            int geometryCount = geometry.GetGeometryCount();
+            int geometryCount = geometry.GeometryCount; 
             for (int i = 0; i < geometryCount; i++)
             {
-                Geometry partGeo = geometry.GetGeometryRef(i);
-                int pointCount = partGeo.GetPointCount();
-                double[] coord = new double[2];
+                var partGeo = geometry.GetGeometry(i);
+                int pointCount = partGeo.PointCount;
                 float scaleSize = (float)symbolizer.GetScale(drawArgs);
                 for (int j = 0; j < pointCount; j++)
                 {
-                    partGeo.GetPoint_2D(j, coord);
+                    var coord= partGeo.GetCoord(j);
                     PointF point = drawArgs.ProjToPixelPointF(coord);
                     (symbolizer as IPointSymbolizer).DrawPoint(drawArgs.Device, scaleSize, point);
                 }

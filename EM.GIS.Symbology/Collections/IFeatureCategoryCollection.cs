@@ -2,6 +2,9 @@
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 要素分类集合
+    /// </summary>
     public interface IFeatureCategoryCollection:ICategoryCollection
     {
         #region 需要重写的部分

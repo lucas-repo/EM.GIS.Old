@@ -2,7 +2,13 @@
 {
     public interface IPointLayer:IFeatureLayer
     {
-        new IPointScheme Symbology { get; set; }
+        /// <summary>
+        /// 分类集合
+        /// </summary>
+        new IPointCategoryCollection Categories { get; }
+        /// <summary>
+        /// 默认分类
+        /// </summary>
         new IPointCategory DefaultCategory { get; set; }
     }
 }
