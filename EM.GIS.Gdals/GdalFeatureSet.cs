@@ -214,9 +214,9 @@ namespace EM.GIS.Gdals
             }
         }
 
-        public override IFieldDfn GetFieldDfn(int index)
+        public override IFieldDefn GetFieldDefn(int index)
         {
-            IFieldDfn destFieldDfn = null;
+            IFieldDefn destFieldDfn = null;
             var fieldDefn = FeatureDefn.GetFieldDefn(index);
             if (fieldDefn != null)
             {

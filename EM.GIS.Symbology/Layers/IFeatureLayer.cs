@@ -14,7 +14,7 @@ namespace EM.GIS.Symbology
         /// <summary>
         /// 选择器
         /// </summary>
-        ISelection Selection { get; }
+        new IFeatureSelection Selection { get; }
         /// <summary>
         /// 标注图层
         /// </summary>

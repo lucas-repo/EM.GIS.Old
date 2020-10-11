@@ -11,7 +11,7 @@ namespace EM.GIS.Symbology
 
         public PolygonCategoryCollection()
         { }
-        public PolygonCategoryCollection(ILayer parent) : base(parent)
+        public PolygonCategoryCollection(IFeatureLayer parent) : base(parent)
         { }
         public new IEnumerator<IPolygonCategory> GetEnumerator()
         {

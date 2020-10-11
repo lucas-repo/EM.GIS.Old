@@ -5,7 +5,7 @@ namespace EM.GIS.Data
     /// <summary>
     /// 字段定义
     /// </summary>
-    public interface IFieldDfn
+    public interface IFieldDefn
     {
         /// <summary>
         /// 名称

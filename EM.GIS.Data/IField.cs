@@ -10,7 +10,7 @@ namespace EM.GIS.Data
         /// <summary>
         /// 字段定义
         /// </summary>
-        IFieldDfn FieldDfn { get;  }
+        IFieldDefn FieldDfn { get;  }
 
         /// <summary>
         /// 是否为空
@@ -31,7 +31,7 @@ namespace EM.GIS.Data
         /// 获取长整型值
         /// </summary>
         /// <returns></returns>
-        long GetValueAsInteger64();
+        long GetValueAsLong();
         /// <summary>
         /// 获取双精度值
         /// </summary>

@@ -33,6 +33,10 @@ namespace EM.GIS.Symbology
         /// </summary>
         ICategory DefaultCategory { get; set; }
         /// <summary>
+        /// 选择器
+        /// </summary>
+        ISelection Selection { get; }
+        /// <summary>
         /// 在指定范围是否可见
         /// </summary>
         /// <param name="extent"></param>

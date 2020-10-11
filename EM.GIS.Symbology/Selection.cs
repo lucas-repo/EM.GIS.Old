@@ -1,12 +1,12 @@
 ﻿using EM.GIS.Data;
-using OSGeo.OGR;
+using EM.GIS.Geometries;
 using System.Collections.Generic;
 
 namespace EM.GIS.Symbology
 {
     public class Selection : Changeable, ISelection
     {
-        public List<Feature> Features { get; }
+        public IEnumerable<IFeature> Features=>
         private IExtent _envelope;
         public IExtent IExtent
         {
@@ -42,7 +42,7 @@ namespace EM.GIS.Symbology
             }
         }
 
-        public Selection()
+        public Selection(IFeatureSet featureSet)
         {
             Features = new List<Feature>();
         }

@@ -1,25 +1,32 @@
 ﻿using EM.GIS.Data;
-using OSGeo.GDAL;
-using System;
-using System.Diagnostics;
+using EM.GIS.Geometries;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Threading;
 
 namespace EM.GIS.Symbology
 {
     public class RasterLayer : Layer, IRasterLayer
     {
+        public new IRasterCategory DefaultCategory
+        {
+            get => base.DefaultCategory as IRasterCategory;
+            set => base.DefaultCategory = value;
+        }
+
+        public new IRasterCategoryCollection Categories { get; }
+        public override ILegendItemCollection Items => Categories;
         public RasterLayer()
         {
+            DefaultCategory = new RasterCategory();
+            Categories = new RasterCategoryCollection(this)
+            {
+                DefaultCategory
+            };
         }
-        public RasterLayer(IRasterSet rasterSet)
+        public RasterLayer(IRasterSet rasterSet):this()
         {
             DataSet = rasterSet;
         }
-
-        public new IRasterScheme Symbology { get => base.Symbology as IRasterScheme; set => base.Symbology = value; }
 
         public new IRasterSet DataSet { get => base.DataSet as IRasterSet; set => base.DataSet = value; }
 
@@ -29,7 +36,6 @@ namespace EM.GIS.Symbology
             {
                 DataSet?.Dispose();
                 DataSet = null;
-                Symbology = null;
             }
             base.Dispose(disposing);
         }

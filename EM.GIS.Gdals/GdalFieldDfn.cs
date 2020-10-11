@@ -2,7 +2,7 @@
 
 namespace EM.GIS.Gdals
 {
-    internal class GdalFieldDfn : IFieldDfn
+    internal class GdalFieldDfn : IFieldDefn
     {
         public OSGeo.OGR.FieldDefn FieldDefn { get; set; }
 

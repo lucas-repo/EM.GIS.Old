@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
 
-
-
 namespace EM.GIS.Symbology
 {
     public class PolygonCategory : FeatureCategory, IPolygonCategory

@@ -22,26 +22,31 @@ namespace EM.GIS.Symbology
         public FeatureLayer(IFeatureSet featureSet)
         {
             DataSet = featureSet;
-            Selection = new Selection();
+            Selection = new FeatureSelection();
         }
 
-        public ISelection Selection { get; }
         public ILabelLayer LabelLayer { get; set; }
         public new IFeatureSet DataSet { get => base.DataSet as IFeatureSet; set => base.DataSet = value; }
 
         public new IFeatureCategoryCollection Categories { get; }
         public override ILegendItemCollection Items => Categories;
-      
+
+        public new IFeatureSelection Selection
+        {
+            get => base.Selection as IFeatureSelection;
+            set => base.Selection = value;
+        }
+
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
             var polygon = extent.ToPolygon();
             DataSet.SpatialFilter = polygon;
             var features = new List<IFeature>();
-            long featureCount = Layer.GetFeatureCount(0);
+            long featureCount = DataSet.FeatureCount;
             long drawnFeatureCount = 0;
             int threshold = 65536;
             int totalPointCount = 0;
-            int percent = 0;
+            int percent;
             Action drawFeatuesAction = new Action(() =>
             {
                 if (features.Count > 0)
@@ -62,8 +67,8 @@ namespace EM.GIS.Symbology
             foreach (var feature in DataSet.GetFeatures())
             {
                 features.Add(feature);
-                int pointCount = feature.Geometry.PointCount; 
-                 totalPointCount += pointCount;
+                int pointCount = feature.Geometry.PointCount;
+                totalPointCount += pointCount;
                 if (totalPointCount >= threshold)
                 {
                     drawFeatuesAction();
@@ -73,31 +78,28 @@ namespace EM.GIS.Symbology
             {
                 drawFeatuesAction();
             }
+            DataSet.SpatialFilter = null;
             ProgressHandler?.Progress(100, "绘制要素中...");
         }
-        private Dictionary<Feature, IFeatureCategory> GetFeatureAndCategoryDic(List<Feature> features)
+        private Dictionary<IFeature, IFeatureCategory> GetFeatureAndCategoryDic(List<IFeature> features)
         {
-            Dictionary<Feature, IFeatureCategory> featureCategoryDic = new Dictionary<Feature, IFeatureCategory>();
+            Dictionary<IFeature, IFeatureCategory> featureCategoryDic = new Dictionary<IFeature, IFeatureCategory>();
+            foreach (var feature in features)
+            {
+                featureCategoryDic[feature] = DefaultCategory;
+            }
             using (DataTable dataTable = GetAttribute(features))
             {
-                foreach (IFeatureCategory featureCategory in Symbology.Categories)
+                foreach (IFeatureCategory featureCategory in Categories)
                 {
                     DataRow[] rows = dataTable.Select(featureCategory.FilterExpression);
                     foreach (var row in rows)
                     {
                         int index = dataTable.Rows.IndexOf(row);
-                        Feature feature = features[index];
-                        if (!featureCategoryDic.ContainsKey(feature))
-                        {
-                            featureCategoryDic[feature] = featureCategory;
-                        }
+                        IFeature feature = features[index];
+                        featureCategoryDic[feature] = featureCategory;
                     }
                 }
-            }
-            var lastFeatures = features.Except(featureCategoryDic.Select(x => x.Key));
-            foreach (var feature in lastFeatures)
-            {
-                featureCategoryDic[feature] = DefaultCategory;
             }
             return featureCategoryDic;
         }
@@ -121,89 +123,72 @@ namespace EM.GIS.Symbology
                 {
                     return;
                 }
-                Feature feature = item.Key;
+                IFeature feature = item.Key;
                 var category = item.Value;
                 var symbolizer = selected ? category.SelectionSymbolizer : category.Symbolizer;
-                using (Geometry geometry = feature.GetGeometryRef())
-                {
-                    DrawGeometry(drawArgs, symbolizer, geometry);
-                }
+                DrawGeometry(drawArgs, symbolizer, feature.Geometry);
             }
         }
 
-        public DataTable GetSchema()
+        private DataTable GetSchema()
         {
             DataTable dataTable = new DataTable();
-            using (FeatureDefn featureDefn = Layer.GetLayerDefn())
+            int fieldCount = DataSet.FieldCount;
+            for (int i = 0; i < fieldCount; i++)
             {
-                int fieldCount = featureDefn.GetFieldCount();
-                for (int i = 0; i < fieldCount; i++)
+                var fieldDefn = DataSet.GetFieldDefn(i);
+
+                FieldType fieldType = fieldDefn.FieldType;
+                string name = fieldDefn.Name;
+                Type type = null;
+                switch (fieldType)
                 {
-                    using (FieldDefn fieldDefn = featureDefn.GetFieldDefn(i))
-                    {
-                        FieldType fieldType = fieldDefn.GetFieldType();
-                        string name = fieldDefn.GetName();
-                        Type type = null;
-                        string fieldName1 = fieldDefn.GetNameRef();
-                        switch (fieldType)
-                        {
-                            case FieldType.OFTBinary:
-                                type = typeof(byte[]);
-                                break;
-                            case FieldType.OFTDate:
-                                type = typeof(DateTime);
-                                break;
-                            case FieldType.OFTDateTime:
-                                type = typeof(DateTime);
-                                break;
-                            case FieldType.OFTInteger:
-                                type = typeof(int);
-                                break;
-                            case FieldType.OFTInteger64:
-                                type = typeof(long);
-                                break;
-                            case FieldType.OFTInteger64List:
-                                type = typeof(long[]);//todo待测试
-                                break;
-                            case FieldType.OFTIntegerList:
-                                type = typeof(int[]);
-                                break;
-                            case FieldType.OFTReal:
-                                type = typeof(double);
-                                break;
-                            case FieldType.OFTRealList:
-                                type = typeof(double[]);
-                                break;
-                            case FieldType.OFTString:
-                                type = typeof(string);
-                                break;
-                            case FieldType.OFTStringList:
-                                type = typeof(string[]);
-                                break;
-                            case FieldType.OFTTime:
-                                type = typeof(DateTime);
-                                break;
-                            case FieldType.OFTWideString:
-                                type = typeof(string);
-                                break;
-                            case FieldType.OFTWideStringList:
-                                type = typeof(string[]);
-                                break;
-                        }
-                        DataColumn dataColumn = new DataColumn(name, type);
-                        dataTable.Columns.Add(dataColumn);
-                    }
+                    case FieldType.Binary:
+                        type = typeof(byte[]);
+                        break;
+                    case FieldType.DateTime:
+                        type = typeof(DateTime);
+                        break;
+                    case FieldType.Int:
+                        type = typeof(int);
+                        break;
+                    case FieldType.Long:
+                        type = typeof(long);
+                        break;
+                    case FieldType.LongList:
+                        type = typeof(long[]);//todo待测试
+                        break;
+                    case FieldType.IntList:
+                        type = typeof(int[]);
+                        break;
+                    case FieldType.Double:
+                        type = typeof(double);
+                        break;
+                    case FieldType.DoubleList:
+                        type = typeof(double[]);
+                        break;
+                    case FieldType.String:
+                        type = typeof(string);
+                        break;
+                    case FieldType.StringList:
+                        type = typeof(string[]);
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
+                DataColumn dataColumn = new DataColumn(name, type);
+                dataTable.Columns.Add(dataColumn);
             }
             return dataTable;
         }
-        public DataTable GetAttribute(List<Feature> features)
+        private DataTable GetAttribute(List<IFeature> features)
         {
             DataTable dataTable = GetSchema();
-            if (features == null)
+            if (features == null || features.Count == 0)
             {
                 return dataTable;
             }
+            dataTable.BeginLoadData();
             foreach (var feature in features)
             {
                 DataRow dataRow = dataTable.NewRow();
@@ -211,31 +196,30 @@ namespace EM.GIS.Symbology
                 for (int i = 0; i < dataTable.Columns.Count; i++)
                 {
                     DataColumn column = dataTable.Columns[i];
-                    string name = column.ColumnName;
-                    switch (column.DataType.Name)
+                    var field = feature.GetField(i);
+                    switch (field.FieldDfn.FieldType)
                     {
-                        case "Int32":
-                            dataRow[column] = feature.GetFieldAsInteger(name);
+                        case FieldType.Int:
+                            dataRow[column] = field.GetValueAsInteger();
                             break;
-                        case "Int64":
-                            dataRow[column] = feature.GetFieldAsInteger64(name);
+                        case FieldType.Long:
+                            dataRow[column] = field.GetValueAsLong();
                             break;
-                        case "Double":
-                            dataRow[column] = feature.GetFieldAsDouble(name);
+                        case FieldType.Double:
+                            dataRow[column] = field.GetValueAsDouble();
                             break;
-                        case "DateTime":
-                            feature.GetFieldAsDateTime(name, out int pnYear, out int pnMonth, out int pnDay, out int pnHour, out int pnMinute, out float pfSecond, out int pnTZFlag);
-                            DateTime dateTime = new DateTime(pnYear, pnMonth, pnDay, pnHour, pnMinute, (int)pfSecond);
-                            dataRow[column] = dateTime;
+                        case FieldType.DateTime:
+                            dataRow[column] = field.GetValueAsDateTime();
                             break;
-                        case "String":
-                            dataRow[column] = feature.GetStringValue(i);
+                        case FieldType.String:
+                            dataRow[column] = field.GetValueAsString();
                             break;
                         default:
                             throw new NotImplementedException();
                     }
                 }
             }
+            dataTable.EndLoadData();
             return dataTable;
         }
 

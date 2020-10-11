@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace EM.GIS.Symbology
 {
     /// <summary>
-    /// 要素分类集合
+    /// 栅格分类集合
     /// </summary>
-    public interface IFeatureCategoryCollection : ICategoryCollection
+    public interface IRasterCategoryCollection: ICategoryCollection
     {
         #region 需要重写的部分
         /// <summary>
@@ -13,16 +15,16 @@ namespace EM.GIS.Symbology
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        new IFeatureCategory this[int index] { get; set; }
+        new IRasterCategory this[int index] { get; set; }
         /// <summary>
         /// 获取枚举器
         /// </summary>
         /// <returns></returns>
-        new IEnumerator<IFeatureCategory> GetEnumerator();
+        new IEnumerator<IRasterCategory> GetEnumerator();
         /// <summary>
         /// 父图层
         /// </summary>
-        new IFeatureLayer Parent { get; set; }
+        new IRasterLayer Parent { get; set; }
         #endregion
     }
 }

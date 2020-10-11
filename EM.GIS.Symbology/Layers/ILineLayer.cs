@@ -2,6 +2,13 @@
 {
     public interface ILineLayer:IFeatureLayer
     {
-        new ILineScheme Symbology { get; set; }
+        /// <summary>
+        /// 分类集合
+        /// </summary>
+        new ILineCategoryCollection Categories { get; }
+        /// <summary>
+        /// 默认分类
+        /// </summary>
+        new ILineCategory DefaultCategory { get; set; }
     }
 }

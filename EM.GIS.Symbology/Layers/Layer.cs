@@ -45,6 +45,7 @@ namespace EM.GIS.Symbology
         public double MinInverseScale { get; set; }
         public IDataSet DataSet { get; set; }
         public virtual ICategoryCollection Categories { get; }
+        public virtual ISelection Selection { get; protected set; }
 
         private void GetResolution(IExtent envelope, int pixelWidth, int pixelHeight, out double xRes, out double yRes)
         {

@@ -20,7 +20,7 @@ namespace EM.GIS.Data
         public abstract IFeature AddFeature(IGeometry geometry, Dictionary<string, object> attribute);
         public abstract IFeature GetFeature(int index);
         public abstract IEnumerable<IFeature> GetFeatures();
-        public abstract IFieldDfn GetFieldDfn(int index);
+        public abstract IFieldDefn GetFieldDefn(int index);
         public abstract bool RemoveFeature(int index);
     }
 }

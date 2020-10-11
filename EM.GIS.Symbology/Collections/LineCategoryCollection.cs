@@ -11,7 +11,7 @@ namespace EM.GIS.Symbology
 
         public LineCategoryCollection()
         { }
-        public LineCategoryCollection(ILayer parent) : base(parent)
+        public LineCategoryCollection(IFeatureLayer parent) : base(parent)
         { }
         public new IEnumerator<ILineCategory> GetEnumerator()
         {

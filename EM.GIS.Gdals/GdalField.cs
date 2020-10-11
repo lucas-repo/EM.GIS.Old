@@ -8,8 +8,8 @@ namespace EM.GIS.Gdals
     {
         private Feature _feature;
         private int _index;
-        private IFieldDfn _fieldDfn;
-        public IFieldDfn FieldDfn
+        private IFieldDefn _fieldDfn;
+        public IFieldDefn FieldDfn
         {
             get
             {
@@ -70,7 +70,7 @@ namespace EM.GIS.Gdals
             return value;
         }
 
-        public long GetValueAsInteger64()
+        public long GetValueAsLong()
         {
             var value = 0L;
             if (_feature != null)

@@ -14,6 +14,6 @@
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        IFieldDfn GetFieldDfn(int index);
+        IFieldDefn GetFieldDefn(int index);
     }
 }

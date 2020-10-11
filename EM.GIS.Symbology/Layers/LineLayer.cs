@@ -1,5 +1,5 @@
 ﻿using EM.GIS.Data;
-using OSGeo.OGR;
+using EM.GIS.Geometries;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,24 +8,23 @@ namespace EM.GIS.Symbology
 {
     public class LineLayer : FeatureLayer, ILineLayer
     {
-        public new ILineScheme Symbology
-        {
-            get => base.Symbology as ILineScheme;
-            set => base.Symbology = value;
-        }
         public new ILineCategory DefaultCategory
         {
             get => base.DefaultCategory as ILineCategory;
             set => base.DefaultCategory = value;
         }
+        public new ILineCategoryCollection Categories { get; }
+        public override ILegendItemCollection Items => Categories;
         public LineLayer(IFeatureSet featureSet) : base(featureSet)
         {
             DefaultCategory = new LineCategory();
-            Symbology = new LineScheme();
-            Symbology.Categories.Add(DefaultCategory);
+            Categories = new LineCategoryCollection(this)
+            {
+                DefaultCategory
+            };
         }
 
-        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
+        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, IGeometry geometry)
         {
             if (drawArgs == null || !(symbolizer is ILineSymbolizer lineSymbolizer) || geometry == null)
             {
@@ -38,35 +37,25 @@ namespace EM.GIS.Symbology
                 lineSymbolizer.DrawLine(drawArgs.Device, scaleSize, path);
             }
         }
-        private void GetLines(MapArgs drawArgs, Geometry geometry, GraphicsPath path)
+        private void GetLines(MapArgs drawArgs, IGeometry geometry, GraphicsPath path)
         {
-            int geoCount = geometry.GetGeometryCount();
-            var geometryType = geometry.GetGeometryType();
-            switch (geometryType)
+            switch (geometry.GeometryType)
             {
-                case wkbGeometryType.wkbMultiLineString:
-                case wkbGeometryType.wkbMultiLineString25D:
-                case wkbGeometryType.wkbMultiLineStringM:
-                case wkbGeometryType.wkbMultiLineStringZM:
+                case GeometryType.MultiLineString:
+                    int geoCount = geometry.GeometryCount;
                     for (int i = 0; i < geoCount; i++)
                     {
-                        using (var partGeo = geometry.GetGeometryRef(i))
-                        {
-                            path.StartFigure();
-                            GetLines(drawArgs, partGeo, path);
-                        }
+                        var partGeo = geometry.GetGeometry(i);
+                        path.StartFigure();
+                        GetLines(drawArgs, partGeo, path);
                     }
                     break;
-                case wkbGeometryType.wkbLineString:
-                case wkbGeometryType.wkbLineString25D:
-                case wkbGeometryType.wkbLineStringM:
-                case wkbGeometryType.wkbLineStringZM:
-                    int pointCount = geometry.GetPointCount();
-                    double[] coord = new double[2];
+                case GeometryType.LineString:
+                    int pointCount = geometry.PointCount;
                     PointF[] points = new PointF[pointCount];
                     for (int j = 0; j < pointCount; j++)
                     {
-                        geometry.GetPoint_2D(j, coord);
+                        var coord = geometry.GetCoord(j);
                         PointF point = drawArgs.ProjToPixelPointF(coord);
                         points[j] = point;
                     }

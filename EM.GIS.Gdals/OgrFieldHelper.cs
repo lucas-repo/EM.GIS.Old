@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace EM.GIS.Symbology
+namespace EM.GIS.Gdals
 {
     public static class OgrFieldHelper
     {
