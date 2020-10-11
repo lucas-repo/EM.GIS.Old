@@ -11,20 +11,66 @@ namespace EM.GIS.WpfControls
     /// </summary>
     public static class DataManagerExt
     {
+        public static string GetVectorFilter(this IDriverFactory driverFactory)
+        {
+            StringBuilder sb = new StringBuilder();
+            List<string> extensions = driverFactory.GetVectorReadableFileExtensions();
+            if (extensions.Count > 0)
+            {
+                sb.Append("矢量数据|");
+                foreach (var item in extensions)
+                {
+                    sb.Append($"*{item}");
+                }
+            }
+            return sb.ToString();
+        }
+        public static string GetRasterFilter(this IDriverFactory driverFactory)
+        {
+            StringBuilder sb = new StringBuilder();
+            List<string> extensions = driverFactory.GetRasterReadableFileExtensions();
+            if (extensions.Count > 0)
+            {
+                sb.Append("栅格数据|");
+                foreach (var item in extensions)
+                {
+                    sb.Append($"*{item}");
+                }
+            }
+            return sb.ToString();
+        }
+        public static string GetFilter(this IDriverFactory driverFactory)
+        {
+            var vectorFilter = driverFactory.GetVectorFilter();
+            var rasterFilter = driverFactory.GetRasterFilter();
+            string filter= vectorFilter;
+            if (string .IsNullOrEmpty(filter))
+            {
+                filter = rasterFilter;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(rasterFilter))
+                {
+                    filter = $"{filter}|{rasterFilter}";
+                }
+            }
+            return filter;
+        }
         /// <summary>
         /// This opens a file, but populates the dialog filter with only vector formats.
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IFeatureSet with the data from the file specified in a dialog, or null if nothing load.</returns>
-        public static IFeatureSet OpenVector(this IDataFactory self)
+        public static IFeatureSet OpenVector(this IDriverFactory self)
         {
             IFeatureSet featureSet = null;
-            var ofd = new OpenFileDialog { Filter = self.VectorReadFilter };
+            var ofd = new OpenFileDialog { Filter = self.GetVectorFilter() };
 
             var ret = ofd.ShowDialog();
             if (ret.HasValue && ret.Value)
             {
-                featureSet = self.Open(ofd.FileName) as IFeatureSet;
+                featureSet = self.OpenVector(ofd.FileName);
             }
             return featureSet;
         }
@@ -35,9 +81,9 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>The enumerable or vectors.</returns>
-        public static IEnumerable<IFeatureSet> OpenVectors(this IDataFactory self)
+        public static IEnumerable<IFeatureSet> OpenVectors(this IDriverFactory self)
         {
-            var ofd = new OpenFileDialog { Filter = self.VectorReadFilter, Multiselect = true };
+            var ofd = new OpenFileDialog { Filter = self.GetVectorFilter(), Multiselect = true };
             var ret = ofd.ShowDialog();
             if (!ret.HasValue || !ret.Value)
             {
@@ -55,9 +101,9 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IDataSet with the data from the file specified in an open file dialog</returns>
-        public static IDataSet OpenFile(this IDataFactory self)
+        public static IDataSet OpenFile(this IDriverFactory self)
         {
-            var ofd = new OpenFileDialog { Filter = self.DialogReadFilter };
+            var ofd = new OpenFileDialog { Filter = self.GetFilter() };
             var ret = ofd.ShowDialog();
             if (!ret.HasValue || !ret.Value)
             { return null; }
@@ -70,20 +116,18 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An enumerable of all the files that were opened.</returns>
-        public static IEnumerable<IDataSet> OpenFiles(this IDataFactory self)
+        public static IEnumerable<IDataSet> OpenFiles(this IDriverFactory self)
         {
-            var ofd = new OpenFileDialog { Multiselect = true, Filter = self.DialogReadFilter };
+            var ofd = new OpenFileDialog { Multiselect = true, Filter = self.GetFilter() };
             var ret = ofd.ShowDialog();
-            if (!ret.HasValue|| !ret.Value) yield break;
+            if (!ret.HasValue || !ret.Value) yield break;
 
             var filterparts = ofd.Filter.Split('|');
             var pos = (ofd.FilterIndex - 1) * 2;
             int index = filterparts[pos].IndexOf(" - ", StringComparison.Ordinal);
-            var filterName = index > 0 ? filterparts[pos].Remove(index) : string.Empty; // provider entries contain a -, entries without - aren't specific providers but lists that contain endings more than one provider can open
-
             foreach (var name in ofd.FileNames)
             {
-                var ds = self.Open(name,  filterName);
+                var ds = self.Open(name);
                 if (ds != null) yield return ds;
             }
 
@@ -94,9 +138,9 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An IRaster with the data from the file specified in an open file dialog</returns>
-        public static IRasterSet OpenRaster(this IDataFactory self)
+        public static IRasterSet OpenRaster(this IDriverFactory self)
         {
-            var ofd = new OpenFileDialog { Filter = self.RasterReadFilter };
+            var ofd = new OpenFileDialog { Filter = self.GetRasterFilter() };
             var ret = ofd.ShowDialog();
             if (!ret.HasValue || !ret.Value) return null;
             return self.Open(ofd.FileName) as IRasterSet;
@@ -108,9 +152,9 @@ namespace EM.GIS.WpfControls
         /// </summary>
         /// <param name="self">this</param>
         /// <returns>An enumerable or rasters.</returns>
-        public static IEnumerable<IRasterSet> OpenRasters(this IDataFactory self)
+        public static IEnumerable<IRasterSet> OpenRasters(this IDriverFactory self)
         {
-            var ofd = new OpenFileDialog { Filter = self.RasterReadFilter, Multiselect = true };
+            var ofd = new OpenFileDialog { Filter = self.GetRasterFilter(), Multiselect = true };
             var ret = ofd.ShowDialog();
             if (!ret.HasValue || !ret.Value) yield break;
             foreach (var name in ofd.FileNames)

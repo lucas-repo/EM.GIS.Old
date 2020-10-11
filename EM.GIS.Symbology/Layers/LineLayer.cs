@@ -13,12 +13,11 @@ namespace EM.GIS.Symbology
             get => base.DefaultCategory as ILineCategory;
             set => base.DefaultCategory = value;
         }
-        public new ILineCategoryCollection Categories { get; }
-        public override ILegendItemCollection Items => Categories;
+        public new ILineCategoryCollection Categories { get => Items as ILineCategoryCollection; }
         public LineLayer(IFeatureSet featureSet) : base(featureSet)
         {
             DefaultCategory = new LineCategory();
-            Categories = new LineCategoryCollection(this)
+            Items = new LineCategoryCollection(this)
             {
                 DefaultCategory
             };

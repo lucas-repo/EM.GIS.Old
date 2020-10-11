@@ -17,9 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="EMap">
-      <HintPath>..\EMap.Gis.Resources\Dependencies\EMap.dll</HintPath>
+    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj">
       <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EM.GIS">
+      <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
     </Reference>
   </ItemGroup>
 

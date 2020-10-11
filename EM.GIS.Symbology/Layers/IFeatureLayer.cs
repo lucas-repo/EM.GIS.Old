@@ -19,5 +19,13 @@ namespace EM.GIS.Symbology
         /// 标注图层
         /// </summary>
         ILabelLayer LabelLayer { get; set; }
+        /// <summary>
+        /// 分类集合
+        /// </summary>
+        new IFeatureCategoryCollection Categories { get; }
+        /// <summary>
+        /// 默认分类
+        /// </summary>
+        new IFeatureCategory DefaultCategory { get; set; }
     }
 }

@@ -8,15 +8,19 @@ namespace EM.GIS.Symbology
     /// <summary>
     /// 选择接口
     /// </summary>
-    public interface ISelection
+    public interface ISelection:IChangeable
     {
         /// <summary>
         /// 范围
         /// </summary>
         IExtent IExtent { get; }
         /// <summary>
-        /// 选择改变事件
+        /// 分类
         /// </summary>
-        event EventHandler SelectionChanged;
+        ICategory Category { get; set; }
+        /// <summary>
+        /// 进度
+        /// </summary>
+        IProgressHandler ProgressHandler { get; set; }
     }
 }

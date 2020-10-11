@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EM.GIS.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -30,7 +31,10 @@ namespace WpfDemo
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
-            map.MapFrame.ProgressHandler = ProgressHandler;
+            map.MapFrame.ProgressHandler = new ProgressHandler()
+            {
+                Handler= ProgressHandler
+            };
         }
 
         private void ProgressHandler(int percent, string message)

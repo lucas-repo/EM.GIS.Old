@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace EM.GIS.Data
@@ -48,5 +49,15 @@ namespace EM.GIS.Data
         /// <param name="destFileName"></param>
         /// <returns></returns>
         bool CopyFiles(string srcFileName, string destFileName);
+        /// <summary>
+        /// 获取可读文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetReadableFileExtensions();
+        /// <summary>
+        /// 获取可写文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetWritableFileExtensions();
     }
 }

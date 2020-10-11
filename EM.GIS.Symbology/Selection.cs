@@ -1,62 +1,17 @@
 ﻿using EM.GIS.Data;
 using EM.GIS.Geometries;
+using System;
 using System.Collections.Generic;
 
 namespace EM.GIS.Symbology
 {
-    public class Selection : Changeable, ISelection
+    /// <summary>
+    /// 选择器
+    /// </summary>
+    public abstract class Selection : Changeable, ISelection
     {
-        public IEnumerable<IFeature> Features=>
-        private IExtent _envelope;
-        public IExtent IExtent
-        {
-            get
-            {
-                if (_envelope == null)
-                {
-                    _envelope =  new Extent();
-                }
-                for (int i = 0; i < Features.Count; i++)
-                {
-                    var feature = Features[i];
-                    using (Geometry geometry = feature.GetGeometryRef())
-                    {
-                        using (Envelope tempEnvelope = new Envelope())
-                        {
-                            geometry.GetEnvelope(tempEnvelope); 
-                            if (i == 0)
-                            {
-                                _envelope.MinX = tempEnvelope.MinX;
-                                _envelope.MinY = tempEnvelope.MinY;
-                                _envelope.MaxX = tempEnvelope.MaxX;
-                                _envelope.MaxY = tempEnvelope.MaxY;
-                            }
-                            else
-                            {
-                                _envelope.ExpandToInclude(tempEnvelope.ToExtent());
-                            }
-                        }
-                    }
-                }
-                return _envelope;
-            }
-        }
-
-        public Selection(IFeatureSet featureSet)
-        {
-            Features = new List<Feature>();
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (Features.Count > 0)
-            {
-                foreach (var item in Features)
-                {
-                    item.Dispose();
-                }
-                Features.Clear();
-            }
-            base.Dispose(disposing);
-        }
+        public virtual IExtent IExtent { get; set; }
+        public ICategory Category { get; set; }
+        public IProgressHandler ProgressHandler { get; set; }
     }
 }

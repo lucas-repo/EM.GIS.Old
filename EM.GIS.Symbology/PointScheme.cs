@@ -14,7 +14,7 @@ namespace EM.GIS.Symbology
 
         public PointScheme()
         {
-            Categories = new PointCategoryCollection(this);
+            Categories = new PointCategoryCollection();
         }
 
         public override ICategory CreateNewCategory(Color fillColor, float size)

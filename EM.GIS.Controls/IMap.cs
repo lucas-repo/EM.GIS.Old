@@ -8,6 +8,9 @@ using System.Text;
 
 namespace EM.GIS.Controls
 {
+    /// <summary>
+    /// 地图接口
+    /// </summary>
     public interface IMap : IProj
     {
         /// <summary>
@@ -42,7 +45,7 @@ namespace EM.GIS.Controls
         /// <summary>
         /// 地图框架
         /// </summary>
-        IMapFrame MapFrame { get; set; }
+        IFrame MapFrame { get; set; }
         /// <summary>
         /// 添加多个图层
         /// </summary>

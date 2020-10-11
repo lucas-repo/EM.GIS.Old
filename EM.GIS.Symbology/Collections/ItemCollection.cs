@@ -12,26 +12,14 @@ namespace EM.GIS.Symbology
     /// <typeparam name="TParent"></typeparam>
     /// <typeparam name="TChild"></typeparam>
     [Serializable]
-    public abstract class ItemCollection< TParent, TChild> :  IItemCollection<TParent, TChild>
+    public abstract class ItemCollection< TParent, TChild> : ItemCollection<TChild>,  IItemCollection<TParent, TChild>
     {
-        /// <summary>
-        /// 元素集合
-        /// </summary>
-        protected ObservableCollection<TChild> Items { get; }
-        public TChild this[int index] { get => Items[index]; set => Items[index]=value; }
         [NonSerialized]
         private TParent _parent;
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
         public TParent Parent { get => _parent; set => _parent = value; }
-
-        public int Count => Items.Count;
-
-        public bool IsReadOnly => false;
         public ItemCollection()
         {
-            Items = new ObservableCollection<TChild>();
             Items.CollectionChanged += Items_CollectionChanged;
         }
         public ItemCollection(TParent parent):this()
@@ -44,9 +32,9 @@ namespace EM.GIS.Symbology
             {
                 foreach (var item in e.OldItems)
                 {
-                    if (item is IParentItem<ILegendItem> t)
+                    if (item is IParentItem<TParent> t)
                     {
-                        t.Parent = null;
+                        t.Parent = default;
                     }
                 }
             });
@@ -78,9 +66,40 @@ namespace EM.GIS.Symbology
                     setOldItemsAction.Invoke();
                     break;
             }
+        }
+    }
+    /// <summary>
+    /// 元素集合
+    /// </summary>
+    /// <typeparam name="TChild"></typeparam>
+    public abstract class ItemCollection< TChild> : IItemCollection< TChild>
+    {
+        /// <summary>
+        /// 元素集合
+        /// </summary>
+        protected ObservableCollection<TChild> Items { get; }
+        public TChild this[int index] { get => Items[index]; set => Items[index] = value; }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public int Count => Items.Count;
+
+        public bool IsReadOnly => false;
+        public ItemCollection()
+        {
+            Items = new ObservableCollection<TChild>();
+            Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnCollectionChanged(e);
+        }
+
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
             CollectionChanged?.Invoke(this, e);
         }
-     
 
         public virtual void Add(TChild item)
         {

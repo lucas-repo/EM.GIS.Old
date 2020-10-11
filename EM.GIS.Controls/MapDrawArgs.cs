@@ -22,7 +22,7 @@ namespace EM.GIS.Controls
         /// <param name="inGraphics">The graphics object used for drawing.</param>
         /// <param name="clipRectangle">The clip rectangle.</param>
         /// <param name="inMapFrame">The map frame.</param>
-        public MapDrawArgs(Graphics inGraphics, Rectangle clipRectangle, IMapFrame inMapFrame)
+        public MapDrawArgs(Graphics inGraphics, Rectangle clipRectangle, IFrame inMapFrame)
         {
             _graphics = inGraphics;
             _geoGraphics = new MapArgs(clipRectangle, inMapFrame.ViewExtents);

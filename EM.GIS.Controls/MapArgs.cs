@@ -1,4 +1,5 @@
 ﻿using EM.GIS.Data;
+using EM.GIS.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,7 +16,7 @@ namespace EM.GIS.Controls
         /// </summary>
         /// <param name="bufferRectangle">The buffer rectangle.</param>
         /// <param name="bufferEnvelope">The buffer envelope.</param>
-        public MapArgs(Rectangle bufferRectangle, Extent bufferEnvelope)
+        public MapArgs(Rectangle bufferRectangle, IExtent bufferEnvelope)
         {
             Bounds = bufferRectangle;
             Extent = bufferEnvelope;
@@ -27,7 +28,7 @@ namespace EM.GIS.Controls
         /// <param name="bufferRectangle">The buffer rectangle.</param>
         /// <param name="bufferEnvelope">The buffer envelope.</param>
         /// <param name="g">The graphics object used for drawing.</param>
-        public MapArgs(Rectangle bufferRectangle, Extent bufferEnvelope, Graphics g)
+        public MapArgs(Rectangle bufferRectangle, IExtent bufferEnvelope, Graphics g)
         {
             Bounds = bufferRectangle;
             Extent = bufferEnvelope;
@@ -56,7 +57,7 @@ namespace EM.GIS.Controls
         /// <summary>
         /// Gets the geographic bounds of the content of the buffer.
         /// </summary>
-        public Extent Extent { get; }
+        public IExtent Extent { get; }
 
         /// <summary>
         /// Gets the rectangle dimensions of what the buffer should be in pixels

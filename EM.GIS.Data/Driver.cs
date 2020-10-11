@@ -23,6 +23,15 @@ namespace EM.GIS.Data
             throw new NotImplementedException();
         }
 
+        public virtual List<string> GetReadableFileExtensions()
+        {
+            throw new NotImplementedException();
+        }
+        public virtual List<string> GetWritableFileExtensions()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual IDataSet Open(string fileName, bool update)
         {
             throw new NotImplementedException();

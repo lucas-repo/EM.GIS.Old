@@ -20,7 +20,7 @@ namespace EM.GIS.Gdals
         public DataSource DataSource
         {
             get { return _dataSource; }
-            private set 
+            private set
             {
                 if (_dataSource != null)
                 {
@@ -30,11 +30,11 @@ namespace EM.GIS.Gdals
             }
         }
         public Layer Layer => DataSource.GetLayerByIndex(0);
-        public FeatureDefn FeatureDefn=> Layer.GetLayerDefn();
+        public FeatureDefn FeatureDefn => Layer.GetLayerDefn();
         public override IExtent Extent => Layer.GetExtent();
         private bool _ignoreChangeDataSource;
         public override string RelativeFilename
-        { 
+        {
             get => base.RelativeFilename;
             protected set
             {
@@ -60,7 +60,7 @@ namespace EM.GIS.Gdals
                 }
             }
         }
-        public override ProjectionInfo Projection 
+        public override ProjectionInfo Projection
         {
             get
             {
@@ -71,7 +71,7 @@ namespace EM.GIS.Gdals
                 }
                 if (base.Projection == null)
                 {
-                    base.Projection = new GdalProjectionInfo(spatialReference); 
+                    base.Projection = new GdalProjectionInfo(spatialReference);
                 }
                 else if (base.Projection is GdalProjectionInfo gdalProjectionInfo)
                 {
@@ -85,34 +85,9 @@ namespace EM.GIS.Gdals
         }
         public override int FeatureCount => (int)Layer.GetFeatureCount(1);
 
-        public override IGeometry SpatialFilter
-        {
-            get => Layer.GetSpatialFilter()?.ToGeometry();
-            set
-            {
-                if (Layer != null)
-                {
-                    Layer.SetSpatialFilter(value?.ToGeometry());
-                }
-            }
-        }
-        private string _attributeFilter;
-        public override string AttributeFilter 
-        { 
-            get => _attributeFilter;
-            set
-            {
-                if (Layer != null)
-                {
-                    Layer.SetAttributeFilter(value);
-                    _attributeFilter = value;
-                }
-            }
-        }
+        public override int FieldCount => FeatureDefn.GetFieldCount();
 
-        public override int FieldCount => throw new NotImplementedException();
-
-        public GdalFeatureSet(string filename,DataSource dataSource)
+        public GdalFeatureSet(string filename, DataSource dataSource)
         {
             _ignoreChangeDataSource = true;
             Filename = filename;
@@ -225,5 +200,41 @@ namespace EM.GIS.Gdals
             return destFieldDfn;
         }
 
+
+        public override IGeometry GetSpatialFilter()
+        {
+            return Layer.GetSpatialFilter()?.ToGeometry();
+        }
+
+        public override void SetAttributeFilter(string expression)
+        {
+            if (Layer != null)
+            {
+                var ret = Layer.SetAttributeFilter(expression);
+            }
+        }
+
+        public override void SetSpatialExtentFilter(IExtent extent)
+        {
+            if (Layer != null)
+            {
+                if (extent != null)
+                {
+                    Layer.SetSpatialFilterRect(extent.MinX, extent.MinY, extent.MaxX, extent.MaxY);
+                }
+                else
+                {
+                    Layer.SetSpatialFilter(null);
+                }
+            }
+        }
+
+        public override void SetSpatialFilter(IGeometry geometry)
+        {
+            if (Layer != null)
+            {
+                Layer.SetSpatialFilter(geometry?.ToGeometry());
+            }
+        }
     }
 }

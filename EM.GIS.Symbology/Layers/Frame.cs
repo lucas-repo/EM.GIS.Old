@@ -200,17 +200,27 @@ namespace EM.GIS.Symbology
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
             base.OnDraw(graphics, rectangle, extent, selected, cancellationTokenSource);
-            var visibleDrawingLayers = DrawingLayers?.Where(x => x.GetVisible(extent, rectangle));
-            foreach (var layer in visibleDrawingLayers)
+            var visibleDrawingFeatureLayers = new List<IFeatureLayer>();
+            if (DrawingLayers != null)
             {
-                if (CancellationTokenSource?.IsCancellationRequested == true)
+                foreach (var item in DrawingLayers)
                 {
-                    break;
+                    if (CancellationTokenSource?.IsCancellationRequested == true)
+                    {
+                        break;
+                    }
+                    if (item.GetVisible(extent, rectangle))
+                    {
+                        item.Draw(graphics, rectangle, extent, selected, cancellationTokenSource);
+                        if (item is IFeatureLayer featureLayer)
+                        {
+                            visibleDrawingFeatureLayers.Add(featureLayer);
+                        }
+                    }
                 }
-                layer?.Draw(graphics, rectangle, extent, selected, cancellationTokenSource);
             }
 
-            var featureLayers = GetFeatureLayers().Union(visibleDrawingLayers.Where(x => x is IFeatureLayer).Select(x => x as IFeatureLayer));
+            var featureLayers = GetFeatureLayers().Where(x=>x.GetVisible(extent, rectangle)).Union(visibleDrawingFeatureLayers);
             var labelLayers = featureLayers.Where(x => x.LabelLayer?.GetVisible(extent, rectangle) == true).Select(x => x.LabelLayer);
             foreach (var layer in labelLayers)
             {

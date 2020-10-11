@@ -74,5 +74,21 @@ namespace EM.GIS.Gdals
             }
             return ret;
         }
+        public override List<string> GetReadableFileExtensions()
+        {
+            List<string> extensions = new List<string>()
+            {
+                ".shp",".kml",".dxf"
+            };
+            return extensions;
+        }
+        public override List<string> GetWritableFileExtensions()
+        {
+            List<string> extensions = new List<string>()
+            {
+                ".shp",".kml",".dxf"
+            };
+            return extensions;
+        }
     }
 }

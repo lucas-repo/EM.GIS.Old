@@ -136,5 +136,45 @@ namespace EM.GIS.Data
             }
             return dataSet;
         }
+
+        public List<string> GetVectorReadableFileExtensions()
+        {
+            List<string> extensions = new List<string>();
+            foreach (var item in VectorDrivers)
+            {
+                extensions.AddRange(item.GetReadableFileExtensions());
+            }
+            return extensions;
+        }
+
+        public List<string> GetRasterWritableFileExtensions()
+        {
+            List<string> extensions = new List<string>();
+            foreach (var item in RasterDrivers)
+            {
+                extensions.AddRange(item.GetWritableFileExtensions());
+            }
+            return extensions;
+        }
+
+        public List<string> GetRasterReadableFileExtensions()
+        {
+            List<string> extensions = new List<string>();
+            foreach (var item in RasterDrivers) 
+            {
+                extensions.AddRange(item.GetReadableFileExtensions());
+            }
+            return extensions;
+        }
+
+        public List<string> GetVectorWritableFileExtensions()
+        {
+            List<string> extensions = new List<string>();
+            foreach (var item in VectorDrivers)
+            {
+                extensions.AddRange(item.GetWritableFileExtensions());
+            }
+            return extensions;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace EM.GIS.Controls
         private int _direction;
         private Point _dragStart;
         private bool _isDragging;
-        private IMapFrame _mapFrame;
+        private IFrame _mapFrame;
         private bool _preventDrag;
         private double _sensitivity;
         private Rectangle _source;

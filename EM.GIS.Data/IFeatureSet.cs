@@ -17,14 +17,6 @@ namespace EM.GIS.Data
         /// </summary>
         FeatureType FeatureType { get; }
         /// <summary>
-        /// 获取或设置空间过滤
-        /// </summary>
-        IGeometry SpatialFilter { get; set; }
-        /// <summary>
-        /// 获取或设置属性过滤
-        /// </summary>
-        string AttributeFilter { get; set; }
-        /// <summary>
         /// 添加要素
         /// </summary>
         /// <param name="geometry"></param>
@@ -54,5 +46,25 @@ namespace EM.GIS.Data
         /// <param name="index"></param>
         /// <returns></returns>
         bool RemoveFeature(int index);
+        /// <summary>
+        /// 获取空间过滤
+        /// </summary>
+        /// <returns></returns>
+        IGeometry GetSpatialFilter( );
+        /// <summary>
+        /// 设置空间过滤
+        /// </summary>
+        /// <param name="geometry"></param>
+        void SetSpatialFilter(IGeometry geometry);
+        /// <summary>
+        /// 设置空间范围过滤
+        /// </summary>
+        /// <param name="extent"></param>
+        void SetSpatialExtentFilter(IExtent extent);
+        /// <summary>
+        /// 设置属性过滤
+        /// </summary>
+        /// <param name="expression"></param>
+        void SetAttributeFilter(string expression);
     }
 }

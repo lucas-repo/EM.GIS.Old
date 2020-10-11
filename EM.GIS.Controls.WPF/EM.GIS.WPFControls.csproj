@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>EM.GIS.WpfControls</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,16 +16,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Controls\EM.GIS.Controls.csproj" />
-    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj" />
+    <ProjectReference Include="..\EM.GIS.Controls\EM.GIS.Controls.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="EM.GIS">
       <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
-    </Reference>
-    <Reference Include="EMap">
-      <HintPath>..\EM.GIS.Resources\Dependencies\EMap.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

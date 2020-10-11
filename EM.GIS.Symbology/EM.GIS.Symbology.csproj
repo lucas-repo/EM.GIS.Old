@@ -22,13 +22,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Data\EM.GIS.Data.csproj" />
-    <ProjectReference Include="..\EM.GIS.Geometries\EM.GIS.Geometries.csproj" />
+    <ProjectReference Include="..\EM.GIS.Data\EM.GIS.Data.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Geometries\EM.GIS.Geometries.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="EM.GIS">
       <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 

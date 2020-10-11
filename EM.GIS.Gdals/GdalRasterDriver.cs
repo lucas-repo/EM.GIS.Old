@@ -125,5 +125,21 @@ namespace EM.GIS.Gdals
             }
             return ret;
         }
+        public override List<string> GetReadableFileExtensions()
+        {
+            List<string> extensions = new List<string>() 
+            {
+                ".asc",".adf",".bil",".gen",".thf",".blx",".xlb",".bt",".dt0",".dt1",".dt2",".tif",".dem",".ter",".mem",".img",".nc"
+            };
+            return extensions;
+        }
+        public override List<string> GetWritableFileExtensions()
+        {
+            List<string> extensions = new List<string>()
+            {
+                ".asc",".adf",".dt0",".dt1",".dt2",".tif",".dem",".ter",".bil",".mem",".img",".nc"
+            };
+            return extensions;
+        }
     }
 }

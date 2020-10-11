@@ -15,13 +15,11 @@ namespace EM.GIS.Symbology
     /// </summary>
     public class Group : Layer, IGroup
     {
-        public ILayerCollection Layers { get; }
-
-        public override ILegendItemCollection Items => Layers;
+        public ILayerCollection Layers { get=>Items as ILayerCollection; }
         public int LayerCount => GetLayers().Count();
         public Group()
         {
-            Layers = new LayerCollection();
+            Items = new LayerCollection();
         }
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {

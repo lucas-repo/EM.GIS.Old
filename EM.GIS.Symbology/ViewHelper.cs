@@ -1,9 +1,5 @@
-﻿using EM.GIS.Data;
-using OSGeo.OGR;
-using System;
-using System.Collections.Generic;
+﻿using EM.GIS.Geometries;
 using System.Drawing;
-using System.Text;
 
 namespace EM.GIS.Symbology
 {

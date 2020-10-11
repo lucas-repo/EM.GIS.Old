@@ -3,6 +3,9 @@ using System.Drawing;
 
 namespace EM.GIS.Data
 {
+    /// <summary>
+    /// 带范围和边界的接口
+    /// </summary>
     public interface IProj
     {
         /// <summary>

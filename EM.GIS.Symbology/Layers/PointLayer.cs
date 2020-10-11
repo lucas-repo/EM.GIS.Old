@@ -11,12 +11,11 @@ namespace EM.GIS.Symbology
             get => base.DefaultCategory as IPointCategory;
             set => base.DefaultCategory = value;
         }
-        public new IPointCategoryCollection Categories { get; }
-        public override ILegendItemCollection Items => Categories;
+        public new IPointCategoryCollection Categories { get => Items as IPointCategoryCollection; }
         public PointLayer(IFeatureSet featureSet) : base(featureSet)
         {
             DefaultCategory = new PointCategory();
-            Categories = new PointCategoryCollection(this)
+            Items = new PointCategoryCollection(this)
             { 
                 DefaultCategory
             };

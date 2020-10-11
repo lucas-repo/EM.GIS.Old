@@ -1,4 +1,5 @@
 ﻿using EM.GIS.Data;
+using EM.GIS.Geometries;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -74,7 +75,7 @@ namespace EM.GIS.Symbology
         /// </summary>
         [Category("Shadow")]
         [Description("Gets or sets an X and Y geographic offset that is only used if ScaleMode is set to Geographic.")]
-        Coordinate DropShadowGeographicOffset { get; set; }
+        ICoordinate DropShadowGeographicOffset { get; set; }
 
         /// <summary>
         /// Gets or sets an X and Y pixel offset that is used if the ScaleMode is set to Symbolic or Simple.

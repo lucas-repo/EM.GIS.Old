@@ -12,8 +12,6 @@ namespace EM.GIS.Data
     {
         public FeatureType FeatureType { get;protected set; }
         public abstract int FeatureCount { get; }
-        public abstract IGeometry SpatialFilter { get; set; }
-        public abstract string AttributeFilter { get; set; }
         public abstract int FieldCount { get; }
 
         public abstract IFeature AddFeature(IGeometry geometry);
@@ -21,6 +19,10 @@ namespace EM.GIS.Data
         public abstract IFeature GetFeature(int index);
         public abstract IEnumerable<IFeature> GetFeatures();
         public abstract IFieldDefn GetFieldDefn(int index);
+        public abstract IGeometry GetSpatialFilter();
         public abstract bool RemoveFeature(int index);
+        public abstract void SetAttributeFilter(string expression);
+        public abstract void SetSpatialExtentFilter(IExtent extent);
+        public abstract void SetSpatialFilter(IGeometry geometry);
     }
 }

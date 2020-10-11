@@ -16,9 +16,15 @@ namespace EM.GIS.Symbology
         /// <summary>
         /// 要素图层
         /// </summary>
-        IFeatureLayer FeatureLayer { get; set; }
+        IFeatureLayer FeatureLayer { get; }
+        /// <summary>
+        /// 分类集合
+        /// </summary>
+        new ILabelCategoryCollection Categories { get; }
+        /// <summary>
+        /// 默认分类
+        /// </summary>
         new ILabelCategory DefaultCategory { get; set; }
-        new ILabelScheme Symbology { get; set; }
 
         #endregion
 

@@ -22,14 +22,13 @@ namespace EM.GIS.Symbology
         public FeatureLayer(IFeatureSet featureSet)
         {
             DataSet = featureSet;
-            Selection = new FeatureSelection();
+            Selection = new FeatureSelection(DataSet);
         }
 
         public ILabelLayer LabelLayer { get; set; }
         public new IFeatureSet DataSet { get => base.DataSet as IFeatureSet; set => base.DataSet = value; }
 
-        public new IFeatureCategoryCollection Categories { get; }
-        public override ILegendItemCollection Items => Categories;
+        public new IFeatureCategoryCollection Categories => Items as IFeatureCategoryCollection;
 
         public new IFeatureSelection Selection
         {
@@ -40,7 +39,7 @@ namespace EM.GIS.Symbology
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
             var polygon = extent.ToPolygon();
-            DataSet.SpatialFilter = polygon;
+            DataSet.SetSpatialFilter(polygon);
             var features = new List<IFeature>();
             long featureCount = DataSet.FeatureCount;
             long drawnFeatureCount = 0;
@@ -78,7 +77,7 @@ namespace EM.GIS.Symbology
             {
                 drawFeatuesAction();
             }
-            DataSet.SpatialFilter = null;
+            DataSet.SetSpatialFilter(null);
             ProgressHandler?.Progress(100, "绘制要素中...");
         }
         private Dictionary<IFeature, IFeatureCategory> GetFeatureAndCategoryDic(List<IFeature> features)

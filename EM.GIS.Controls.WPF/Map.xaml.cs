@@ -3,18 +3,14 @@ using EM.GIS.Data;
 using EM.GIS.Geometries;
 using EM.GIS.Symbology;
 using Microsoft.Win32;
-using OSGeo.GDAL;
-using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -25,12 +21,12 @@ namespace EM.GIS.WpfControls
     /// </summary>
     public partial class Map : UserControl, IMap
     {
-        public IMapFrame MapFrame { get; set; }
+        public IFrame MapFrame { get; set; }
         public IExtent Extent => (MapFrame as IProj).Extent;
         public bool IsBusy { get; set; }
         public ILegend Legend { get; set; }
         public IExtent ViewExtent { get => MapFrame.ViewExtents; set => MapFrame.ViewExtents = value; }
-        public Rectangle Bounds => MapFrame.Bounds;
+        public Rectangle Bounds => MapFrame.ViewBounds;
 
         public ILayerCollection Layers => MapFrame.Layers;
 
@@ -46,7 +42,7 @@ namespace EM.GIS.WpfControls
         }
         private void Map_Loaded(object sender, RoutedEventArgs e)
         {
-            MapFrame = new MapFrame((int)ActualWidth, (int)ActualHeight);
+            MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
             MapFrame.BufferChanged += MapFrame_BufferImageChanged;
             var pan = new MapToolPan(this); 
              var zoom = new MapToolZoom(this);
@@ -104,45 +100,28 @@ namespace EM.GIS.WpfControls
             if (MapFrame?.BackBuffer is Bitmap)
             {
                 BitmapSource bitmapSource = null;
-                using (Bitmap bmp = new Bitmap(MapFrame.Bounds.Width, MapFrame.Bounds.Height))
+                using (Bitmap bmp = new Bitmap(MapFrame.ViewBounds.Width, MapFrame.ViewBounds.Height))
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-                        g.DrawImage(MapFrame.BackBuffer, MapFrame.Bounds, MapFrame.ViewBounds, GraphicsUnit.Pixel);
+                        g.DrawImage(MapFrame.BackBuffer, MapFrame.ViewBounds, MapFrame.ViewBounds, GraphicsUnit.Pixel);
                     }
                     bitmapSource = bmp.ToBitmapImage();
                 }
-                var rect = MapFrame.Bounds.ToRect();
-                double offsetX = (ActualWidth - MapFrame.Bounds.Width) / 2.0;
-                double offsetY = (ActualHeight - MapFrame.Bounds.Height) / 2.0;
+                var rect = MapFrame.ViewBounds.ToRect();
+                double offsetX = (ActualWidth - MapFrame.ViewBounds.Width) / 2.0;
+                double offsetY = (ActualHeight - MapFrame.ViewBounds.Height) / 2.0;
                 Transform transform = new TranslateTransform(offsetX, offsetY);
                 drawingContext.PushTransform(transform);
                 drawingContext.DrawImage(bitmapSource, rect);
             }
             base.OnRender(drawingContext);
         }
-
         public ILayer AddLayer()
         {
-            //ILayer layer = null;
-            //OpenFileDialog dg = new OpenFileDialog()
-            //{
-            //    Filter = "*.img,*.shp|*.img;*.shp"
-            //};
-            //if (dg.ShowDialog(Window.GetWindow(this)).HasValue)
-            //{
-            //    layer = MapFrame.AddLayer(dg.FileName);
-            //}
-            //return layer;
-
-            if (DataFactor.Default.ProgressHandler == null && MapFrame.ProgressHandler != null)
-            {
-                DataFactor.Default.ProgressHandler = MapFrame.ProgressHandler;
-            }
-
             try
             {
-                return Layers.AddLayer(DataFactor.Default.OpenFile());
+                return Layers.AddLayer(DataFactor.Default.DriverFactory.OpenFile());
             }
             catch (Exception ex)
             {

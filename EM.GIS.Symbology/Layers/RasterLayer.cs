@@ -13,12 +13,11 @@ namespace EM.GIS.Symbology
             set => base.DefaultCategory = value;
         }
 
-        public new IRasterCategoryCollection Categories { get; }
-        public override ILegendItemCollection Items => Categories;
+        public new IRasterCategoryCollection Categories { get=> Items as IRasterCategoryCollection; }
         public RasterLayer()
         {
             DefaultCategory = new RasterCategory();
-            Categories = new RasterCategoryCollection(this)
+            Items = new RasterCategoryCollection(this)
             {
                 DefaultCategory
             };

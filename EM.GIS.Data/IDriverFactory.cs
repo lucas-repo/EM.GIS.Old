@@ -43,5 +43,25 @@ namespace EM.GIS.Data
         /// <param name="path"></param>
         /// <returns></returns>
         IRasterSet OpenRaster(string path);
+        /// <summary>
+        /// 获取矢量可读文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetVectorReadableFileExtensions();
+        /// <summary>
+        /// 获取矢量可写文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetRasterWritableFileExtensions();
+        /// <summary>
+        /// 获取矢量可读文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetRasterReadableFileExtensions();
+        /// <summary>
+        /// 获取矢量可写文件扩展
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetVectorWritableFileExtensions();
     }
 }

@@ -15,9 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Data\EM.GIS.Data.csproj" />
-    <ProjectReference Include="..\EM.GIS.Serialization\EM.GIS.Serialization.csproj" />
-    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj" />
+    <ProjectReference Include="..\EM.GIS.Data\EM.GIS.Data.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Serialization\EM.GIS.Serialization.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

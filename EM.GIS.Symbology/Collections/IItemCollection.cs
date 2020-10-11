@@ -8,7 +8,7 @@ namespace EM.GIS.Symbology
     /// </summary>
     /// <typeparam name="TParent">父元素类型</typeparam>
     /// <typeparam name="TChild">元素类型</typeparam>
-    public interface IItemCollection<out TParent,  TChild> : IItemCollection<TChild>, IParentItem<TParent>, IEnumerable<TChild>
+    public interface IItemCollection<TParent,  TChild> : IItemCollection<TChild>, IParentItem<TParent>, IEnumerable<TChild>
     {
     }
     /// <summary>

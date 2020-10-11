@@ -14,7 +14,7 @@ namespace EM.GIS.Symbology
 
         public PolygonScheme()
         {
-            Categories = new PolygonCategoryCollection(this);
+            Categories = new PolygonCategoryCollection();
         }
 
 

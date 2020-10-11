@@ -21,9 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Geometries\EM.GIS.Geometries.csproj" />
-    <ProjectReference Include="..\EM.GIS.Projection\EM.GIS.Projection.csproj" />
-    <ProjectReference Include="..\EM.GIS.Serialization\EM.GIS.Serialization.csproj" />
+    <ProjectReference Include="..\EM.GIS.Geometries\EM.GIS.Geometries.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Projection\EM.GIS.Projection.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Serialization\EM.GIS.Serialization.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
