@@ -1,5 +1,5 @@
 ﻿using EM.GIS.Data;
-using OSGeo.OGR;
+using EM.GIS.Geometries;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,12 +11,14 @@ namespace EM.GIS.Symbology
         public new IPolygonScheme Symbology { get => base.Symbology as IPolygonScheme; set => base.Symbology = value; }
         public new IPolygonCategory DefaultCategory { get => base.DefaultCategory as IPolygonCategory; set => base.DefaultCategory = value; }
 
+        public IPolygonCategoryCollection Categories => throw new NotImplementedException();
+
         public PolygonLayer(IFeatureSet featureSet) : base(featureSet)
         {
             Symbology = new PolygonScheme();
             DefaultCategory = new PolygonCategory();
         }
-        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, Geometry geometry)
+        protected override void DrawGeometry(MapArgs drawArgs, IFeatureSymbolizer symbolizer, IGeometry geometry)
         {
             if (drawArgs == null || !(symbolizer is IPolygonSymbolizer polygonSymbolizer) || geometry == null)
             {
@@ -27,7 +29,7 @@ namespace EM.GIS.Symbology
             GetPolygons(drawArgs, geometry, path);
             polygonSymbolizer.DrawPolygon(drawArgs.Device, scaleSize, path);
         }
-        private void DrawGeometry(MapArgs drawArgs, Graphics context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, Geometry geometry)
+        private void DrawGeometry(MapArgs drawArgs, Graphics context, float scaleSize, IPolygonSymbolizer polygonSymbolizer, IGeometry geometry)
         {
             int geoCount = geometry.GetGeometryCount();
             if (geoCount == 0)

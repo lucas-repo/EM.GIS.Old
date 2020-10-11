@@ -27,7 +27,7 @@ namespace EM.GIS.Symbology
         public LegendMode LegendSymbolMode { get ; set ; }
         public LegendType LegendType { get; set; }
 
-        public abstract ILegendItemCollection Items { get; }
+        public virtual ILegendItemCollection Items { get; }
 
         public LegendItem()
         {

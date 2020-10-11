@@ -16,7 +16,7 @@ namespace EM.GIS.Symbology
         public override ILegendItemCollection Items => Categories;
         public PointLayer(IFeatureSet featureSet) : base(featureSet)
         {
-            DefaultCategory = new PointCategory();
+            DefaultCategory = new PointCategory();base.Items
             Categories = new PointCategoryCollection(this)
             { 
                 DefaultCategory

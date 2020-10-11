@@ -15,7 +15,7 @@ namespace EM.GIS.Gdals
         {
             get
             {
-                IGeometry geometry = Feature?.GetGeometryRef().ToGeometry(); 
+                IGeometry geometry = Feature?.GetGeometryRef().ToGeometry();
                 return geometry;
             }
             set
@@ -50,9 +50,42 @@ namespace EM.GIS.Gdals
                     foreach (var item in value)
                     {
                         using var fieldDefn = Feature.GetFieldDefnRef(item.Key);
-                        Feature.SetField(fieldDefn,item.Value);
+                        Feature.SetField(fieldDefn, item.Value);
                     }
                 }
+            }
+        }
+
+        public long FId
+        {
+            get
+            {
+                long value = -1;
+                if (Feature != null)
+                {
+                    value = Feature.GetFID();
+                }
+                return value;
+            }
+            set
+            {
+                if (Feature != null)
+                {
+                    var ret = Feature.SetFID(value);
+                }
+            }
+        }
+
+        public int FieldCount
+        {
+            get
+            {
+                int value = -1;
+                if (Feature != null)
+                {
+                    value = Feature.GetFieldCount();
+                }
+                return value;
             }
         }
 
@@ -113,6 +146,35 @@ namespace EM.GIS.Gdals
         {
             int hashCode = "GdalFeature".GetHashCode() ^ Feature.GetHashCode();
             return hashCode;
+        }
+
+        public IField GetField(int index)
+        {
+            IField value = null;
+            if (Feature != null && index >= 0 && index < FieldCount)
+            {
+                value = new GdalField(Feature, index);
+            }
+            return value;
+        }
+
+        public IField GetField(string name)
+        {
+            IField value = null;
+            if (Feature != null && !string.IsNullOrEmpty(name))
+            {
+                var fieldCount = Feature.GetFieldCount();
+                for (int i = 0; i < fieldCount; i++)
+                {
+                    var fieldDefn = Feature.GetFieldDefnRef(i);
+                    if (fieldDefn.GetName() == name)
+                    {
+                        value = new GdalField(Feature, i);
+                        break;
+                    }
+                }
+            }
+            return value;
         }
     }
 }

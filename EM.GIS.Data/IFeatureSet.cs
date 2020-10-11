@@ -6,7 +6,7 @@ namespace EM.GIS.Data
     /// <summary>
     /// 矢量数据集
     /// </summary>
-    public interface IFeatureSet : IDataSet
+    public interface IFeatureSet : IDataSet, IGetFieldDefn
     {
         /// <summary>
         /// 要素个数

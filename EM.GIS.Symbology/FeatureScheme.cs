@@ -1,4 +1,4 @@
-﻿using OSGeo.OGR;
+﻿using EM.GIS.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -265,7 +265,7 @@ namespace EM.GIS.Symbology
         }
         public abstract IFeatureCategory CreateRandomCategory(string filterExpression);
 
-        public void Draw(Graphics context, Envelope envelope, Rectangle rectangle)
+        public void Draw(Graphics context, IExtent envelope, Rectangle rectangle)
         {
             throw new NotImplementedException();
         }

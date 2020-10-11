@@ -1,4 +1,4 @@
-﻿using OSGeo.OGR;
+﻿using EM.GIS.Geometries;
 using System.Data;
 using System.Drawing;
 
@@ -13,6 +13,6 @@ namespace EM.GIS.Symbology
         //new IFeatureLayer Parent { get; set; }
         void CreateCategories(DataTable table);
         IFeatureCategory CreateRandomCategory(string filterExpression);
-        void Draw(Graphics context, Envelope envelope, Rectangle rectangle);
+        void Draw(Graphics context, IExtent envelope, Rectangle rectangle);
     }
 }

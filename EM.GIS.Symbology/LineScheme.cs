@@ -11,7 +11,6 @@ namespace EM.GIS.Symbology
 
         public LineScheme()
         {
-            Categories = new LineCategoryCollection(this);
         }
 
         public override ICategory CreateNewCategory(Color fillColor, float size)

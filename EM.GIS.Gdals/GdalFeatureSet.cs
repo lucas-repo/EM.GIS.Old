@@ -71,7 +71,7 @@ namespace EM.GIS.Gdals
                 }
                 if (base.Projection == null)
                 {
-                    base.Projection = new GdalProjectionInfo(spatialReference);
+                    base.Projection = new GdalProjectionInfo(spatialReference); 
                 }
                 else if (base.Projection is GdalProjectionInfo gdalProjectionInfo)
                 {
@@ -109,6 +109,8 @@ namespace EM.GIS.Gdals
                 }
             }
         }
+
+        public override int FieldCount => throw new NotImplementedException();
 
         public GdalFeatureSet(string filename,DataSource dataSource)
         {
@@ -211,5 +213,17 @@ namespace EM.GIS.Gdals
                 feature = Layer.GetNextFeature()?.ToFeature();
             }
         }
+
+        public override IFieldDfn GetFieldDfn(int index)
+        {
+            IFieldDfn destFieldDfn = null;
+            var fieldDefn = FeatureDefn.GetFieldDefn(index);
+            if (fieldDefn != null)
+            {
+                destFieldDfn = new GdalFieldDfn(fieldDefn);
+            }
+            return destFieldDfn;
+        }
+
     }
 }

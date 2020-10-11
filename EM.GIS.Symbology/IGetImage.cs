@@ -1,4 +1,4 @@
-﻿using OSGeo.OGR;
+﻿using EM.GIS.Geometries;
 using System.Drawing;
 
 
@@ -6,6 +6,6 @@ namespace EM.GIS.Symbology
 {
     public interface IGetImage
     {
-        Bitmap GetImage(Envelope envelope, Rectangle rectangle) ;
+        Bitmap GetImage(IExtent envelope, Rectangle rectangle) ;
     }
 }

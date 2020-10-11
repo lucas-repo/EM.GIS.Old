@@ -9,6 +9,9 @@ using System.Threading;
 
 namespace EM.GIS.Symbology
 {
+    /// <summary>
+    /// 要素图层
+    /// </summary>
     public abstract class FeatureLayer : Layer, IFeatureLayer
     {
         public override IExtent Extent
@@ -31,10 +34,9 @@ namespace EM.GIS.Symbology
       
         protected override void OnDraw(Graphics graphics, Rectangle rectangle, IExtent extent, bool selected = false, CancellationTokenSource cancellationTokenSource = null)
         {
-            IGeometry polygon = extent.ToGeometry();
-            Layer.SetSpatialFilter(polygon);
-            List<Feature> features = new List<Feature>();
-            Feature feature = Layer.GetNextFeature();
+            var polygon = extent.ToPolygon();
+            DataSet.SpatialFilter = polygon;
+            var features = new List<IFeature>();
             long featureCount = Layer.GetFeatureCount(0);
             long drawnFeatureCount = 0;
             int threshold = 65536;
@@ -57,16 +59,15 @@ namespace EM.GIS.Symbology
                 }
                 totalPointCount = 0;
             });
-            while (feature != null)
+            foreach (var feature in DataSet.GetFeatures())
             {
                 features.Add(feature);
-                int pointCount = feature.GetPointCount();
-                totalPointCount += pointCount;
+                int pointCount = feature.Geometry.PointCount; 
+                 totalPointCount += pointCount;
                 if (totalPointCount >= threshold)
                 {
                     drawFeatuesAction();
                 }
-                feature = Layer.GetNextFeature();
             }
             if (totalPointCount > 0)
             {
