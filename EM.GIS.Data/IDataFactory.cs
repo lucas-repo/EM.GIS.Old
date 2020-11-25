@@ -16,7 +16,7 @@ namespace EM.GIS.Data
         /// <summary>
         /// 几何工厂
         /// </summary>
-        IGeometryFactory GeometryFactory { get; }
+        IGeometryFactory GeometryFactory { get; set; }
         /// <summary>
         /// 进度
         /// </summary>

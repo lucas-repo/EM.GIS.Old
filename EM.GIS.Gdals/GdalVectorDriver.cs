@@ -12,6 +12,12 @@ namespace EM.GIS.Gdals
     /// </summary>
     public class GdalVectorDriver : Driver, IVectorDriver
     {
+        static GdalVectorDriver()
+        {
+            GdalConfiguration.ConfigureOgr();
+            // 为了使属性表字段支持中文，请添加下面这句  
+            OSGeo.GDAL.Gdal.SetConfigOption("SHAPE_ENCODING", "");
+        }
         public override bool CopyFiles(string srcFileName, string destFileName)
         {
             bool ret = false;

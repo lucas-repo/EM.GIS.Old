@@ -113,7 +113,7 @@ namespace EM.GIS.Symbology
 
         public ILayer AddLayer(string filename, int? index = null)
         {
-            IDataSet dataSet = DataFactor.Default.DriverFactory.Open(filename);
+            IDataSet dataSet = DataFactory.Default.DriverFactory.Open(filename);
             return AddLayer(dataSet, index);
         }
 

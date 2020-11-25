@@ -1,4 +1,5 @@
-﻿using EM.GIS.Data;
+﻿using EM.GIS.Controls;
+using EM.GIS.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,7 @@ namespace WpfDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IAppManager App { get; }
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +31,11 @@ namespace WpfDemo
             initializer.Initialize();
             ContentRendered += MainWindow_ContentRendered;
             map.GeoMouseMove += Map_GeoMouseMove;
+            App = new AppManager()
+            {
+                Map = map
+            };
+            App.LoadPlugins();
         }
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)

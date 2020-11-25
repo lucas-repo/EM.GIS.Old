@@ -121,7 +121,7 @@ namespace EM.GIS.WpfControls
         {
             try
             {
-                return Layers.AddLayer(DataFactor.Default.DriverFactory.OpenFile());
+                return Layers.AddLayer(DataFactory.Default.DriverFactory.OpenFile());
             }
             catch (Exception ex)
             {

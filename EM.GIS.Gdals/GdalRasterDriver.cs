@@ -8,6 +8,19 @@ namespace EM.GIS.Gdals
 {
     public class GdalRasterDriver : Driver, IRasterDriver
     {
+        static GdalRasterDriver()
+        {
+            GdalConfiguration.ConfigureGdal();
+            // 为了支持中文路径，请添加下面这句代码  
+            if (Encoding.Default.EncodingName == Encoding.UTF8.EncodingName && Encoding.Default.CodePage == Encoding.UTF8.CodePage)
+            {
+                OSGeo.GDAL.Gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
+            }
+            else
+            {
+                OSGeo.GDAL.Gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+            }
+        }
         public IRasterSet Create(string fileName, int xsize, int ysize, int bands, RasterType eType)
         {
             IRasterSet rasterSet = null;

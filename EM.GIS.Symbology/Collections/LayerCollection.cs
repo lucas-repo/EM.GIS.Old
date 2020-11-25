@@ -86,7 +86,7 @@ namespace EM.GIS.Symbology
 
         public ILayer AddLayer(string path)
         {
-            IDataSet dataSet = DataFactor.Default.DriverFactory.Open(path);
+            IDataSet dataSet = DataFactory.Default.DriverFactory.Open(path);
             return AddLayer(dataSet);
         }
 

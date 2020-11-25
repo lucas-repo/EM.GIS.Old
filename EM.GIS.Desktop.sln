@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Gdals", "EM.GIS.Gdal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Projection", "EM.GIS.Projection\EM.GIS.Projection.csproj", "{04FB6225-3C6C-4B8A-8DA8-1C7FAB650A63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.GIS.Geometries", "EM.GIS.Geometries\EM.GIS.Geometries.csproj", "{9863E561-7169-4A85-AF76-C030B39517C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Geometries", "EM.GIS.Geometries\EM.GIS.Geometries.csproj", "{9863E561-7169-4A85-AF76-C030B39517C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{02F54416-7905-44EE-8025-59FE6261CA78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +80,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E4425F2-FE47-42B1-9E03-B9B6D44CC643} = {02F54416-7905-44EE-8025-59FE6261CA78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {267256E8-360B-4063-9720-11ECE7A1F6CC}

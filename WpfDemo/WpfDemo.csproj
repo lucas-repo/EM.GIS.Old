@@ -22,13 +22,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WpfControls.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WPFControls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EM.GIS">
+      <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

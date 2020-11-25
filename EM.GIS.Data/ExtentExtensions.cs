@@ -17,7 +17,7 @@ namespace EM.GIS.Data
             IPolygon polygon = null;
             if (extent != null)
             {
-                var geometryFactory = DataFactor.Default.GeometryFactory;
+                var geometryFactory = DataFactory.Default.GeometryFactory;
                 ICoordinate[] coordinates = { new Coordinate(extent.MinX, extent.MinY),
                     new Coordinate(extent.MinX, extent.MaxY),
                     new Coordinate(extent.MaxX, extent.MaxY),
@@ -25,7 +25,7 @@ namespace EM.GIS.Data
                     new Coordinate(extent.MinX, extent.MinY)
                 };
                 var shell = geometryFactory.GetLinearRing(coordinates);
-                polygon = DataFactor.Default.GeometryFactory.GetPolygon(shell);
+                polygon = DataFactory.Default.GeometryFactory.GetPolygon(shell);
             }
             return polygon;
         }

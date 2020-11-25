@@ -279,10 +279,6 @@ namespace EM.GIS.Projection
         /// </value>
         public virtual double? to_meter { get; set; }
 
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
         /// <summary>
         /// 从wkt导入
         /// </summary>

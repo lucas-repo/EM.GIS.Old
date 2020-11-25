@@ -39,7 +39,10 @@ namespace EM.GIS.Data
                 }
             }
         }
-
+        public DriverFactory()
+        {
+            Drivers = new List<IDriver>();
+        }
         public IRasterSet OpenRaster(string fileName)
         {
             IRasterSet dataSet = null;

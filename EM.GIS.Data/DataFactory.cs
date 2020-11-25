@@ -12,9 +12,8 @@ namespace EM.GIS.Data
     /// <summary>
     /// 数据工厂
     /// </summary>
-    public class DataFactor : IDataFactory
+    public class DataFactory : IDataFactory
     {
-
         private static IDataFactory _default;
         /// <summary>
         /// 默认数据工厂
@@ -25,7 +24,7 @@ namespace EM.GIS.Data
             {
                 if (_default == null)
                 {
-                    _default = new DataFactor();
+                    _default = new DataFactory();
                 }
                 return _default;
             }
@@ -54,7 +53,7 @@ namespace EM.GIS.Data
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IGeometryFactory GeometryFactory { get; set; }
 
-        public DataFactor()
+        public DataFactory()
         {
             DriverFactory = new DriverFactory()
             {
