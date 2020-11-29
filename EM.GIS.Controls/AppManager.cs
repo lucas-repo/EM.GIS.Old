@@ -55,7 +55,7 @@ namespace EM.GIS.Controls
             BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             Directories = new List<string>
             {
-                "./",
+                string.Empty,
                 "Plugins"
             };
         }
@@ -150,7 +150,8 @@ namespace EM.GIS.Controls
                     foreach (string extension in knownExtensions)
                     {
                         var potentialFiles = Directory.GetFiles(path, assemblyName + "." + extension, SearchOption.AllDirectories);
-                        if (potentialFiles.Length > 0) return Assembly.LoadFrom(potentialFiles[0]);
+                        if (potentialFiles.Length > 0)
+                            return Assembly.LoadFrom(potentialFiles[0]);
                     }
                 }
             }

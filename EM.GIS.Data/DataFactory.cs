@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace EM.GIS.Data
@@ -25,6 +26,12 @@ namespace EM.GIS.Data
                 if (_default == null)
                 {
                     _default = new DataFactory();
+                    string directory = AppDomain.CurrentDomain.BaseDirectory;
+                    _default.GeometryFactory = AssemblyExtensions.CreateInstance<IGeometryFactory>(directory);
+                    if (_default.GeometryFactory == null)
+                    {
+                        throw new DllNotFoundException($"未找到实现{nameof(IGeometryFactory)}的dll");
+                    }
                 }
                 return _default;
             }
