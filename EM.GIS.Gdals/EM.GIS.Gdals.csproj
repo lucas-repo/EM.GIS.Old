@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,6 +26,7 @@
     <ProjectReference Include="..\EM.GIS.Geometries\EM.GIS.Geometries.csproj">
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\EM.GIS.Projection\EM.GIS.Projection.csproj" />
   </ItemGroup>
 
   <ItemGroup>

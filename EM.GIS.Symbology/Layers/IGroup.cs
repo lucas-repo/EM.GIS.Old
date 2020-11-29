@@ -60,45 +60,45 @@ namespace EM.GIS.Symbology
         /// <param name="layer"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public bool AddLayer(ILayer layer, int? index = null);
+        bool AddLayer(ILayer layer, int? index = null);
         /// <summary>
         /// 添加图层
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="index"></param>
-        public ILayer AddLayer(string filename, int? index = null);
+        ILayer AddLayer(string filename, int? index = null);
         /// <summary>
         /// 添加图层
         /// </summary>
         /// <param name="dataSet"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public ILayer AddLayer(IDataSet dataSet, int? index = null);
+        ILayer AddLayer(IDataSet dataSet, int? index = null);
         /// <summary>
         /// 添加图层
         /// </summary>
         /// <param name="featureSet"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public IFeatureLayer AddLayer(IFeatureSet featureSet, int? index = null);
+        IFeatureLayer AddLayer(IFeatureSet featureSet, int? index = null);
         /// <summary>
         /// 添加图层
         /// </summary>
         /// <param name="rasterSet"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public IRasterLayer AddLayer(IRasterSet rasterSet, int? index = null);
+        IRasterLayer AddLayer(IRasterSet rasterSet, int? index = null);
         /// <summary>
         /// 移除图层
         /// </summary>
         /// <param name="layer"></param>
         /// <returns></returns>
-        public bool RemoveLayer(ILayer layer);
+        bool RemoveLayer(ILayer layer);
         /// <summary>
         /// 移除图层
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveLayerAt(int index);
+        void RemoveLayerAt(int index);
         /// <summary>
         /// 清空图层
         /// </summary>

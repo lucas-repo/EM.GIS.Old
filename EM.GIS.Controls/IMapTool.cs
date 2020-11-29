@@ -14,7 +14,7 @@ namespace EM.GIS.Controls
         bool Enabled { get; }
         IMap Map { get; set; }
         string Name { get; set; }
-        public YieldStyles  YieldStyle { get; set; }
+        YieldStyles  YieldStyle { get; set; }
         void Activate(); 
         void Deactivate();
 
