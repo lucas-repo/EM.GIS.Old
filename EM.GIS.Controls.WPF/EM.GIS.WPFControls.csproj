@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>EM.GIS.WpfControls</AssemblyName>
     <Nullable>enable</Nullable>
@@ -16,17 +16,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Controls\EM.GIS.Controls.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\EM.GIS.Symbology\EM.GIS.Symbology.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="EM.GIS">
-      <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Controls">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Data">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Geometries">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Symbology">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

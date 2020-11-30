@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -16,13 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GDAL" Version="2.4.4" />
-    <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
-    <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,8 +30,31 @@
 
   <ItemGroup>
     <Reference Include="EM.GIS">
-      <HintPath>..\EM.GIS.Resources\Dependencies\EM.GIS.dll</HintPath>
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
+      <Private>false</Private>
     </Reference>
+    <Reference Include="EM.GIS.Controls">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Data">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Geometries">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="EM.GIS.Symbology">
+      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
