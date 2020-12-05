@@ -22,16 +22,16 @@ namespace EM.GIS.WpfControls
     public partial class Map : UserControl, IMap
     {
         public IFrame MapFrame { get; set; }
-        public IExtent Extent => MapFrame.Extent;
         public bool IsBusy { get; set; }
         public ILegend Legend { get; set; }
         public IExtent ViewExtent { get => MapFrame.ViewExtents; set => MapFrame.ViewExtents = value; }
-        public Rectangle Bounds => MapFrame.ViewBounds;
 
         public ILayerCollection Layers => MapFrame.Layers;
 
         public Rectangle ViewBounds { get => MapFrame.ViewBounds; set => MapFrame.ViewBounds = value; }
         public List<IMapTool> MapTools { get; }
+        public IExtent Extent { get => (MapFrame as IProj).Extent; set => (MapFrame as IProj).Extent = value; }
+        public Rectangle Bounds { get => MapFrame.Bounds; set => MapFrame.Bounds = value; }
 
         public event EventHandler<GeoMouseArgs> GeoMouseMove;
         public Map()
@@ -44,11 +44,43 @@ namespace EM.GIS.WpfControls
         {
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
             MapFrame.BufferChanged += MapFrame_BufferChanged;
-            var pan = new MapToolPan(this); 
-             var zoom = new MapToolZoom(this);
+            MapFrame.ViewBoundsChanged += MapFrame_ViewBoundsChanged;
+            var pan = new MapToolPan(this);
+            var zoom = new MapToolZoom(this);
             IMapTool[] mapTools = { pan, zoom };
             MapTools.AddRange(mapTools);
+            foreach (var mapTool in MapTools)
+            {
+                mapTool.Activated += MapTool_Activated;
+            }
             ActivateMapFunctionWithZoom(pan);
+        }
+
+        private void MapFrame_ViewBoundsChanged(object? sender, EventArgs e)
+        {
+            Invalidate();
+        }
+
+        private void MapTool_Activated(object? sender, EventArgs e)
+        {
+            if (sender is IMapTool mapTool)
+            {
+                if (mapTool.Cursor != null)
+                {
+                    Cursor = new Cursor(mapTool.Cursor);
+                }
+                else if (mapTool is MapToolPan)
+                {
+                    Cursor = Cursors.SizeAll;
+                }
+                else
+                {
+                    if (Cursor != Cursors.Arrow)
+                    {
+                        Cursor = Cursors.Arrow;
+                    }
+                }
+            }
         }
 
         private void MapFrame_BufferChanged(object? sender, EventArgs e)
@@ -101,17 +133,17 @@ namespace EM.GIS.WpfControls
             if (MapFrame?.BackBuffer is Bitmap)
             {
                 BitmapSource bitmapSource = null;
-                using (Bitmap bmp = new Bitmap(MapFrame.ViewBounds.Width, MapFrame.ViewBounds.Height))
+                using (Bitmap bmp = new Bitmap(Bounds.Width, Bounds.Height))
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-                        g.DrawImage(MapFrame.BackBuffer, MapFrame.ViewBounds, MapFrame.ViewBounds, GraphicsUnit.Pixel);
+                        MapFrame.Draw(g, Bounds);
                     }
                     bitmapSource = bmp.ToBitmapImage();
                 }
-                var rect = MapFrame.ViewBounds.ToRect();
-                double offsetX = (ActualWidth - MapFrame.ViewBounds.Width) / 2.0;
-                double offsetY = (ActualHeight - MapFrame.ViewBounds.Height) / 2.0;
+                var rect = Bounds.ToRect();
+                double offsetX = (ActualWidth - Bounds.Width) / 2.0;
+                double offsetY = (ActualHeight - Bounds.Height) / 2.0;
                 Transform transform = new TranslateTransform(offsetX, offsetY);
                 drawingContext.PushTransform(transform);
                 drawingContext.DrawImage(bitmapSource, rect);
@@ -160,8 +192,8 @@ namespace EM.GIS.WpfControls
 
             foreach (var f in MapTools)
             {
-                if ((f.YieldStyle & YieldStyles.AlwaysOn) == YieldStyles.AlwaysOn) continue;
-                int test = (int)(f.YieldStyle & function.YieldStyle);
+                if ((f.MapToolMode & MapToolMode.AlwaysOn) == MapToolMode.AlwaysOn) continue;
+                int test = (int)(f.MapToolMode & function.MapToolMode);
                 if (test > 0) f.Deactivate();
             }
             function.Activate();
@@ -171,7 +203,7 @@ namespace EM.GIS.WpfControls
         {
             foreach (var f in MapTools)
             {
-                if ((f.YieldStyle & YieldStyles.AlwaysOn) != YieldStyles.AlwaysOn) f.Deactivate();
+                if ((f.MapToolMode & MapToolMode.AlwaysOn) != MapToolMode.AlwaysOn) f.Deactivate();
             }
         }
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -187,7 +219,7 @@ namespace EM.GIS.WpfControls
                 return;
             }
             var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.Enabled))
+            foreach (var tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseDown(args);
                 if (args.Handled) break;
@@ -201,7 +233,7 @@ namespace EM.GIS.WpfControls
                 return;
             }
             var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.Enabled))
+            foreach (var tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseMove(args);
                 if (args.Handled) break;
@@ -216,7 +248,7 @@ namespace EM.GIS.WpfControls
                 return;
             }
             var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.Enabled))
+            foreach (var tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseUp(args);
                 if (args.Handled) break;
@@ -230,7 +262,7 @@ namespace EM.GIS.WpfControls
                 return;
             }
             var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.Enabled))
+            foreach (var tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseWheel(args);
                 if (args.Handled) break;
@@ -243,7 +275,7 @@ namespace EM.GIS.WpfControls
             {
                 return;
             }
-            //foreach (var tool in MapTools.Where(_ => _.Enabled))
+            //foreach (var tool in MapTools.Where(_ => _.IsActivated))
             //{
             //    tool.DoKeyDown(e.);
             //    if (e.Handled) break;

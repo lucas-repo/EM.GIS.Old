@@ -67,16 +67,29 @@ namespace EM.GIS.WpfControls
 
             return byteArray;
         }
+        public static MemoryStream ToMemoryStream(this Image bitmap, ImageFormat imageFormat)
+        {
+            MemoryStream ms = null;
+            if (bitmap != null)
+            {
+                ms = new MemoryStream();
+                bitmap.Save(ms, imageFormat);
+                ms.Seek(0, SeekOrigin.Begin);
+            }
+            return ms;
+        }
         public static BitmapImage ToBitmapImage(this Image bitmap, ImageFormat imageFormat)
         {
             BitmapImage bitmapImage = null;
             if (bitmap != null)
             {
-                using (MemoryStream ms = new MemoryStream())
+                using (MemoryStream ms = bitmap.ToMemoryStream(imageFormat))
                 {
-                    bitmap.Save(ms, imageFormat);
-                    byte[] buffer = ms.ToArray();
-                    bitmapImage = ByteArrayToBitmapImage(buffer);
+                    if (ms != null)
+                    {
+                        byte[] buffer = ms.ToArray();
+                        bitmapImage = ByteArrayToBitmapImage(buffer);
+                    }
                 }
             }
             return bitmapImage;
