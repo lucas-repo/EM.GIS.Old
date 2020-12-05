@@ -22,7 +22,7 @@ namespace EM.GIS.WpfControls
     public partial class Map : UserControl, IMap
     {
         public IFrame MapFrame { get; set; }
-        public IExtent Extent => (MapFrame as IProj).Extent;
+        public IExtent Extent => MapFrame.Extent;
         public bool IsBusy { get; set; }
         public ILegend Legend { get; set; }
         public IExtent ViewExtent { get => MapFrame.ViewExtents; set => MapFrame.ViewExtents = value; }
@@ -43,7 +43,7 @@ namespace EM.GIS.WpfControls
         private void Map_Loaded(object sender, RoutedEventArgs e)
         {
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
-            MapFrame.BufferChanged += MapFrame_BufferImageChanged;
+            MapFrame.BufferChanged += MapFrame_BufferChanged;
             var pan = new MapToolPan(this); 
              var zoom = new MapToolZoom(this);
             IMapTool[] mapTools = { pan, zoom };
@@ -51,10 +51,11 @@ namespace EM.GIS.WpfControls
             ActivateMapFunctionWithZoom(pan);
         }
 
-        private void MapFrame_BufferImageChanged(object sender, EventArgs e)
+        private void MapFrame_BufferChanged(object? sender, EventArgs e)
         {
             Invalidate();
         }
+
         public IList<ILayer> AddLayers()
         {
             var layers = new List<ILayer>();

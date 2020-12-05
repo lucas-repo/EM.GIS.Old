@@ -27,8 +27,6 @@ namespace WpfDemo
         public MainWindow()
         {
             InitializeComponent();
-            Initializer initializer = new Initializer();
-            initializer.Initialize();
             ContentRendered += MainWindow_ContentRendered;
             map.GeoMouseMove += Map_GeoMouseMove;
             App = new AppManager()

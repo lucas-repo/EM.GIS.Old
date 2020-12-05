@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 
 namespace WpfDemo
@@ -17,6 +18,7 @@ namespace WpfDemo
         static List<string> _privatePathes;
         static App()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);//todo 注册编码，注册gdal使用的GBK编码
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json");
@@ -46,7 +48,7 @@ namespace WpfDemo
                     {
                         foreach (string extension in _extensions)
                         {
-                            var potentialFiles = Directory.GetFiles(path, assemblyName + "." + extension, SearchOption.TopDirectoryOnly);
+                            var potentialFiles = Directory.GetFiles(path, $"{assemblyName}.{extension}", SearchOption.TopDirectoryOnly);
                             if (potentialFiles.Length > 0)
                             {
                                 assembly = Assembly.LoadFrom(potentialFiles[0]);

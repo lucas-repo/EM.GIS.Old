@@ -12,7 +12,7 @@ namespace EM.GIS.WpfControls
             where TEnum1 : Enum
         {
             TEnum1 enum1 = default;
-            var ret = Enum.TryParse(typeof(Controls.MouseButtons), enum0.ToString(), out object obj);
+            var ret = Enum.TryParse(typeof(Controls.MouseButtons), enum0.ToString(), out object? obj);
             if (ret)
             {
                 enum1 = (TEnum1)obj;
