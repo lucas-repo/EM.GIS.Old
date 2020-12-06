@@ -40,7 +40,8 @@ namespace WpfDemo
             // check the installation directory
             if (_privatePathes != null)
             {
-                string assemblyName = new AssemblyName(args.Name).Name;
+                var assemblyName = new AssemblyName(args.Name);
+                string name = assemblyName.Name;
                 foreach (string directory in _privatePathes)
                 {
                     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directory);
@@ -48,7 +49,7 @@ namespace WpfDemo
                     {
                         foreach (string extension in _extensions)
                         {
-                            var potentialFiles = Directory.GetFiles(path, $"{assemblyName}.{extension}", SearchOption.TopDirectoryOnly);
+                            var potentialFiles = Directory.GetFiles(path, $"{name}.{extension}", SearchOption.TopDirectoryOnly);
                             if (potentialFiles.Length > 0)
                             {
                                 assembly = Assembly.LoadFrom(potentialFiles[0]);

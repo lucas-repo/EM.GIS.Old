@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -11,6 +11,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\bin\Release\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
+    <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="Libs\EM.GIS.Controls.deps.json">
@@ -85,11 +90,11 @@
     <None Update="Libs\EM.GIS.Symbology.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Libs\Gdal.Core.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Libs\System.ComponentModel.Composition.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\System.ComponentModel.Composition.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Libs\System.Drawing.Common.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

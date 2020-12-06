@@ -9,7 +9,6 @@
     ".NETStandard,Version=v2.0/": {
       "EM.GIS.Gdals/1.0.0": {
         "dependencies": {
-          "EM.GIS.Controls": "1.0.0",
           "EM.GIS.Data": "1.0.0-alpha0001",
           "EM.GIS.Geometries": "1.0.0",
           "EM.GIS.Projection": "1.0.0",
@@ -55,17 +54,6 @@
           "EM.GIS.dll": {}
         }
       },
-      "EM.GIS.Controls/1.0.0": {
-        "dependencies": {
-          "EM.GIS.Data": "1.0.0-alpha0001",
-          "EM.GIS.Serialization": "1.0.0",
-          "EM.GIS.Symbology": "1.0.0-alpha0003",
-          "System.ComponentModel.Composition": "5.0.0"
-        },
-        "runtime": {
-          "EM.GIS.Controls.dll": {}
-        }
-      },
       "EM.GIS.Projection/1.0.0": {
         "dependencies": {
           "EM.GIS": "1.0.0-alpha0004"
@@ -77,16 +65,6 @@
       "EM.GIS.Serialization/1.0.0": {
         "runtime": {
           "EM.GIS.Serialization.dll": {}
-        }
-      },
-      "EM.GIS.Symbology/1.0.0-alpha0003": {
-        "dependencies": {
-          "EM.GIS": "1.0.0-alpha0004",
-          "EM.GIS.Data": "1.0.0-alpha0001",
-          "EM.GIS.Geometries": "1.0.0"
-        },
-        "runtime": {
-          "EM.GIS.Symbology.dll": {}
         }
       }
     }
@@ -137,22 +115,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "EM.GIS.Controls/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
     "EM.GIS.Projection/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "EM.GIS.Serialization/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "EM.GIS.Symbology/1.0.0-alpha0003": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -10,6 +10,7 @@
       "EM.GIS.Controls/1.0.0": {
         "dependencies": {
           "EM.GIS.Data": "1.0.0-alpha0001",
+          "EM.GIS.Gdals": "1.0.0",
           "EM.GIS.Serialization": "1.0.0",
           "EM.GIS.Symbology": "1.0.0-alpha0003",
           "NETStandard.Library": "2.0.3",
@@ -17,6 +18,14 @@
         },
         "runtime": {
           "EM.GIS.Controls.dll": {}
+        }
+      },
+      "Gdal.Core/2.3.0-beta-023": {
+        "runtime": {
+          "lib/netstandard2.0/Gdal.Core.dll": {
+            "assemblyVersion": "2.3.0.0",
+            "fileVersion": "2.3.0.0"
+          }
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
@@ -46,6 +55,17 @@
           "EM.GIS.dll": {}
         }
       },
+      "EM.GIS.Gdals/1.0.0": {
+        "dependencies": {
+          "EM.GIS.Data": "1.0.0-alpha0001",
+          "EM.GIS.Geometries": "1.0.0",
+          "EM.GIS.Projection": "1.0.0",
+          "Gdal.Core": "2.3.0-beta-023"
+        },
+        "runtime": {
+          "EM.GIS.Gdals.dll": {}
+        }
+      },
       "EM.GIS.Geometries/1.0.0": {
         "runtime": {
           "EM.GIS.Geometries.dll": {}
@@ -66,6 +86,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Gdal.Core/2.3.0-beta-023": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Uro75+j+beV+1nhzY204Mzmto/PwJ+DqpQYezCVsD9f/kDWcDBmDigwwKSX/uml+rtRSQ4ITccqP5lOv2e4+pA==",
+      "path": "gdal.core/2.3.0-beta-023",
+      "hashPath": "gdal.core.2.3.0-beta-023.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
@@ -96,6 +123,11 @@
       "hashPath": "system.drawing.common.5.0.0.nupkg.sha512"
     },
     "EM.GIS/1.0.0-alpha0004": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "EM.GIS.Gdals/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

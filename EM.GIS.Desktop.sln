@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.WPFControls", "EM.GI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Test", "EM.GIS.Test\EM.GIS.Test.csproj", "{E4A21811-0858-4A9B-9132-1714EC58C49C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.GIS.Resources", "EM.GIS.Resources\EM.GIS.Resources.csproj", "{2CA74CCE-AE13-46C8-913B-EFEA8F7A886F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Resources", "EM.GIS.Resources\EM.GIS.Resources.csproj", "{2CA74CCE-AE13-46C8-913B-EFEA8F7A886F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

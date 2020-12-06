@@ -38,8 +38,18 @@ namespace EM.GIS.WpfControls
         {
             InitializeComponent();
             Loaded += Map_Loaded;
+            SizeChanged += Map_SizeChanged;
             MapTools = new List<IMapTool>();
         }
+
+        private void Map_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (MapFrame != null && IsLoaded)
+            {
+                MapFrame.Resize((int)e.NewSize.Width, (int)e.NewSize.Height);
+            }
+        }
+
         private void Map_Loaded(object sender, RoutedEventArgs e)
         {
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
@@ -140,7 +150,7 @@ namespace EM.GIS.WpfControls
                         MapFrame.Draw(g, Bounds);
                     }
                     bitmapSource = bmp.ToBitmapImage();
-                }
+                } 
                 var rect = Bounds.ToRect();
                 double offsetX = (ActualWidth - Bounds.Width) / 2.0;
                 double offsetY = (ActualHeight - Bounds.Height) / 2.0;
@@ -277,7 +287,7 @@ namespace EM.GIS.WpfControls
             }
             //foreach (var tool in MapTools.Where(_ => _.IsActivated))
             //{
-            //    tool.DoKeyDown(e.);
+            //    tool.DoKeyUp(e.to);
             //    if (e.Handled) break;
             //}
             throw new NotImplementedException();
