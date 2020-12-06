@@ -118,10 +118,10 @@ namespace EM.GIS.WpfControls
         public void Invalidate()
         {
             var action = new Action(() =>
-              {
-                  InvalidateVisual();
-                  UpdateLayout();
-              });
+            {
+                InvalidateVisual();
+                //UpdateLayout();
+            });
             Dispatcher.BeginInvoke(action);
         }
         public void ZoomToMaxExtent()
