@@ -14,7 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace EM.GIS.WpfControls
+namespace EM.GIS.WPFControls
 {
     /// <summary>
     /// Map.xaml 的交互逻辑
@@ -29,17 +29,17 @@ namespace EM.GIS.WpfControls
         public ILayerCollection Layers => MapFrame.Layers;
 
         public Rectangle ViewBounds { get => MapFrame.ViewBounds; set => MapFrame.ViewBounds = value; }
-        public List<IMapTool> MapTools { get; }
+        public List<ITool> MapTools { get; }
         public IExtent Extent { get => (MapFrame as IProj).Extent; set => (MapFrame as IProj).Extent = value; }
         public Rectangle Bounds { get => MapFrame.Bounds; set => MapFrame.Bounds = value; }
 
-        public event EventHandler<GeoMouseArgs> GeoMouseMove;
+        public event EventHandler<IGeoMouseEventArgs> GeoMouseMove;
         public Map()
         {
             InitializeComponent();
             Loaded += Map_Loaded;
             SizeChanged += Map_SizeChanged;
-            MapTools = new List<IMapTool>();
+            MapTools = new List<ITool>();
         }
 
         private void Map_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -57,7 +57,7 @@ namespace EM.GIS.WpfControls
             MapFrame.ViewBoundsChanged += MapFrame_ViewBoundsChanged;
             var pan = new MapToolPan(this);
             var zoom = new MapToolZoom(this);
-            IMapTool[] mapTools = { pan, zoom };
+            ITool[] mapTools = { pan, zoom };
             MapTools.AddRange(mapTools);
             foreach (var mapTool in MapTools)
             {
@@ -189,7 +189,7 @@ namespace EM.GIS.WpfControls
             }
             ActivateMapFunction(function);
         }
-        public void ActivateMapFunction(IMapTool function)
+        public void ActivateMapFunction(ITool function)
         {
             if (function == null)
             {
@@ -222,28 +222,42 @@ namespace EM.GIS.WpfControls
             base.OnRenderSizeChanged(sizeInfo);
         }
         #region 鼠标事件
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+            {
+                return;
+            }
+            var args = new GeoMouseButtonEventArgs(e, this);
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
+            {
+                tool.DoMouseDoubleClick(args);
+                if (args.Handled) break;
+            }
+            base.OnMouseDoubleClick(e);
+        }
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if (e.Handled)
             {
                 return;
             }
-            var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.IsActivated))
+            var args = new GeoMouseButtonEventArgs(e, this);
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseDown(args);
                 if (args.Handled) break;
             }
             base.OnMouseDown(e);
         }
-        protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.Handled)
             {
                 return;
             }
-            var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.IsActivated))
+            var args = new GeoMouseEventArgs(e, this);
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseMove(args);
                 if (args.Handled) break;
@@ -257,8 +271,8 @@ namespace EM.GIS.WpfControls
             {
                 return;
             }
-            var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.IsActivated))
+            var args = new GeoMouseButtonEventArgs(e, this);
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseUp(args);
                 if (args.Handled) break;
@@ -271,8 +285,8 @@ namespace EM.GIS.WpfControls
             {
                 return;
             }
-            var args = new GeoMouseArgs(e.ToMouseEventArgs(this), this);
-            foreach (var tool in MapTools.Where(_ => _.IsActivated))
+            var args = new GeoMouseWheelEventArgs(e, this);
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
             {
                 tool.DoMouseWheel(args);
                 if (args.Handled) break;
@@ -285,17 +299,24 @@ namespace EM.GIS.WpfControls
             {
                 return;
             }
-            //foreach (var tool in MapTools.Where(_ => _.IsActivated))
-            //{
-            //    tool.DoKeyUp(e.to);
-            //    if (e.Handled) break;
-            //}
-            throw new NotImplementedException();
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
+            {
+                tool.DoKeyUp(e);
+                if (e.Handled) break;
+            }
             base.OnKeyUp(e);//todo 待完成
         }
         protected override void OnKeyDown(System.Windows.Input.KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Handled)
+            {
+                return;
+            }
+            foreach (IMapTool tool in MapTools.Where(_ => _.IsActivated))
+            {
+                tool.DoKeyDown(e);
+                if (e.Handled) break;
+            }
             base.OnKeyDown(e);
         }
         #endregion

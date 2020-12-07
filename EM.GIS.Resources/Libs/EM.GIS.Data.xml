@@ -1,0 +1,1498 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EM.GIS.Data</name>
+    </assembly>
+    <members>
+        <member name="T:EM.GIS.Data.AffineTransform">
+            <summary>
+            The AffineTransform class represents a 2D affine transform that performs a linear mapping from 2D coordinates to other 2D coordinates that preserves
+            the "straightness" and "parallelness" of lines. Affine transformations can be constructed using sequences of translations, scales, flips, rotations, and shears.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.#ctor(System.Double[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.AffineTransform"/> class with the 6 specifiable entries of the 3x3 transformation matrix.
+            </summary>
+            <param name="inCoefficients">An array with the 6 specifiable entries of the 3x3 transformation matrix.</param>
+        </member>
+        <member name="P:EM.GIS.Data.AffineTransform.Coefficients">
+            <summary>
+            Gets or sets the array of coefficients for this transform.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.CellCenterToProj(System.Int32,System.Int32)">
+            <summary>
+            Given any input row or column, this returns the appropriate geographic location for the
+            position of the center of the cell.
+            </summary>
+            <param name="row">The integer row index from 0 to numRows - 1</param>
+            <param name="column">The integer column index from 0 to numColumns - 1</param>
+            <returns>The geographic position of the center of the specified cell</returns>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.CellTopLeftToProj(System.Int32,System.Int32)">
+            <summary>
+            Given the row and column, this returns the geographic position of the top left corner of the cell
+            </summary>
+            <param name="row">The integer row index from 0 to numRows - 1</param>
+            <param name="column">The integer column index from 0 to numColumns - 1</param>
+            <returns>The geographic position of the top left corner of the specified cell</returns>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.CellTopRightToProj(System.Int32,System.Int32)">
+            <summary>
+            Given the row and column, this returns the geographic position of the top right corner of the cell
+            </summary>
+            <param name="row">The integer row index from 0 to numRows - 1</param>
+            <param name="column">The integer column index from 0 to numColumns - 1</param>
+            <returns>The geographic position of the top right corner of the specified cell</returns>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.CellBottomLeftToProj(System.Int32,System.Int32)">
+            <summary>
+            Given the row and column, this returns the geographic position of the bottom left corner of the cell
+            </summary>
+            <param name="row">The integer row index from 0 to numRows - 1</param>
+            <param name="column">The integer column index from 0 to numColumns - 1</param>
+            <returns>The geographic position of the bottom left corner of the specified cell</returns>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.CellBottomRightToProj(System.Int32,System.Int32)">
+            <summary>
+            Given the row and column, this returns the geographic position of the bottom right corner of the cell
+            </summary>
+            <param name="row">The integer row index from 0 to numRows - 1</param>
+            <param name="column">The integer column index from 0 to numColumns - 1</param>
+            <returns>The geographic position of the bottom right corner of the specified cell</returns>
+        </member>
+        <member name="M:EM.GIS.Data.AffineTransform.TransfromToCorner(System.Double,System.Double)">
+            <summary>
+             Given the row and column, this returns new affine coefficients transformed to that cell
+            </summary>
+            <param name="startColumn">The column index from 0 to numColumns - 1</param>
+            <param name="startRow">The row index from 0 to numRows - 1</param>
+            <returns>Transformed affine coefficients</returns>
+        </member>
+        <member name="T:EM.GIS.Data.AssemblyExtensions">
+            <summary>
+            程序集扩展
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.AssemblyExtensions.CreateInstance(System.Reflection.Assembly,System.Type)">
+            <summary>
+            创建实例
+            </summary>
+            <param name="assembly"></param>
+            <param name="destType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.AssemblyExtensions.CreateInstance``1(System.String)">
+            <summary>
+            从文件中读取dll创建实例
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="directory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.AssemblyExtensions.IsAssignable(System.Reflection.Assembly,System.Type)">
+            <summary>
+            程序集是否可分配指定类型实例
+            </summary>
+            <param name="assembly"></param>
+            <param name="destType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.AssemblyExtensions.GetAssignableAssembly``1(System.String)">
+            <summary>
+            获取可分配指定类型的程序集
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="directory"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.DataFactory">
+            <summary>
+            数据工厂
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.DataFactory.Default">
+            <summary>
+            默认数据工厂
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.DataSet">
+            <summary>
+            数据集
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.Driver">
+            <summary>
+            驱动基类
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.DriverFactory">
+            <summary>
+            驱动工厂
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.ExtentArgs">
+            <summary>
+            An EventArgs class for passing around an extent.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.ExtentArgs.#ctor(EM.GIS.Geometries.IExtent)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.ExtentArgs"/> class.
+            </summary>
+            <param name="value">The value for this event.</param>
+        </member>
+        <member name="P:EM.GIS.Data.ExtentArgs.Extent">
+            <summary>
+            Gets or sets the Extents for this event.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.ExtentExtensions.ToPolygon(EM.GIS.Geometries.IExtent)">
+            <summary>
+            转几何体
+            </summary>
+            <param name="extent"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.FeatureSet">
+            <summary>
+            要素集
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.FeatureType">
+            <summary>
+            An abreviated list for quick classification
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.FeatureType.Unspecified">
+            <summary>
+            None specified or custom
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.FeatureType.Point">
+            <summary>
+            Point
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.FeatureType.Line">
+            <summary>
+            Line
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.FeatureType.Polygon">
+            <summary>
+            Polygon
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.FeatureType.MultiPoint">
+            <summary>
+            MultiPoint
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.FieldType">
+            <summary>
+            字段类型
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.FilePathUtils">
+            <summary>
+            Contains misc utils for file paths.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.FilePathUtils.RelativePathTo(System.String)">
+            <summary>
+            Creates a relative path from one file or folder to another.
+            </summary>
+            <param name="toPath">Contains the path that defines the endpoint of the relative path.</param>
+            <returns>The relative path from the start directory to the end path.</returns>
+            <exception cref="T:System.ArgumentNullException">Occurs when the toPath is NULL</exception>
+        </member>
+        <member name="M:EM.GIS.Data.GCHandleHelper.GetIntPtr(System.Object)">
+            <summary>
+            根据指定对象创建内存指针
+            </summary>
+            <param name="obj">对象</param>
+            <returns>指针</returns>
+        </member>
+        <member name="T:EM.GIS.Data.Global">
+            <summary>
+            Global has some basic methods that may be useful in lots of places.
+            TODO: This class needs to be removed and these methods relocated to easier to find places.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.Global.Convert``1(System.Double)">
+            <summary>
+            Converts a double numeric value into the appropriate T data type using a ChangeType process.
+            </summary>
+            <typeparam name="T">The numeric output type created from the double value.</typeparam>
+            <param name="value">The double value to retrieve the equivalent numeric value for.</param>
+            <returns>A variable of type T with the value of the value parameter.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetByte(System.Object)">
+            <summary>
+            This attempts to convert a value into a byte. If it fails, the byte will be 0.
+            </summary>
+            <param name="expression">The expression (like a string) to System.Convert.</param>
+            <returns>A byte that is 0 if the test fails.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetDouble(System.Object)">
+            <summary>
+            This attempts to convert a value into a double. If it fails, the double will be double.NaN.
+            </summary>
+            <param name="expression">The expression (like a string) to System.Convert.</param>
+            <returns>A double that is double.NAN if the test fails.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetFloat(System.Object)">
+            <summary>
+            This attempts to convert a value into a float. If it fails, the float will be 0.
+            </summary>
+            <param name="expression">The expression (like a string) to System.Convert.</param>
+            <returns>A float that is 0 if the test fails.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetInteger(System.Object)">
+            <summary>
+            This attempts to convert a value into an integer. If it fails, it returns 0.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as a double, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetShort(System.Object)">
+            <summary>
+            This attempts to convert a value into a short. If it fails, it returns 0.
+            </summary>
+            <param name="expression">The expression (like a string) to System.Convert.</param>
+            <returns>A short that is 0 if the test fails.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.GetString(System.Object)">
+            <summary>
+            Gets the string form of the number using culture settings
+            </summary>
+            <param name="expression">The expression to obtain the string for</param>
+            <returns>A string</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.IsByte(System.Object)">
+            <summary>
+            Tests an expression to see if it can be converted into a byte.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as a double, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.IsDouble(System.Object)">
+            <summary>
+            Tests an expression to see if it can be converted into a double.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as a double, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.IsFloat(System.Object)">
+            <summary>
+            Tests an expression to see if it can be converted into a float.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as a double, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.IsInteger(System.Object)">
+            <summary>
+            Tests an expression to see if it can be converted into an integer.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as an integer, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.IsShort(System.Object)">
+            <summary>
+            Tests an expression to see if it can be converted into a short.
+            </summary>
+            <param name="expression">The expression to test</param>
+            <returns>true if the value could be cast as a double, false otherwise</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.MaximumValue``1">
+            <summary>
+            For numeric types, this will return the maximum value.
+            </summary>
+            <typeparam name="T">The type of the numeric range to find the maximum for.</typeparam>
+            <returns>The maximum value for the numeric type specified by T.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.MinimumValue``1">
+            <summary>
+            For Numeric types, this will return the minimum value.
+            </summary>
+            <typeparam name="T">The type of the numeric range to return the minimum for.</typeparam>
+            <returns>The the minimum value possible for a numeric value of type T.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.ParseEnum``1(System.String)">
+            <summary>
+            Uses the standard enum parsing, but returns it cast as the specified T parameter
+            </summary>
+            <typeparam name="T">The type of the enum to use</typeparam>
+            <param name="text">The string to parse into a copy of the enumeration</param>
+            <returns>an enumeration of the specified type</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.SafeCastTo``1(System.Object)">
+            <summary>
+            A Generic Safe Casting method that should simply exist as part of the core framework
+            </summary>
+            <typeparam name="T">The type of the member to attempt to cast to.</typeparam>
+            <param name="obj">The original object to attempt to System.Convert.</param>
+            <returns>An output variable of type T.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Global.ToDouble``1(``0)">
+            <summary>
+            This involves boxing and unboxing as well as a convert to double, but IConvertible was
+            not CLS Compliant, so we were always getting warnings about it. Ted was trying to make
+            all the code CLS Compliant to remove warnings.
+            </summary>
+            <param name="value">The value that gets converted to double. this should be a numeric.</param>
+            <typeparam name="T">Type of the value that gets converted to double.</typeparam>
+            <returns>0 if the type wasn't found otherwise the result of the conversion.</returns>
+        </member>
+        <member name="T:EM.GIS.Data.IDataFactory">
+            <summary>
+            数据工厂接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataFactory.DriverFactory">
+            <summary>
+            数据驱动工厂
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataFactory.GeometryFactory">
+            <summary>
+            几何工厂
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataFactory.ProgressHandler">
+            <summary>
+            进度
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.IDataSet">
+            <summary>
+            数据集
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.Extent">
+            <summary>
+            范围
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.Filename">
+            <summary>
+            路径
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.RelativeFilename">
+            <summary>
+            相对路径
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.IsDisposed">
+            <summary>
+            已经释放
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.Projection">
+            <summary>
+            投影
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDataSet.ProgressHandler">
+            <summary>
+            进度
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IDataSet.Save">
+            <summary>
+            保存
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IDataSet.SaveAs(System.String,System.Boolean)">
+            <summary>
+            另存为
+            </summary>
+            <param name="filename"></param>
+            <param name="overwrite"></param>
+        </member>
+        <member name="T:EM.GIS.Data.IDriver">
+            <summary>
+            数据驱动接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriver.ProgressHandler">
+            <summary>
+            进度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriver.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriver.Discription">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.Open(System.String,System.Boolean)">
+            <summary>
+            打开
+            </summary>
+            <param name="fileName"></param>
+            <param name="update"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.Delete(System.String)">
+            <summary>
+            删除数据集
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.Rename(System.String,System.String)">
+            <summary>
+            重命名数据集
+            </summary>
+            <param name="srcFileName"></param>
+            <param name="destFileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.CopyFiles(System.String,System.String)">
+            <summary>
+            复制数据集
+            </summary>
+            <param name="srcFileName"></param>
+            <param name="destFileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.GetReadableFileExtensions">
+            <summary>
+            获取可读文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriver.GetWritableFileExtensions">
+            <summary>
+            获取可写文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IDriverFactory">
+            <summary>
+            数据驱动工厂
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriverFactory.Drivers">
+            <summary>
+            数据驱动集合
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriverFactory.VectorDrivers">
+            <summary>
+            矢量数据驱动集合
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriverFactory.RasterDrivers">
+            <summary>
+            栅格数据驱动集合
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IDriverFactory.ProgressHandler">
+            <summary>
+            进度
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.Open(System.String)">
+            <summary>
+            打开数据集
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.OpenVector(System.String)">
+            <summary>
+            打开矢量数据集
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.OpenRaster(System.String)">
+            <summary>
+            打开栅格数据集
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.GetVectorReadableFileExtensions">
+            <summary>
+            获取矢量可读文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.GetRasterWritableFileExtensions">
+            <summary>
+            获取矢量可写文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.GetRasterReadableFileExtensions">
+            <summary>
+            获取矢量可读文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IDriverFactory.GetVectorWritableFileExtensions">
+            <summary>
+            获取矢量可写文件扩展
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IFeature">
+            <summary>
+            要素接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFeature.FId">
+            <summary>
+            要素id
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFeature.Geometry">
+            <summary>
+            几何体
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.IFeatureSet">
+            <summary>
+            矢量数据集
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFeatureSet.FeatureCount">
+            <summary>
+            要素个数
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFeatureSet.FeatureType">
+            <summary>
+            要素类型
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.AddFeature(EM.GIS.Geometries.IGeometry)">
+            <summary>
+            添加要素
+            </summary>
+            <param name="geometry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.AddFeature(EM.GIS.Geometries.IGeometry,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            添加要素
+            </summary>
+            <param name="geometry"></param>
+            <param name="attribute"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.GetFeature(System.Int32)">
+            <summary>
+            获取要素
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.GetFeatures">
+            <summary>
+            获取要素集合(返回过滤后的要素)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.RemoveFeature(System.Int32)">
+            <summary>
+            移除要素
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.GetSpatialFilter">
+            <summary>
+            获取空间过滤
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.SetSpatialFilter(EM.GIS.Geometries.IGeometry)">
+            <summary>
+            设置空间过滤
+            </summary>
+            <param name="geometry"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.SetSpatialExtentFilter(EM.GIS.Geometries.IExtent)">
+            <summary>
+            设置空间范围过滤
+            </summary>
+            <param name="extent"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IFeatureSet.SetAttributeFilter(System.String)">
+            <summary>
+            设置属性过滤
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="T:EM.GIS.Data.IField">
+            <summary>
+            字段接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IField.FieldDfn">
+            <summary>
+            字段定义
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IField.IsNull">
+            <summary>
+            是否为空
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsString">
+            <summary>
+            获取字符串值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsInteger">
+            <summary>
+            获取整数值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsLong">
+            <summary>
+            获取长整型值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsDouble">
+            <summary>
+            获取双精度值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsDateTime">
+            <summary>
+            获取时间值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsIntegerList">
+            <summary>
+            获取整数数组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.GetValueAsStringList">
+            <summary>
+            获取字符串数组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.String)">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.Int64)">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.Int32)">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.Double)">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.DateTime)">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.Int32[])">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.Double[])">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IField.SetValue(System.String[])">
+            <summary>
+            设置值
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="T:EM.GIS.Data.IFieldDefn">
+            <summary>
+            字段定义
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.FieldType">
+            <summary>
+            字段类型
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.Length">
+            <summary>
+            长度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.Precision">
+            <summary>
+            精度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.IsIgnored">
+            <summary>
+            获取或设置获取要素时是否忽略此字段
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IFieldDefn.IsNullable">
+            <summary>
+            获取或设置此字段是否可为空
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.IGeometryFactory">
+            <summary>
+            几何工厂
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetGeometryFromWkt(System.String)">
+            <summary>
+            从wkt获取几何体
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetPoint(EM.GIS.Geometries.ICoordinate)">
+            <summary>
+            创建点
+            </summary>
+            <param name="coordinate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetLineString(System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ICoordinate})">
+            <summary>
+            创建线
+            </summary>
+            <param name="coordinates"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetLinearRing(System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ICoordinate})">
+            <summary>
+            创建环
+            </summary>
+            <param name="coordinates"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(EM.GIS.Geometries.ILinearRing,System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ILinearRing})">
+            <summary>
+            创建面
+            </summary>
+            <param name="shell"></param>
+            <param name="holes"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IGetBitmap">
+            <summary>
+            获取图片接口
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap">
+            <summary>
+            获取图片
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Size)">
+            <summary>
+            获取图片
+            </summary>
+            <param name="envelope"></param>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle)">
+            <summary>
+            获取图片
+            </summary>
+            <param name="envelope"></param>
+            <param name="window"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IGetField">
+            <summary>
+            获取字段值
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IGetField.FieldCount">
+            <summary>
+            字段数量
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IGetField.GetField(System.Int32)">
+            <summary>
+            获取字段
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGetField.GetField(System.String)">
+            <summary>
+            获取字段
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IGetFieldDefn">
+            <summary>
+            获取字段定义
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IGetFieldDefn.FieldCount">
+            <summary>
+            字段数量
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IGetFieldDefn.GetFieldDefn(System.Int32)">
+            <summary>
+            获取字段定义
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IProgressHandler">
+            <summary>
+            进度接口
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IProgressHandler.Progress(System.Int32,System.String)">
+            <summary>
+            汇报进度方法
+            </summary>
+            <param name="percent">百分比</param>
+            <param name="message">消息</param>
+        </member>
+        <member name="T:EM.GIS.Data.IProj">
+            <summary>
+            带范围和边界的接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IProj.Extent">
+            <summary>
+            范围
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IProj.Bounds">
+            <summary>
+            边界
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IProjExtensions.ExtendBuffer">
+            <summary>
+            Gets or sets a value indicating whether this map frame should define its buffer
+            region to be the same size as the client, or three times larger.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IProjExtensions.ExtendBufferCoeff">
+            <summary>
+            Gets or sets the coefficient used for ExtendBuffer. This coefficient should not be modified.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Drawing.Point)">
+            <summary>
+            Converts a single point location into an equivalent geographic coordinate
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="position">The client coordinate relative to the map control</param>
+            <returns>The geographic ICoordinate interface</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Drawing.Rectangle)">
+            <summary>
+            Converts a rectangle in pixel coordinates relative to the map control into
+            a geographic envelope.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="rect">The rectangle to convert</param>
+            <returns>An IEnvelope interface</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Collections.Generic.List{System.Drawing.Rectangle})">
+            <summary>
+            Projects all of the rectangles int the specified list of rectangles into geographic regions.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="clipRects">The clip rectangles</param>
+            <returns>A List of IEnvelope geographic bounds that correspond to the specified clip rectangles.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixelPoint(EM.GIS.Data.IProj,System.Double[])">
+            <summary>
+            Converts a single geographic location into the equivalent point on the screen relative to the top left corner of the map.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="location">The geographic position to transform</param>
+            <returns>A Point with the new location.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixelPointF(EM.GIS.Data.IProj,System.Double[])">
+            <summary>
+            Converts a single geographic location into the equivalent point on the screen relative to the top left corner of the map.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="location">The geographic position to transform</param>
+            <returns>A Point with the new location.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixel(EM.GIS.Data.IProj,EM.GIS.Geometries.IExtent)">
+            <summary>
+            Converts a single geographic envelope into an equivalent Rectangle as it would be drawn on the screen.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="env">The geographic IEnvelope</param>
+            <returns>A Rectangle</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixel(EM.GIS.Data.IProj,System.Collections.Generic.List{EM.GIS.Geometries.IExtent})">
+            <summary>
+            Translates all of the geographic regions, forming an equivalent list of rectangles.
+            </summary>
+            <param name="self">This IProj</param>
+            <param name="regions">The list of geographic regions to project</param>
+            <returns>A list of pixel rectangles that describe the specified region</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixel(EM.GIS.Data.IProj,System.Double)">
+            <summary>
+            Calculates an integer length distance in pixels that corresponds to the double length specified in the image.
+            </summary>
+            <param name="self">The IProj that this describes</param>
+            <param name="distance">The double distance to obtain in pixels</param>
+            <returns>The integer distance in pixels</returns>
+        </member>
+        <member name="T:EM.GIS.Data.IRasterBounds">
+            <summary>
+            栅格范围接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.AffineCoefficients">
+            <summary>
+            仿射系数
+            X' = [0] + [1] * Column + [2] * Row
+            Y' = [3] + [4] * Column + [5] * Row
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.CellHeight">
+            <summary>
+            像素高度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.CellWidth">
+            <summary>
+            像素宽度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.Extent">
+            <summary>
+            范围
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.NumColumns">
+            <summary>
+            宽度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.NumRows">
+            <summary>
+            高度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.WorldFile">
+            <summary>
+            世界范围文件路径
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.X">
+            <summary>
+            左上角X坐标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterBounds.Y">
+            <summary>
+            左上角Y坐标
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterBounds.OpenWorldFile(System.String)">
+            <summary>
+            打开世界文件
+            </summary>
+            <param name="worldFileName"></param>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterBounds.Save">
+            <summary>
+            保存
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterBounds.SaveAs(System.String)">
+            <summary>
+            另存为
+            </summary>
+            <param name="worldFileName"></param>
+        </member>
+        <member name="T:EM.GIS.Data.IRasterDriver">
+             <summary>
+            栅格数据驱动接口
+             </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterDriver.Open(System.String,System.Boolean)">
+            <summary>
+            打开栅格
+            </summary>
+            <param name="fileName"></param>
+            <param name="update"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterDriver.Create(System.String,System.Int32,System.Int32,System.Int32,EM.GIS.Data.RasterType)">
+            <summary>
+            创建栅格
+            </summary>
+            <param name="utf8_path"></param>
+            <param name="xsize"></param>
+            <param name="ysize"></param>
+            <param name="bands"></param>
+            <param name="eType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IRasterSet">
+            <summary>
+            栅格数据集
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.RasterType">
+            <summary>
+            栅格类型
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.Bands">
+            <summary>
+            波段
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.BandCount">
+            <summary>
+            波段数
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.NumRows">
+            <summary>
+            高度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.NumColumns">
+            <summary>
+            长度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.NoDataValue">
+            <summary>
+            无数据值
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRasterSet.RasterBounds">
+            <summary>
+            栅格范围
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IRasterSet.GetStatistics">
+            <summary>
+            获取统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.IReproject">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IReproject.CanReproject">
+            <summary>
+            Gets a value indicating whether the DotSpatial.Projections assembly is loaded. If
+            not, this returns false, and neither ProjectionInfo nor the Reproject() method should
+            be used.
+            </summary>
+            <returns>Boolean, true if the value can reproject.</returns>
+        </member>
+        <member name="P:EM.GIS.Data.IReproject.Projection">
+            <summary>
+            Gets or sets the projection information for this dataset
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IReproject.Reproject(EM.GIS.Projection.ProjectionInfo)">
+            <summary>
+            Reprojects all of the in-ram vertices of vectors, or else this
+            simply updates the "Bounds" of image and raster objects
+            This will also update the projection to be the specified projection.
+            </summary>
+            <param name="targetProjection">
+            The projection information to reproject the coordinates to.
+            </param>
+        </member>
+        <member name="T:EM.GIS.Data.IRuntimeManager">
+            <summary>
+            环境管理器
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IRuntimeManager.IsRegisted">
+            <summary>
+            是否已注册
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.IRuntimeManager.Register">
+            <summary>
+            注册
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IRuntimeManager.Unregister">
+            <summary>
+            取消注册
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IStatistic.Maximum">
+            <summary>
+            Gets the maximum data value, not counting no-data values in the grid.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IStatistic.Mean">
+            <summary>
+            Gets the mean of the non-NoData values in this grid. If the data is not InRam, then
+            the GetStatistics method must be called before these values will be correct.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IStatistic.Minimum">
+            <summary>
+            Gets the minimum data value that is not classified as a no data value in this raster.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.IStatistic.StdDeviation">
+            <summary>
+            Gets the standard deviation of all the Non-nodata cells. If the data is not InRam,
+            then you will have to first call the GetStatistics() method to get meaningful values.
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.IVectorDriver">
+            <summary>
+            矢量数据接口
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.ProjectionExtensions.TransformCoordinate(EM.GIS.Projection.ITransformation,EM.GIS.Geometries.ICoordinate)">
+            <summary>
+            转换坐标
+            </summary>
+            <param name="coordinate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.ProjectionExtensions.TransformCoordinates(EM.GIS.Projection.ITransformation,System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ICoordinate})">
+            <summary>
+            转换多个坐标
+            </summary>
+            <param name="transformation"></param>
+            <param name="coordinates"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.RasterBounds">
+            <summary>
+            RasterBounds
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.RasterBounds"/> class.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.RasterBounds"/> class.
+            This attempts to read the very simple 6 number world file associated with an image.
+            </summary>
+            <param name="numRows">The number of rows in this raster</param>
+            <param name="numColumns">The number of columns in this raster</param>
+            <param name="worldFileName">A world file to attempt to read</param>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.#ctor(System.Int32,System.Int32,System.Double[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.RasterBounds"/> class.
+            </summary>
+            <param name="numRows">The number of rows for this raster</param>
+            <param name="numColumns">The number of columns for this raster</param>
+            <param name="affineCoefficients">The affine coefficients describing the location of this raster.</param>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.#ctor(System.Int32,System.Int32,EM.GIS.Geometries.IExtent)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.RasterBounds"/> class that is georeferenced to the specified envelope.
+            </summary>
+            <param name="numRows">The number of rows</param>
+            <param name="numColumns">The number of columns</param>
+            <param name="bounds">The bounding envelope</param>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.AffineCoefficients">
+            <summary>
+            Gets or sets the double affine coefficients that control the world-file
+            positioning of this image. X' and Y' are real world coords.
+            X' = [0] + [1] * Column + [2] * Row
+            Y' = [3] + [4] * Column + [5] * Row
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.CellHeight">
+            <summary>
+            Gets or sets the desired height per cell. This will keep the skew the same, but
+            will adjust both the column based and row based height coefficients in order
+            to match the specified cell height. This can be thought of as the height
+            of a bounding box that contains an entire grid cell, no matter if it is skewed.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.CellWidth">
+            <summary>
+            Gets or sets the desired width per cell. This will keep the skew the same, but
+            will adjust both the column based and row based width coefficients in order
+            to match the specified cell width. This can be thought of as the width
+            of a bounding box that contains an entire grid cell, no matter if it is skewed.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.Extent">
+            <summary>
+            Gets or sets the rectangular bounding box for this raster.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.Height">
+            <summary>
+            Gets or sets the height of the entire bounds. This is derived by considering both the
+            column and row based contributions to the overall height. Changing this will keep
+            the skew ratio the same, but adjust both portions so that the overall height
+            will match the specified height.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.NumColumns">
+            <summary>
+            Gets the number of columns in the raster.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.NumRows">
+            <summary>
+            Gets the number of rows in the raster.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.Width">
+            <summary>
+            Gets or sets the geographic width of this raster. This will include the skew term
+            in the width estimate, so it will adjust both the width and the skew coefficient,
+            but preserve the ratio of skew to cell width.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.WorldFile">
+            <summary>
+            Gets or sets the fileName of the wordfile that describes the geographic coordinates of this raster. If a relative path gets assigned it is changed to the absolute path including the file extension.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.X">
+            <summary>
+            Gets or sets the horizontal placement of the upper left corner of this bounds. Because
+            of the skew, this upper left position may not actually be the same as the upper left
+            corner of the image itself (_affine[0]). Instead, this is the top left corner of
+            the rectangular extent for this raster.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterBounds.Y">
+            <summary>
+            Gets or sets the vertical placement of the upper left corner of this bounds, which is the
+            same as the top. The top left corner of the actual image may not be in this position
+            because of skew, but this represents the maximum Y value of the rectangular extents
+            that contains the image.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.Clone">
+            <summary>
+            Returns a duplicate of this object as an object.
+            </summary>
+            <returns>A duplicate of this object as an object.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.Copy">
+            <summary>
+            Creates a duplicate of this RasterBounds class.
+            </summary>
+            <returns>A RasterBounds that has the same properties but does not point to the same internal array.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.Open(System.String)">
+            <summary>
+            Attempts to load the data from the given fileName.
+            </summary>
+            <param name="fileName">The file name.</param>
+        </member>
+        <member name="M:EM.GIS.Data.RasterBounds.Save">
+            <summary>
+            Attempts to save the data to the file listed in WorldFile
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.RasterSet`1">
+            <summary>
+            A raster of the given type.
+            </summary>
+            <typeparam name="T">Type of the raster.</typeparam>
+        </member>
+        <member name="M:EM.GIS.Data.RasterSet`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.RasterSet`1"/> class.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.RasterSet`1.ByteSize">
+            <summary>
+            Gets the size of each raster element in bytes.
+            </summary>
+            <remarks>
+            This only works for a few numeric types, and will return 0 if it is not identifiable as one
+            of these basic types: byte, short, int, long, float, double, decimal, sbyte, ushort, uint, ulong, bool.
+            </remarks>
+        </member>
+        <member name="M:EM.GIS.Data.RasterSet`1.ReadRaster(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            This Method should be overrridden by classes, and provides the primary ability.
+            </summary>
+            <param name="xOff">The horizontal offset of the area to read values from.</param>
+            <param name="yOff">The vertical offset of the window to read values from.</param>
+            <param name="sizeX">The number of values to read into the buffer.</param>
+            <param name="sizeY">The vertical size of the window to read into the buffer.</param>
+            <returns>The jagged array of raster values of type T.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.RasterSet`1.WriteRaster(`0[][],System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            This method reads the values from the entire band into an array and returns the array as a single array.
+            This specifies a window where the xSize and ySize specified and 0 is used for the pixel and line space.
+            </summary>
+            <param name="buffer">The one dimensional array of values containing all the data for this particular content.</param>
+            <param name="xOff">The horizontal offset of the area to read values from.</param>
+            <param name="yOff">The vertical offset of the window to read values from.</param>
+            <param name="xSize">The number of values to read into the buffer.</param>
+            <param name="ySize">The vertical size of the window to read into the buffer.</param>
+        </member>
+        <member name="T:EM.GIS.Data.RasterType">
+            <summary>
+            栅格类型
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.Statistics">
+            <summary>
+            统计
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.Statistics.Maximum">
+            <summary>
+            最大值
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.Statistics.Mean">
+            <summary>
+            平均值
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.Statistics.Minimum">
+            <summary>
+            最小值
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Data.Statistics.StdDeviation">
+            <summary>
+            标准差
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.Statistics.IsEmpty">
+            <summary>
+            是否为空
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Data.Vertex">
+            <summary>
+            A vertex is a two dimensional structure with an X and a Y value. This is deliberately kept as small as possible.
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.Vertex.Epsilon">
+            <summary>
+            The tolerance for testing equality.
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.Vertex.X">
+            <summary>
+            The X coordinate.
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Data.Vertex.Y">
+            <summary>
+            The Y coordinate.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.#ctor(System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Data.Vertex"/> struct.
+            </summary>
+            <param name="x">The x value.</param>
+            <param name="y">The y value.</param>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.op_Equality(EM.GIS.Data.Vertex,EM.GIS.Data.Vertex)">
+            <summary>
+            Checks whether the given vertices are equal.
+            </summary>
+            <param name="v1">The first vertex.</param>
+            <param name="v2">The second vertex.</param>
+            <returns>True, if the difference is smaller than epsilon.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.op_Inequality(EM.GIS.Data.Vertex,EM.GIS.Data.Vertex)">
+            <summary>
+            Checks whether the given vertices are equal.
+            </summary>
+            <param name="v1">The first vertex.</param>
+            <param name="v2">The second vertex.</param>
+            <returns>True, if the difference is bigger than epsilon.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.ToCoordinate">
+            <summary>
+            Casts this vertex to a coordinate.
+            </summary>
+            <returns>This as coordinate.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.Equals(EM.GIS.Data.Vertex)">
+            <summary>
+            Checks whether this equals other.
+            </summary>
+            <param name="other">The other vertex to check against.</param>
+            <returns>True, if both are equal.</returns>
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EM.GIS.Data.Vertex.GetHashCode">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

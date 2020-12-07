@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EM.GIS.Gdals</name>
+    </assembly>
+    <members>
+        <member name="M:EM.GIS.Gdals.ExtentExtensions.ToEnvelope(EM.GIS.Geometries.IExtent)">
+            <summary>
+            转Envelope
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.ExtentExtensions.Contains(EM.GIS.Geometries.IExtent,OSGeo.OGR.Envelope)">
+            <summary>
+            是否包含范围
+            </summary>
+            <param name="extent"></param>
+            <param name="env"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.ExtentExtensions.Intersects(EM.GIS.Geometries.IExtent,OSGeo.OGR.Envelope)">
+            <summary>
+            是否相交
+            </summary>
+            <param name="extent"></param>
+            <param name="env"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.ExtentExtensions.Within(EM.GIS.Geometries.IExtent,OSGeo.OGR.Envelope)">
+            <summary>
+            是否包含于
+            </summary>
+            <param name="extent"></param>
+            <param name="env"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalExtensions.Open(System.String)">
+            <summary>
+            尝试以读写打开数据，若失败则以只读打开
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalExtensions.ReadBand(OSGeo.GDAL.Band,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            读取栅格块为字节数组（自动拉伸）
+            </summary>
+            <param name="band"></param>
+            <param name="xOffset"></param>
+            <param name="yOffset"></param>
+            <param name="xSize"></param>
+            <param name="ySize"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalExtensions.ComputeBlockSize(OSGeo.GDAL.Band,System.Int32@,System.Int32@)">
+            <summary>
+            计算读取块大小
+            </summary>
+            <param name="band"></param>
+            <param name="blockXsize"></param>
+            <param name="blockYsize"></param>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalExtensions.GetBitmap(System.Int32,System.Int32,System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Nullable{System.Double})">
+            <summary>
+            根据波段值创建位图
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="rBuffer"></param>
+            <param name="gBuffer"></param>
+            <param name="bBuffer"></param>
+            <param name="aBuffer"></param>
+            <param name="noDataValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.Byte,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.UInt16,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.Int16,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.UInt32,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.Int32,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.Single,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.NumberExtensions.StretchToByteValue(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            拉伸值
+            </summary>
+            <param name="value">值</param>
+            <param name="maxValue">最大值</param>
+            <param name="minValue">最小值</param>
+            <param name="factor">系数</param>
+            <returns>拉伸后的值</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.ProjectionExtensions.ToProjectionInfo(OSGeo.OSR.SpatialReference)">
+            <summary>
+            转投影信息
+            </summary>
+            <param name="spatialReference"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalConfiguration.#cctor">
+            <summary>
+            Construction of Gdal/Ogr
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalConfiguration.Usable">
+            <summary>
+            Gets a value indicating if the GDAL package is set up properly.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalConfiguration.ConfigureOgr">
+            <summary>
+            Method to ensure the static constructor is being called.
+            </summary>
+            <remarks>Be sure to call this function before using Gdal/Ogr/Osr</remarks>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalConfiguration.ConfigureGdal">
+            <summary>
+            Method to ensure the static constructor is being called.
+            </summary>
+            <remarks>Be sure to call this function before using Gdal/Ogr/Osr</remarks>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalConfiguration.GetPlatform">
+            <summary>
+            Function to determine which platform we're on
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalConfiguration.IsWindows">
+            <summary>
+            Gets a value indicating if we are on a windows platform
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalFeatureSet.DataSource">
+            <summary>
+            数据源
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Gdals.GdalProjectionInfo">
+            <summary>
+            投影信息
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalProjectionInfo.SpatialReference">
+            <summary>
+            空间参考
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Gdals.GdalRasterSet`1">
+            <summary>
+            A GDAL raster.
+            </summary>
+            <typeparam name="T">Type of the contained items.</typeparam>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalRasterSet`1.Dataset">
+            <summary>
+            数据源
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.#ctor(System.String,OSGeo.GDAL.Dataset)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Gdals.GdalRasterSet`1"/> class.
+            This can be a raster with multiple bands.
+            </summary>
+            <param name="fileName">The file name.</param>
+            <param name="fromDataset">The dataset.</param>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.#ctor(System.String,OSGeo.GDAL.Dataset,OSGeo.GDAL.Band)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Gdals.GdalRasterSet`1"/> class.
+            Creates a new raster from the specified band.
+            </summary>
+            <param name="fileName">The string path of the file if any.</param>
+            <param name="fromDataset">The dataset.</param>
+            <param name="fromBand">The band.</param>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalRasterSet`1.GdalDataType">
+            <summary>
+            Gets the GDAL data type.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Gdals.GdalRasterSet`1.NoDataValue">
+            <summary>
+            Gets or sets the NoDataValue.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle)">
+            <summary>
+            This needs to return the actual image and override the base
+            behavior that handles the internal variables only.
+            </summary>
+            <param name="envelope">The envelope to grab image data for.</param>
+            <param name="window">A Rectangle</param>
+            <returns>The image.</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GetBitmap(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets a block of data directly, converted into a bitmap.  This always writes
+            to the base layer, not the overviews.
+            </summary>
+            <param name="xOffset">The zero based integer column offset from the left</param>
+            <param name="yOffset">The zero based integer row offset from the top</param>
+            <param name="xSize">The integer number of pixel columns in the block. </param>
+            <param name="ySize">The integer number of pixel rows in the block.</param>
+            <returns>A Bitmap that is xSize, ySize.</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.CategoryColors">
+            <summary>
+            Gets the category colors.
+            </summary>
+            <returns>The category colors.</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.CategoryNames">
+            <summary>
+            Gets the category names.
+            </summary>
+            <returns>The category names.</returns>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GetStatistics">
+            <summary>
+            Gets the mean, standard deviation, minimum and maximum
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GdalProgressFunc(System.Double,System.IntPtr,System.IntPtr)">
+            <summary>
+            Handles the callback progress content.
+            </summary>
+            <param name="complete">Percent of completeness.</param>
+            <param name="message">Message is not used.</param>
+            <param name="data">Data is not used.</param>
+            <returns>0</returns>
+        </member>
+        <member name="T:EM.GIS.Gdals.GdalVectorDriver">
+            <summary>
+            矢量数据驱动类
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Gdals.OgrFieldHelper.GetStringValue(OSGeo.OGR.Feature,System.Int32)">
+            <summary>
+            读取要素的字段值
+            </summary>
+            <param name="feature"></param>
+            <param name="fieldIndex"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

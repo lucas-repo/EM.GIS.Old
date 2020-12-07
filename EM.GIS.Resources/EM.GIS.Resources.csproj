@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
     <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
   </ItemGroup>
 
@@ -88,6 +87,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Libs\EM.GIS.Symbology.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\Gdal.Core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Libs\System.ComponentModel.Composition.dll">

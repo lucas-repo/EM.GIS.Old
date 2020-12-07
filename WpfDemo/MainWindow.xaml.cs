@@ -53,7 +53,7 @@ namespace WpfDemo
             });
             Dispatcher.BeginInvoke(action);
         }
-        private void Map_GeoMouseMove(object sender, EM.GIS.Controls.GeoMouseArgs e)
+        private void Map_GeoMouseMove(object sender, IGeoMouseEventArgs e)
         {
             coordTBlock.Text = $"{e.GeographicLocation.X},{e.GeographicLocation.Y}";
         }

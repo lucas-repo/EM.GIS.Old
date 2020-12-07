@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <AssemblyName>EM.GIS.WpfControls</AssemblyName>
+    <AssemblyName>EM.GIS.WPFControls</AssemblyName>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

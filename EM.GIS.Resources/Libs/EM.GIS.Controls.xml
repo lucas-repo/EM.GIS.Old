@@ -1,0 +1,512 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EM.GIS.Controls</name>
+    </assembly>
+    <members>
+        <member name="T:EM.GIS.Controls.AppManager">
+            <summary>
+            app管理类
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.AppManager.GetDirectoriesNestedOneLevel">
+            <summary>
+            获取Directories及子文件夹的目录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Controls.AssemblyInformation">
+            <summary>
+            Information about the assembly containing the extension.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.AssemblyQualifiedName">
+            <summary>
+            Gets the name of the assembly and class.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.Author">
+            <summary>
+            Gets or sets the plugins author.
+            </summary>
+            <remarks>This setter should be overriden by a derived class (if needed).</remarks>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.BuildDate">
+            <summary>
+            Gets the build date.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.Description">
+            <summary>
+            Gets or sets the short description of the plugin.
+            </summary>
+            <remarks>This setter should be overriden by a derived class (if needed).</remarks>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.Name">
+            <summary>
+            Gets or sets the name of the plugin.
+            </summary>
+            <remarks>This setter should be overriden by a derived class (if needed).</remarks>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.Version">
+            <summary>
+            Gets or sets the plugin version.
+            </summary>
+            <remarks>This setter should be overriden by a derived class (if needed).</remarks>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.ReferenceAssembly">
+            <summary>
+            Gets the reference assembly.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.ReferenceFile">
+            <summary>
+            Gets the reference file.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.AssemblyInformation.ReferenceType">
+            <summary>
+            Gets the type of the referenced class.
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.IAppManager">
+            <summary>
+            app管理接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.ProgressHandler">
+            <summary>
+            进度处理
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.Map">
+            <summary>
+            地图
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.Legend">
+            <summary>
+            图例
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.Plugins">
+            <summary>
+            插件
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.BaseDirectory">
+            <summary>
+            根目录
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IAppManager.Directories">
+            <summary>
+            扩展目录(相对路径)
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IAppManager.LoadPlugins">
+            <summary>
+            读取插件
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.IGeoMouseEventArgs">
+            <summary>
+            几何参数
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IGeoMouseEventArgs.Location">
+            <summary>
+            屏幕坐标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IGeoMouseEventArgs.GeographicLocation">
+            <summary>
+            地理坐标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IGeoMouseEventArgs.Map">
+            <summary>
+            地图
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.ILegend">
+            <summary>
+            图例接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ILegend.Items">
+            <summary>
+            元素集合
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.IMap">
+            <summary>
+            地图接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.ViewExtent">
+            <summary>
+            视图范围
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.ViewBounds">
+            <summary>
+            视图边界
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.IsBusy">
+            <summary>
+            是否在工作中
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.Legend">
+            <summary>
+            图例
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.Invalidate(EM.GIS.Geometries.IExtent)">
+            <summary>
+            重绘指定范围
+            </summary>
+            <param name="extent"></param>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.Invalidate">
+            <summary>
+            重绘整个地图
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.ZoomToMaxExtent">
+            <summary>
+            缩放至最大范围
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.MapFrame">
+            <summary>
+            地图框架
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.AddLayers">
+            <summary>
+            添加多个图层
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.AddLayer">
+            <summary>
+            添加单个图层
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.Layers">
+            <summary>
+            图层
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IMap.MapTools">
+            <summary>
+            地图方法
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.ActivateMapFunction(EM.GIS.Controls.ITool)">
+            <summary>
+            激活地图方法
+            </summary>
+            <param name="function"></param>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.DeactivateAllMapTools">
+            <summary>
+            使所有地图工具无效
+            </summary>
+        </member>
+        <member name="E:EM.GIS.Controls.IMap.GeoMouseMove">
+            <summary>
+            鼠标移动事件
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.IPlugin">
+            <summary>
+            插件接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.App">
+            <summary>
+            app管理器
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.AssemblyQualifiedName">
+            <summary>
+            限定名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.Author">
+            <summary>
+            作者
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.BuildDate">
+            <summary>
+            创建日期
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.DeactivationAllowed">
+            <summary>
+            是否允许冻结
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.IsActive">
+            <summary>
+            是否已激活
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.Priority">
+            <summary>
+            优先级别
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.IPlugin.Version">
+            <summary>
+            版本
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IPlugin.Activate">
+            <summary>
+            激活
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.IPlugin.Deactivate">
+            <summary>
+            冻结
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.ITool">
+            <summary>
+            工具接口
+            </summary>
+        </member>
+        <member name="E:EM.GIS.Controls.ITool.Activated">
+            <summary>
+            工具已激活事件
+            </summary>
+        </member>
+        <member name="E:EM.GIS.Controls.ITool.Deactivated">
+            <summary>
+            工具已冻结事件
+            </summary>
+        </member>
+        <member name="E:EM.GIS.Controls.ITool.Drawn">
+            <summary>
+            绘制事件
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.Image">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.Cursor">
+            <summary>
+            光标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.IsActivated">
+            <summary>
+            是否已激活
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.Map">
+            <summary>
+            地图
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.MapToolMode">
+            <summary>
+            地图工具模式
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.ITool.BusySet">
+            <summary>
+            是否正与地图交互
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.ITool.Activate">
+            <summary>
+            激活
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.ITool.Deactivate">
+            <summary>
+            冻结
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.ITool.DoDraw(EM.GIS.Controls.MapDrawArgs)">
+            <summary>
+            处理绘制
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:EM.GIS.Controls.MapDrawArgs.#ctor(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Symbology.IFrame)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Controls.MapDrawArgs"/> class.
+            </summary>
+            <param name="inGraphics">The graphics object used for drawing.</param>
+            <param name="clipRectangle">The clip rectangle.</param>
+            <param name="inMapFrame">The map frame.</param>
+        </member>
+        <member name="M:EM.GIS.Controls.MapDrawArgs.#ctor(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Controls.MapEventArgs)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Controls.MapDrawArgs"/> class.
+            </summary>
+            <param name="inGraphics">The graphics object used for drawing.</param>
+            <param name="clipRectangle">The clip rectangle.</param>
+            <param name="inGeoGraphics">The map args.</param>
+        </member>
+        <member name="P:EM.GIS.Controls.MapDrawArgs.ClipRectangle">
+            <summary>
+            Gets or sets the clip rectangle that defines the area on the region in client coordinates where drawing is taking place.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapDrawArgs.GeoGraphics">
+            <summary>
+            Gets or sets a GeoGraphics wrapper that makes it easy to draw things in geographic coordinates.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapDrawArgs.Graphics">
+            <summary>
+            Gets or sets a Graphics object that is useful for drawing in client coordinates. Coordinates
+            should be specified as though they were drawn to the client rectangle, even if
+            a clip rectangle is specified.
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.MapEventArgs">
+            <summary>
+            地图事件参数
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.MapEventArgs.#ctor(System.Drawing.Rectangle,EM.GIS.Geometries.IExtent)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Controls.MapEventArgs"/> class.
+            </summary>
+            <param name="bufferRectangle">The buffer rectangle.</param>
+            <param name="bufferEnvelope">The buffer envelope.</param>
+        </member>
+        <member name="M:EM.GIS.Controls.MapEventArgs.#ctor(System.Drawing.Rectangle,EM.GIS.Geometries.IExtent,System.Drawing.Graphics)">
+            <summary>
+            Initializes a new instance of the <see cref="T:EM.GIS.Controls.MapEventArgs"/> class, where the device is also specified, overriding the default buffering behavior.
+            </summary>
+            <param name="bufferRectangle">The buffer rectangle.</param>
+            <param name="bufferEnvelope">The buffer envelope.</param>
+            <param name="g">The graphics object used for drawing.</param>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.Device">
+            <summary>
+            Gets an optional parameter that specifies a device to use instead of the normal buffers.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.Dx">
+            <summary>
+            Gets the Dx
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.Dy">
+            <summary>
+            Gets the Dy
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.Extent">
+            <summary>
+            Gets the geographic bounds of the content of the buffer.
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.Bounds">
+            <summary>
+            Gets the rectangle dimensions of what the buffer should be in pixels
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.MaxY">
+            <summary>
+            Gets the maximum Y value
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.MapEventArgs.MinX">
+            <summary>
+            Gets the minimum X value
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.MapToolMode">
+            <summary>
+            地图工具模式
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.None">
+            <summary>
+            无
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.LeftButton">
+            <summary>
+            左键
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.RightButton">
+            <summary>
+            右键
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.Middle">
+            <summary>
+            中键
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.Keyboard">
+            <summary>
+            键盘
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Controls.MapToolMode.AlwaysOn">
+            <summary>
+            始终启动
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.Plugin">
+            <summary>
+            插件基类
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.Properties.Resources">
+            <summary>
+              一个强类型的资源类，用于查找本地化的字符串等。
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存的 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Controls.Properties.Resources.Culture">
+            <summary>
+              重写当前线程的 CurrentUICulture 属性，对
+              使用此强类型资源类的所有资源查找执行重写。
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Controls.Tool">
+            <summary>
+            工具
+            </summary>
+        </member>
+    </members>
+</doc>

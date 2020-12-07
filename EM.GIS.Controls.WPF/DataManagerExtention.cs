@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EM.GIS.WpfControls
+namespace EM.GIS.WPFControls
 {
     /// <summary>
     /// Extend the data manager with some convenient dialog spawning options.

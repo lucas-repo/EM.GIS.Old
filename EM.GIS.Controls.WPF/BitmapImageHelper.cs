@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace EM.GIS.WpfControls
+namespace EM.GIS.WPFControls
 {
     public static class BitmapImageHelper
     {
