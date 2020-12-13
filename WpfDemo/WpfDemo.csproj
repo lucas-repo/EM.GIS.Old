@@ -1,59 +1,66 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\bin\Debug\</OutputPath>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\bin\Release\</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<ApplicationIcon>LogoIco128.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="ViewModels\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Fluent.Ribbon" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WPFControls.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WPFControls.csproj" />
+		<ProjectReference Include="..\EM.GIS.Resources\EM.GIS.Resources.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="EM.GIS">
-      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="EM.GIS.Controls">
-      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="EM.GIS.Data">
-      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="EM.GIS.Geometries">
-      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="EM.GIS.Symbology">
-      <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="EM.GIS">
+			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="EM.GIS.Controls">
+			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="EM.GIS.Data">
+			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="EM.GIS.Geometries">
+			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="EM.GIS.Symbology">
+			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

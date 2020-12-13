@@ -142,6 +142,10 @@ namespace EM.GIS.WPFControls
         {
             if (MapFrame?.BackBuffer is Bitmap)
             {
+                if (Bounds.Width <= 0 || Bounds.Height <= 0)
+                {
+                    return;
+                }
                 BitmapSource bitmapSource = null;
                 using (Bitmap bmp = new Bitmap(Bounds.Width, Bounds.Height))
                 {

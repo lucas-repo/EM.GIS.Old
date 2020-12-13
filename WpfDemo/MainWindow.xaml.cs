@@ -1,5 +1,7 @@
 ﻿using EM.GIS.Controls;
 using EM.GIS.Data;
+using EM.GIS.WPFControls;
+using Fluent;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -21,51 +24,19 @@ namespace WpfDemo
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow 
     {
-        private IAppManager App { get; }
+        private IWpfAppManager App { get; }
         public MainWindow()
         {
             InitializeComponent();
-            ContentRendered += MainWindow_ContentRendered;
-            map.GeoMouseMove += Map_GeoMouseMove;
-            App = new AppManager()
+            App = new WpfAppManager()
             {
-                Map = map
+                Window=this,
+                BaseDirectory = AppDomain.CurrentDomain.BaseDirectory
             };
-            App.LoadPlugins();
+            App.LoadPlugins(); 
         }
 
-        private void MainWindow_ContentRendered(object sender, EventArgs e)
-        {
-            map.MapFrame.ProgressHandler = new ProgressHandler()
-            {
-                Handler= ProgressHandler
-            };
-        }
-
-        private void ProgressHandler(int percent, string message)
-        {
-            var action = new Action(() =>
-            {
-                progressBar.Value = percent;
-                progressTBlock.Text = message;
-            });
-            Dispatcher.BeginInvoke(action);
-        }
-        private void Map_GeoMouseMove(object sender, IGeoMouseEventArgs e)
-        {
-            coordTBlock.Text = $"{e.GeographicLocation.X},{e.GeographicLocation.Y}";
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            map.AddLayers();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            map.ZoomToMaxExtent();
-        }
     }
 }

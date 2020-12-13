@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\bin\Debug\Plugins</OutputPath>
+		<DocumentationFile>..\bin\Debug\EM.GIS.Plugins.MainFrame.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Dirkster.AvalonDock" Version="4.50.0" />
+	  <PackageReference Include="Fluent.Ribbon" Version="8.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\EM.GIS.Controls.WPF\EM.GIS.WPFControls.csproj">
+	    <Private>false</Private>
+	  </ProjectReference>
+	  <ProjectReference Include="..\EM.GIS.Resources\EM.GIS.Resources.csproj">
+	    <Private>false</Private>
+	  </ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="EM.GIS">
+	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
+	    <Private>false</Private>
+	  </Reference>
+	  <Reference Include="EM.GIS.Controls">
+	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
+	    <Private>false</Private>
+	  </Reference>
+	  <Reference Include="EM.GIS.Data">
+	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
+	    <Private>false</Private>
+	  </Reference>
+	  <Reference Include="EM.GIS.Geometries">
+	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
+	    <Private>false</Private>
+	  </Reference>
+	  <Reference Include="EM.GIS.Symbology">
+	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
+	    <Private>false</Private>
+	  </Reference>
+	</ItemGroup>
+
+</Project>

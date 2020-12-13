@@ -55,6 +55,52 @@
             <param name="copy">目标对象</param>
             <param name="bindingFlags">绑定标记</param>
         </member>
+        <member name="T:EM.GIS.DelegateCommand">
+            <summary>
+            委托命令类
+            </summary>
+        </member>
+        <member name="P:EM.GIS.DelegateCommand.ExecuteCommand">
+            <summary>
+            执行命令委托
+            </summary>
+        </member>
+        <member name="P:EM.GIS.DelegateCommand.CanExecuteCommand">
+            <summary>
+            命令是否可用委托
+            </summary>
+        </member>
+        <member name="E:EM.GIS.DelegateCommand.CanExecuteChanged">
+            <summary>
+            命令是否可用改变事件
+            </summary>
+        </member>
+        <member name="M:EM.GIS.DelegateCommand.#ctor(System.Action{System.Object},System.Func{System.Object,System.Boolean},System.EventHandler)">
+            <summary>
+            实例化委托命令类
+            </summary>
+            <param name="executeCommand">执行的方法委托</param>
+            <param name="canExecuteCommand">计算能否执行的方法委托</param>
+            <param name="canExecuteChanged">能否执行改变后的委托</param>
+        </member>
+        <member name="M:EM.GIS.DelegateCommand.CanExecute(System.Object)">
+            <summary>
+            返回命令是否可用
+            </summary>
+            <param name="parameter">参数</param>
+            <returns>可用为true，反之false</returns>
+        </member>
+        <member name="M:EM.GIS.DelegateCommand.Execute(System.Object)">
+            <summary>
+            执行命令
+            </summary>
+            <param name="parameter">参数</param>
+        </member>
+        <member name="M:EM.GIS.DelegateCommand.RaiseCanExecuteChanged">
+            <summary>
+            调用计算命令是否可用改变事件
+            </summary>
+        </member>
         <member name="T:EM.GIS.NotifyClass">
             <summary>
             可通知的类
