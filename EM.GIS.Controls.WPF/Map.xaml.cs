@@ -38,16 +38,7 @@ namespace EM.GIS.WPFControls
         {
             InitializeComponent();
             Loaded += Map_Loaded;
-            SizeChanged += Map_SizeChanged;
             MapTools = new List<ITool>();
-        }
-
-        private void Map_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (MapFrame != null && IsLoaded)
-            {
-                MapFrame.Resize((int)e.NewSize.Width, (int)e.NewSize.Height);
-            }
         }
 
         private void Map_Loaded(object sender, RoutedEventArgs e)
@@ -211,6 +202,7 @@ namespace EM.GIS.WPFControls
                 if (test > 0) f.Deactivate();
             }
             function.Activate();
+
         }
 
         public void DeactivateAllMapTools()
@@ -222,7 +214,10 @@ namespace EM.GIS.WPFControls
         }
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            MapFrame?.Resize((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            if (MapFrame != null && sizeInfo.NewSize.Width > 0 && sizeInfo.NewSize.Height > 0)
+            {
+                MapFrame.Resize((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            }
             base.OnRenderSizeChanged(sizeInfo);
         }
         #region 鼠标事件

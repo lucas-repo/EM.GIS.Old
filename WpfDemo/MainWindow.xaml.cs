@@ -26,16 +26,21 @@ namespace WpfDemo
     /// </summary>
     public partial class MainWindow 
     {
-        private IWpfAppManager App { get; }
+        private IWpfAppManager App { get;  set; }
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             App = new WpfAppManager()
             {
-                Window=this,
+                Window = this,
                 BaseDirectory = AppDomain.CurrentDomain.BaseDirectory
             };
-            App.LoadPlugins(); 
+            App.LoadPlugins();
         }
 
     }

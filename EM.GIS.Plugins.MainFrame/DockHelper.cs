@@ -1,5 +1,6 @@
 ﻿using AvalonDock;
 using AvalonDock.Layout;
+using AvalonDock.Themes;
 using EM.GIS.WPFControls;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace EM.GIS.Plugins.MainFrame
                 FloatingWidth = 200
             };
             LayoutAnchorablePane layoutAnchorablePane = new LayoutAnchorablePane();
-            LayoutAnchorable layoutAnchorable = new LayoutAnchorable()
+            LayoutAnchorable layoutAnchorable = new LayoutAnchorable()  
             {
                 Title = "图例",
                 CanClose=false
@@ -64,7 +65,8 @@ namespace EM.GIS.Plugins.MainFrame
             };
             DockingManager dockingManager = new DockingManager()
             {
-                Layout = layoutRoot
+                Layout = layoutRoot,
+                Theme= new MetroTheme()
             };
             return dockingManager;
         }
