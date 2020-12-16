@@ -37,18 +37,13 @@ namespace EM.GIS.WPFControls
         public Map()
         {
             InitializeComponent();
-            Loaded += Map_Loaded;
-            MapTools = new List<ITool>();
-        }
-
-        private void Map_Loaded(object sender, RoutedEventArgs e)
-        {
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
             MapFrame.BufferChanged += MapFrame_BufferChanged;
             MapFrame.ViewBoundsChanged += MapFrame_ViewBoundsChanged;
             var pan = new MapToolPan(this);
             var zoom = new MapToolZoom(this);
             ITool[] mapTools = { pan, zoom };
+            MapTools = new List<ITool>();
             MapTools.AddRange(mapTools);
             foreach (var mapTool in MapTools)
             {
@@ -131,7 +126,7 @@ namespace EM.GIS.WPFControls
         }
         protected override void OnRender(DrawingContext drawingContext)
         {
-            if (MapFrame?.BackBuffer is Bitmap)
+            if ( MapFrame?.BackBuffer is Bitmap)
             {
                 if (Bounds.Width <= 0 || Bounds.Height <= 0)
                 {

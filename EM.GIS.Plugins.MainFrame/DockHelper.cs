@@ -25,11 +25,10 @@ namespace EM.GIS.Plugins.MainFrame
                 FloatingWidth = 200
             };
             LayoutAnchorablePane layoutAnchorablePane = new LayoutAnchorablePane();
-            LayoutAnchorable layoutAnchorable = new LayoutAnchorable()  
+            LayoutAnchorable layoutAnchorable = new LayoutAnchorable()
             {
                 Title = "图例",
-                CanClose=false
-                //Content = Legend
+                CanHide = false
             };
             layoutAnchorablePane.Children.Add(layoutAnchorable);
             layoutAnchorablePaneGroup.Children.Add(layoutAnchorablePane);
@@ -44,13 +43,14 @@ namespace EM.GIS.Plugins.MainFrame
             {
                 Title = "地图",
                 Content = map,
-                CanClose=false
+                CanClose = false
             };
             LayoutDocumentPane layoutDocumentPane = new LayoutDocumentPane();
             layoutDocumentPane.Children.Add(layoutDocument);
             layoutDocumentPaneGroup.Children.Add(layoutDocumentPane);
             return layoutDocumentPaneGroup;
         }
+
         public DockingManager GetDockingManager()
         {
             LayoutPanel layoutPanel = new LayoutPanel()
@@ -66,7 +66,7 @@ namespace EM.GIS.Plugins.MainFrame
             DockingManager dockingManager = new DockingManager()
             {
                 Layout = layoutRoot,
-                Theme= new MetroTheme()
+                //Theme = new MetroTheme()
             };
             return dockingManager;
         }
