@@ -24,7 +24,7 @@ namespace WpfDemo
                 .AddJsonFile("appsettings.json");
             Configuration = builder.Build();
             var privatePathesSection = Configuration.GetSection("PrivatePathes");
-            _privatePathes = new List<string>();
+            _privatePathes = new List<string>() { string.Empty };
             foreach (var item in privatePathesSection.GetChildren())
             {
                 _privatePathes.Add(item.Value);

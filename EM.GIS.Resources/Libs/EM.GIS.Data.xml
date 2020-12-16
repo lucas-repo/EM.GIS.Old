@@ -911,7 +911,7 @@
             范围
             </summary>
         </member>
-        <member name="P:EM.GIS.Data.IProj.Bounds">
+        <member name="P:EM.GIS.Data.IProj.Bound">
             <summary>
             边界
             </summary>

@@ -1213,12 +1213,12 @@
             后台缓存图片，用以获取缓存图片
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.IFrame.ViewBounds">
+        <member name="P:EM.GIS.Symbology.IFrame.ViewBound">
             <summary>
             视图边界
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.IFrame.ViewExtents">
+        <member name="P:EM.GIS.Symbology.IFrame.ViewExtent">
             <summary>
             视图范围
             </summary>
@@ -1233,7 +1233,7 @@
             缓存图片改变事件
             </summary>
         </member>
-        <member name="E:EM.GIS.Symbology.IFrame.ViewBoundsChanged">
+        <member name="E:EM.GIS.Symbology.IFrame.ViewBoundChanged">
             <summary>
             视图边界改变事件
             </summary>
@@ -1250,9 +1250,9 @@
             <param name="g"></param>
             <param name="rectangle"></param>
         </member>
-        <member name="M:EM.GIS.Symbology.IFrame.ResetExtents">
+        <member name="M:EM.GIS.Symbology.IFrame.ResetViewExtent">
             <summary>
-            根据视图范围重设范围
+            根据视图边界重设视图范围
             </summary>
         </member>
         <member name="M:EM.GIS.Symbology.IFrame.Resize(System.Int32,System.Int32)">

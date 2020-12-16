@@ -66,7 +66,7 @@ namespace EM.GIS.Plugins.MainFrame
             DockingManager dockingManager = new DockingManager()
             {
                 Layout = layoutRoot,
-                //Theme = new MetroTheme()
+                Theme = new MetroTheme()
             };
             return dockingManager;
         }

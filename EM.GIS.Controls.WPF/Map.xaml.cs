@@ -24,14 +24,14 @@ namespace EM.GIS.WPFControls
         public IFrame MapFrame { get; set; }
         public bool IsBusy { get; set; }
         public ILegend Legend { get; set; }
-        public IExtent ViewExtent { get => MapFrame.ViewExtents; set => MapFrame.ViewExtents = value; }
+        public IExtent ViewExtent { get => MapFrame.ViewExtent; set => MapFrame.ViewExtent = value; }
 
         public ILayerCollection Layers => MapFrame.Layers;
 
-        public Rectangle ViewBounds { get => MapFrame.ViewBounds; set => MapFrame.ViewBounds = value; }
+        public Rectangle ViewBound { get => MapFrame.ViewBound; set => MapFrame.ViewBound = value; }
         public List<ITool> MapTools { get; }
         public IExtent Extent { get => (MapFrame as IProj).Extent; set => (MapFrame as IProj).Extent = value; }
-        public Rectangle Bounds { get => MapFrame.Bounds; set => MapFrame.Bounds = value; }
+        public Rectangle Bound { get => MapFrame.Bound; set => MapFrame.Bound = value; }
 
         public event EventHandler<IGeoMouseEventArgs> GeoMouseMove;
         public Map()
@@ -39,7 +39,7 @@ namespace EM.GIS.WPFControls
             InitializeComponent();
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
             MapFrame.BufferChanged += MapFrame_BufferChanged;
-            MapFrame.ViewBoundsChanged += MapFrame_ViewBoundsChanged;
+            MapFrame.ViewBoundChanged += MapFrame_ViewBoundChanged;
             var pan = new MapToolPan(this);
             var zoom = new MapToolZoom(this);
             ITool[] mapTools = { pan, zoom };
@@ -52,7 +52,7 @@ namespace EM.GIS.WPFControls
             ActivateMapFunctionWithZoom(pan);
         }
 
-        private void MapFrame_ViewBoundsChanged(object? sender, EventArgs e)
+        private void MapFrame_ViewBoundChanged(object? sender, EventArgs e)
         {
             Invalidate();
         }
@@ -128,22 +128,22 @@ namespace EM.GIS.WPFControls
         {
             if ( MapFrame?.BackBuffer is Bitmap)
             {
-                if (Bounds.Width <= 0 || Bounds.Height <= 0)
+                if (Bound.Width <= 0 || Bound.Height <= 0)
                 {
                     return;
                 }
                 BitmapSource bitmapSource = null;
-                using (Bitmap bmp = new Bitmap(Bounds.Width, Bounds.Height))
+                using (Bitmap bmp = new Bitmap(Bound.Width, Bound.Height))
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-                        MapFrame.Draw(g, Bounds);
+                        MapFrame.Draw(g, Bound);
                     }
                     bitmapSource = bmp.ToBitmapImage();
                 } 
-                var rect = Bounds.ToRect();
-                double offsetX = (ActualWidth - Bounds.Width) / 2.0;
-                double offsetY = (ActualHeight - Bounds.Height) / 2.0;
+                var rect = Bound.ToRect();
+                double offsetX = (ActualWidth - Bound.Width) / 2.0;
+                double offsetY = (ActualHeight - Bound.Height) / 2.0;
                 Transform transform = new TranslateTransform(offsetX, offsetY);
                 drawingContext.PushTransform(transform);
                 drawingContext.DrawImage(bitmapSource, rect);

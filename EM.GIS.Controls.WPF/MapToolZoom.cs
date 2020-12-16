@@ -90,7 +90,7 @@ namespace EM.GIS.WPFControls
             if (e.MiddleButton ==  System.Windows.Input.MouseButtonState.Pressed && !_preventDrag)
             {
                 _dragStart = e.Location;
-                _source = e.Map.MapFrame.ViewBounds;
+                _source = e.Map.MapFrame.ViewBound;
                 _isDragging = true;
             }
 
@@ -109,7 +109,7 @@ namespace EM.GIS.WPFControls
 
                 var dx = _dragStart.X - e.Location.X;
                 var dy = _dragStart.Y - e.Location.Y;
-                e.Map.MapFrame.ViewBounds = new Rectangle(_source.X + dx, _source.Y + dy, _source.Width, _source.Height);
+                e.Map.MapFrame.ViewBound = new Rectangle(_source.X + dx, _source.Y + dy, _source.Width, _source.Height);
             }
 
             base.DoMouseMove(e);
@@ -121,7 +121,7 @@ namespace EM.GIS.WPFControls
             {
                 _isDragging = false;
                 _preventDrag = true;
-                e.Map.MapFrame.ResetExtents();
+                e.Map.MapFrame.ResetViewExtent();
                 _preventDrag = false;
                 Map.IsBusy = false;
                 BusySet = false;
@@ -136,7 +136,7 @@ namespace EM.GIS.WPFControls
         {
             // Fix this
             _zoomTimer.Stop(); // if the timer was already started, stop it.
-            Rectangle r = e.Map.MapFrame.ViewBounds;
+            Rectangle r = e.Map.MapFrame.ViewBound;
 
             // For multiple zoom steps before redrawing, we actually
             // want the x coordinate relative to the screen, not
@@ -177,7 +177,7 @@ namespace EM.GIS.WPFControls
                 r.Y += yOff;
             }
 
-            Map.MapFrame.ViewBounds = r;
+            Map.MapFrame.ViewBound = r;
             _zoomTimer.Start();
             if (!BusySet)
             {
@@ -205,7 +205,7 @@ namespace EM.GIS.WPFControls
         private void ZoomTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             _zoomTimer.Stop();
-            Map.MapFrame.ResetExtents();
+            Map.MapFrame.ResetViewExtent();
             Map.IsBusy = false;
             BusySet = false;
         }

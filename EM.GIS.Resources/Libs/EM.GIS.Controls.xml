@@ -149,7 +149,7 @@
             视图范围
             </summary>
         </member>
-        <member name="P:EM.GIS.Controls.IMap.ViewBounds">
+        <member name="P:EM.GIS.Controls.IMap.ViewBound">
             <summary>
             视图边界
             </summary>
@@ -432,7 +432,7 @@
             Gets the geographic bounds of the content of the buffer.
             </summary>
         </member>
-        <member name="P:EM.GIS.Controls.MapEventArgs.Bounds">
+        <member name="P:EM.GIS.Controls.MapEventArgs.Bound">
             <summary>
             Gets the rectangle dimensions of what the buffer should be in pixels
             </summary>
