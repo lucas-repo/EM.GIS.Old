@@ -152,38 +152,6 @@
             <param name="spatialReference"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Gdals.GdalConfiguration.#cctor">
-            <summary>
-            Construction of Gdal/Ogr
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Gdals.GdalConfiguration.Usable">
-            <summary>
-            Gets a value indicating if the GDAL package is set up properly.
-            </summary>
-        </member>
-        <member name="M:EM.GIS.Gdals.GdalConfiguration.ConfigureOgr">
-            <summary>
-            Method to ensure the static constructor is being called.
-            </summary>
-            <remarks>Be sure to call this function before using Gdal/Ogr/Osr</remarks>
-        </member>
-        <member name="M:EM.GIS.Gdals.GdalConfiguration.ConfigureGdal">
-            <summary>
-            Method to ensure the static constructor is being called.
-            </summary>
-            <remarks>Be sure to call this function before using Gdal/Ogr/Osr</remarks>
-        </member>
-        <member name="M:EM.GIS.Gdals.GdalConfiguration.GetPlatform">
-            <summary>
-            Function to determine which platform we're on
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Gdals.GdalConfiguration.IsWindows">
-            <summary>
-            Gets a value indicating if we are on a windows platform
-            </summary>
-        </member>
         <member name="P:EM.GIS.Gdals.GdalFeatureSet.DataSource">
             <summary>
             数据源

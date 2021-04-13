@@ -793,7 +793,7 @@
             几何工厂
             </summary>
         </member>
-        <member name="M:EM.GIS.Data.IGeometryFactory.GetGeometryFromWkt(System.String)">
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetGeometry(System.String)">
             <summary>
             从wkt获取几何体
             </summary>
@@ -821,12 +821,18 @@
             <param name="coordinates"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(EM.GIS.Geometries.IGeometry,System.Collections.Generic.IEnumerable{EM.GIS.Geometries.IGeometry})">
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ICoordinate})">
             <summary>
             创建面
             </summary>
-            <param name="shell"></param>
-            <param name="holes"></param>
+            <param name="coordinates"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ICoordinate}})">
+            <summary>
+            创建面
+            </summary>
+            <param name="ringList"></param>
             <returns></returns>
         </member>
         <member name="T:EM.GIS.Data.IGetBitmap">

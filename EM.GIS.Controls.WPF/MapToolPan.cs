@@ -42,7 +42,6 @@ namespace EM.GIS.WPFControls
             {
                 _dragStart = e.Location;
                 _source = e.Map.MapFrame.ViewBound;
-                Debug.WriteLine($"{_dragStart}_{_source}");
                 _isDragging = true;
             }
 
@@ -74,7 +73,6 @@ namespace EM.GIS.WPFControls
                 _isDragging = false;
 
                 _preventDrag = true;
-                Debug.WriteLine($"{_dragStart}_{_source}");
                 e.Map.MapFrame.ResetViewExtent();
                 _preventDrag = false;
                 Map.IsBusy = false;
