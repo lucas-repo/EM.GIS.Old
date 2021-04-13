@@ -99,6 +99,14 @@
             <param name="destType"></param>
             <returns></returns>
         </member>
+        <member name="M:EM.GIS.Data.AssemblyExtensions.GetAssembly(System.String,System.String)">
+            <summary>
+            获取指定名称的程序集
+            </summary>
+            <param name="directory">目录</param>
+            <param name="assemblyName">程序集名称</param>
+            <returns>程序集</returns>
+        </member>
         <member name="M:EM.GIS.Data.AssemblyExtensions.GetAssignableAssembly``1(System.String)">
             <summary>
             获取可分配指定类型的程序集
@@ -165,29 +173,29 @@
             An abreviated list for quick classification
             </summary>
         </member>
-        <member name="F:EM.GIS.Data.FeatureType.Unspecified">
+        <member name="F:EM.GIS.Data.FeatureType.Unknown">
             <summary>
-            None specified or custom
+            未指明或自定义
             </summary>
         </member>
         <member name="F:EM.GIS.Data.FeatureType.Point">
             <summary>
-            Point
+            点
             </summary>
         </member>
-        <member name="F:EM.GIS.Data.FeatureType.Line">
+        <member name="F:EM.GIS.Data.FeatureType.Polyline">
             <summary>
-            Line
+            线
             </summary>
         </member>
         <member name="F:EM.GIS.Data.FeatureType.Polygon">
             <summary>
-            Polygon
+            面
             </summary>
         </member>
         <member name="F:EM.GIS.Data.FeatureType.MultiPoint">
             <summary>
-            MultiPoint
+            多点
             </summary>
         </member>
         <member name="T:EM.GIS.Data.FieldType">
@@ -813,7 +821,7 @@
             <param name="coordinates"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(EM.GIS.Geometries.ILinearRing,System.Collections.Generic.IEnumerable{EM.GIS.Geometries.ILinearRing})">
+        <member name="M:EM.GIS.Data.IGeometryFactory.GetPolygon(EM.GIS.Geometries.IGeometry,System.Collections.Generic.IEnumerable{EM.GIS.Geometries.IGeometry})">
             <summary>
             创建面
             </summary>

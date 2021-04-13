@@ -72,12 +72,6 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.ICategoryCollection.GetEnumerator">
-            <summary>
-            获取枚举器
-            </summary>
-            <returns></returns>
-        </member>
         <member name="P:EM.GIS.Symbology.ICategoryCollection.Parent">
             <summary>
             父元素
@@ -93,12 +87,6 @@
             获取或设置分类
             </summary>
             <param name="index"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EM.GIS.Symbology.IFeatureCategoryCollection.GetEnumerator">
-            <summary>
-            获取枚举器
-            </summary>
             <returns></returns>
         </member>
         <member name="P:EM.GIS.Symbology.IFeatureCategoryCollection.Parent">
@@ -119,6 +107,80 @@
             </summary>
             <typeparam name="TChild">元素类型</typeparam>
         </member>
+        <member name="P:EM.GIS.Symbology.IItemCollection`1.Count">
+            <summary>
+            个数
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IItemCollection`1.IsReadOnly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.Add(`0)">
+            <summary>
+            添加
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.Clear">
+            <summary>
+            清空
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.Contains(`0)">
+            <summary>
+            是否包含元素
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            复制
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.Remove(`0)">
+            <summary>
+            移除
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="P:EM.GIS.Symbology.IItemCollection`1.Item(System.Int32)">
+            <summary>
+            获取或设置元素
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.IndexOf(`0)">
+            <summary>
+            获取索引
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.Insert(System.Int32,`0)">
+            <summary>
+            插入
+            </summary>
+            <param name="index"></param>
+            <param name="item"></param>
+        </member>
+        <member name="M:EM.GIS.Symbology.IItemCollection`1.RemoveAt(System.Int32)">
+            <summary>
+            移除
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="T:EM.GIS.Symbology.ILabelCategoryCollection">
+            <summary>
+            标注分类集合
+            </summary>
+        </member>
         <member name="T:EM.GIS.Symbology.ILayerCollection">
             <summary>
             图层集合接口
@@ -129,12 +191,6 @@
             获取或设置图层
             </summary>
             <param name="index"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EM.GIS.Symbology.ILayerCollection.GetEnumerator">
-            <summary>
-            获取枚举器
-            </summary>
             <returns></returns>
         </member>
         <member name="P:EM.GIS.Symbology.ILayerCollection.Parent">
@@ -196,11 +252,10 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.ILineCategoryCollection.GetEnumerator">
+        <member name="T:EM.GIS.Symbology.ILineSymbolCollection">
             <summary>
-            获取枚举器
+            线符号集合
             </summary>
-            <returns></returns>
         </member>
         <member name="T:EM.GIS.Symbology.IPointCategoryCollection">
             <summary>
@@ -214,11 +269,10 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.IPointCategoryCollection.GetEnumerator">
+        <member name="T:EM.GIS.Symbology.IPointSymbolCollection">
             <summary>
-            获取枚举器
+            点符号集合
             </summary>
-            <returns></returns>
         </member>
         <member name="T:EM.GIS.Symbology.IPolygonCategoryCollection">
             <summary>
@@ -232,11 +286,10 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.IPolygonCategoryCollection.GetEnumerator">
+        <member name="T:EM.GIS.Symbology.IPolygonSymbolCollection">
             <summary>
-            获取枚举器
+            面符号集合
             </summary>
-            <returns></returns>
         </member>
         <member name="T:EM.GIS.Symbology.IRasterCategoryCollection">
             <summary>
@@ -248,12 +301,6 @@
             获取或设置分类
             </summary>
             <param name="index"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EM.GIS.Symbology.IRasterCategoryCollection.GetEnumerator">
-            <summary>
-            获取枚举器
-            </summary>
             <returns></returns>
         </member>
         <member name="P:EM.GIS.Symbology.IRasterCategoryCollection.Parent">
@@ -394,6 +441,11 @@
         <member name="P:EM.GIS.Symbology.FeatureLayerSelectionEventArgs.Selection">
             <summary>
             Gets or sets the list of changed features.
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.FeatureSymbol">
+            <summary>
+            要素符号
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.ICategory">
@@ -580,6 +632,36 @@
             符号
             </summary>
         </member>
+        <member name="T:EM.GIS.Symbology.IFeatureSymbol">
+            <summary>
+            要素符号接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFeatureSymbol.Color">
+            <summary>
+            颜色
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFeatureSymbol.Opacity">
+            <summary>
+            不透明度
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.IFeatureSymbolizer">
+            <summary>
+            要素符号化接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFeatureSymbolizer.ScaleMode">
+            <summary>
+            缩放模式
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFeatureSymbolizer.Symbols">
+            <summary>
+            符号集合
+            </summary>
+        </member>
         <member name="T:EM.GIS.Symbology.IImageSymbolizer">
             <summary>
             Interface for ImageSymbolizer.
@@ -643,11 +725,6 @@
             </summary>
             <param name="columns">Columns that should be updated.</param>
             <returns>False if columns were not set.</returns>
-        </member>
-        <member name="T:EM.GIS.Symbology.ILabelScheme">
-            <summary>
-            Interface for label scheme.
-            </summary>
         </member>
         <member name="T:EM.GIS.Symbology.ILabelSymbolizer">
             <summary>
@@ -934,6 +1011,77 @@
             选择符号
             </summary>
         </member>
+        <member name="T:EM.GIS.Symbology.ILineSymbol">
+            <summary>
+            线符号接口
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.ILineSymbol.Width">
+            <summary>
+            宽度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.ILineSymbol.LineSymbolType">
+            <summary>
+            线符号类型
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.ILineSymbol.DrawLine(System.Drawing.Graphics,System.Single,System.Drawing.Drawing2D.GraphicsPath)">
+            <summary>
+            绘制线
+            </summary>
+            <param name="context"></param>
+            <param name="scale"></param>
+            <param name="path"></param>
+        </member>
+        <member name="M:EM.GIS.Symbology.ILineSymbol.ToPen(System.Single)">
+            <summary>
+            转成Pen
+            </summary>
+            <param name="scale"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EM.GIS.Symbology.IMoveable">
+            <summary>
+            可移动元素的接口
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.IMoveable.Move(System.Int32,System.Int32)">
+            <summary>
+            移动元素
+            </summary>
+            <param name="oldIndex"></param>
+            <param name="newIndex"></param>
+        </member>
+        <member name="T:EM.GIS.Symbology.IOutlineSymbol">
+            <summary>
+            边线符号
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IOutlineSymbol.UseOutLine">
+            <summary>
+            使用边线
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IOutlineSymbol.OutLineSymbolizer">
+            <summary>
+            边线符号化
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.IOutlineSymbol.CopyOutLine(EM.GIS.Symbology.IOutlineSymbol)">
+            <summary>
+            复制边线
+            </summary>
+            <param name="outlineSymbol"></param>
+        </member>
+        <member name="M:EM.GIS.Symbology.IOutlineSymbol.DrawOutLine(System.Drawing.Graphics,System.Single,System.Drawing.Drawing2D.GraphicsPath)">
+            <summary>
+            绘制线
+            </summary>
+            <param name="context"></param>
+            <param name="scale"></param>
+            <param name="path"></param>
+        </member>
         <member name="T:EM.GIS.Symbology.IParentItem`1">
             <summary>
             带父元素的接口
@@ -958,6 +1106,49 @@
         <member name="P:EM.GIS.Symbology.IPointCategory.Symbolizer">
             <summary>
             符号
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.IPointSimpleSymbol">
+            <summary>
+            简单点符号
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IPointSimpleSymbol.PointShape">
+            <summary>
+            点形状
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.IPointSymbol">
+            <summary>
+            点符号
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IPointSymbol.Angle">
+            <summary>
+            角度
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IPointSymbol.Offset">
+            <summary>
+            偏移
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IPointSymbol.PointSymbolType">
+            <summary>
+            点符号类型
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.IPointSymbol.DrawPoint(System.Drawing.Graphics,System.Single,System.Drawing.PointF)">
+            <summary>
+            绘制点
+            </summary>
+            <param name="context"></param>
+            <param name="scale"></param>
+            <param name="point"></param>
+        </member>
+        <member name="P:EM.GIS.Symbology.IPointSymbol.Size">
+            <summary>
+            尺寸
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.IPolygonCategory">
@@ -998,6 +1189,16 @@
         <member name="P:EM.GIS.Symbology.ISelection.ProgressHandler">
             <summary>
             进度
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.ISymbol">
+            <summary>
+            符号
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.ISymbolizer">
+            <summary>
+            符号化接口
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.LabelPlacementMethod">
@@ -1719,6 +1920,51 @@
             Only label the largest part.
             </summary>
         </member>
+        <member name="T:EM.GIS.Symbology.PointShape">
+            <summary>
+            点形状
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Unknown">
+            <summary>
+            形状
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Ellipse">
+            <summary>
+            椭圆
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Diamond">
+            <summary>
+            菱形
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Triangle">
+            <summary>
+            三角形
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Rectangle">
+            <summary>
+            矩形
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Star">
+            <summary>
+            星星
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Pentagon">
+            <summary>
+            五边形
+            </summary>
+        </member>
+        <member name="F:EM.GIS.Symbology.PointShape.Hexagon">
+            <summary>
+            六边形
+            </summary>
+        </member>
         <member name="M:EM.GIS.Symbology.RandomExtension.NextFloat(System.Random)">
             <summary>
             Generates a floating point value from 0 to 1
@@ -1901,6 +2147,11 @@
             <summary>
             The region is found completely inside the specified region to the extent
             that no borders come in contact with the outside edge of the region.
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.Symbol">
+            <summary>
+            符号
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.SymbologyGlobal">

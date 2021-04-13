@@ -317,9 +317,9 @@
             最大索引个数
             </summary>
         </member>
-        <member name="P:EM.GIS.Geometries.ICoordinate.NumOrdinates">
+        <member name="P:EM.GIS.Geometries.ICoordinate.Dimension">
             <summary>
-            索引个数
+            维度
             </summary>
         </member>
         <member name="P:EM.GIS.Geometries.ICoordinate.X">
@@ -578,54 +578,22 @@
             几何类型
             </summary>
         </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.PointCount">
-            <summary>
-            点个数
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.Coord">
-            <summary>
-            获取第一个点
-            </summary>
-        </member>
         <member name="M:EM.GIS.Geometries.IGeometry.IsEmpty">
             <summary>
             是否为空
             </summary>
         </member>
-        <member name="M:EM.GIS.Geometries.IGeometry.GetCoord(System.Int32)">
+        <member name="P:EM.GIS.Geometries.IGeometry.Geometries">
             <summary>
-            获取点
-            </summary>
-            <param name="index"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EM.GIS.Geometries.IGeometry.GetAllCoords">
-            <summary>
-            获取所有点
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:EM.GIS.Geometries.IGeometry.SetCoord(System.Int32,EM.GIS.Geometries.ICoordinate)">
-            <summary>
-            设置点
-            </summary>
-            <param name="index"></param>
-            <param name="coordinate"></param>
-        </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.GeometryCount">
-            <summary>
-            几何个数
+            几何集合
             </summary>
         </member>
-        <member name="M:EM.GIS.Geometries.IGeometry.GetGeometry(System.Int32)">
+        <member name="P:EM.GIS.Geometries.IGeometry.Coordinates">
             <summary>
-            获取几何
+            几何集合
             </summary>
-            <param name="index"></param>
-            <returns></returns>
         </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.Extent">
+        <member name="M:EM.GIS.Geometries.IGeometry.GetExtent">
             <summary>
             范围
             </summary>
@@ -636,12 +604,12 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.Area">
+        <member name="M:EM.GIS.Geometries.IGeometry.Area">
             <summary>
             面积
             </summary>
         </member>
-        <member name="P:EM.GIS.Geometries.IGeometry.Length">
+        <member name="M:EM.GIS.Geometries.IGeometry.Length">
             <summary>
             长度
             </summary>
@@ -687,56 +655,6 @@
             </summary>
             <param name="coord"></param>
             <returns></returns>
-        </member>
-        <member name="T:EM.GIS.Geometries.ILinearRing">
-            <summary>
-            线性环接口
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.ILinearRing.IsRing">
-            <summary>
-            是否是闭环
-            </summary>
-        </member>
-        <member name="M:EM.GIS.Geometries.ILinearRing.CloseRings">
-            <summary>
-            闭合环
-            </summary>
-        </member>
-        <member name="T:EM.GIS.Geometries.ILineString">
-            <summary>
-            线接口
-            </summary>
-        </member>
-        <member name="T:EM.GIS.Geometries.IPoint">
-            <summary>
-            点接口
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IPoint.X">
-            <summary>
-            X值
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IPoint.Y">
-            <summary>
-            Y值
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IPoint.Z">
-            <summary>
-            Z值
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IPoint.M">
-            <summary>
-            M值
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Geometries.IPolygon.Shell">
-            <summary>
-            外圈多边形
-            </summary>
         </member>
     </members>
 </doc>

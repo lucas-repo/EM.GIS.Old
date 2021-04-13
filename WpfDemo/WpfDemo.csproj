@@ -18,6 +18,8 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<ApplicationIcon>LogoIco128.ico</ApplicationIcon>
+		<AssemblyName>易图</AssemblyName>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Dirkster.AvalonDock.Themes.Metro" Version="4.50.3" />
 		<PackageReference Include="Fluent.Ribbon" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 	</ItemGroup>
