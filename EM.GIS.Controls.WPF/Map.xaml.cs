@@ -23,7 +23,18 @@ namespace EM.GIS.WPFControls
     {
         public IFrame MapFrame { get; set; }
         public bool IsBusy { get; set; }
-        public ILegend Legend { get; set; }
+        private ILegend _legend;
+
+        public ILegend Legend
+        {
+            get { return _legend; }
+            set
+            {
+                _legend = value;
+                _legend?.AddMapFrame(MapFrame);
+            }
+        }
+
         public IExtent ViewExtent { get => MapFrame.ViewExtent; set => MapFrame.ViewExtent = value; }
 
         public ILayerCollection Layers => MapFrame.Layers;
@@ -37,7 +48,10 @@ namespace EM.GIS.WPFControls
         public Map()
         {
             InitializeComponent();
-            MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight);
+            MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight)
+            {
+                Text="地图框"
+            };
             MapFrame.BufferChanged += MapFrame_BufferChanged;
             MapFrame.ViewBoundChanged += MapFrame_ViewBoundChanged;
             var pan = new MapToolPan(this);
@@ -126,7 +140,7 @@ namespace EM.GIS.WPFControls
         }
         protected override void OnRender(DrawingContext drawingContext)
         {
-            if ( MapFrame?.BackBuffer is Bitmap)
+            if (MapFrame?.BackBuffer is Bitmap)
             {
                 if (Bound.Width <= 0 || Bound.Height <= 0)
                 {
@@ -140,7 +154,7 @@ namespace EM.GIS.WPFControls
                         MapFrame.Draw(g, Bound);
                     }
                     bitmapSource = bmp.ToBitmapImage();
-                } 
+                }
                 var rect = Bound.ToRect();
                 double offsetX = (ActualWidth - Bound.Width) / 2.0;
                 double offsetY = (ActualHeight - Bound.Height) / 2.0;

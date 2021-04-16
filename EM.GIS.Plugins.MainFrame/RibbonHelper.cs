@@ -304,7 +304,7 @@ namespace EM.GIS.Plugins.MainFrame
         {
             Ribbon ribbon = new Ribbon()
             {
-                StartScreen = GetStartScreen(),
+                //StartScreen = GetStartScreen(),
                 Menu = GetMenu()
             };
             AddQuickAccessItems(ribbon);

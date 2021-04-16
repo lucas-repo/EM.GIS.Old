@@ -984,7 +984,7 @@
             文字
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.ILegendItem.Items">
+        <member name="P:EM.GIS.Symbology.ILegendItem.LegendItems">
             <summary>
             子元素集合
             </summary>

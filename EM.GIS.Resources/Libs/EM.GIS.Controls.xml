@@ -134,10 +134,16 @@
             图例接口
             </summary>
         </member>
-        <member name="P:EM.GIS.Controls.ILegend.Items">
+        <member name="P:EM.GIS.Controls.ILegend.LegendItems">
             <summary>
             元素集合
             </summary>
+        </member>
+        <member name="M:EM.GIS.Controls.ILegend.AddMapFrame(EM.GIS.Symbology.IFrame)">
+            <summary>
+            添加地图框架
+            </summary>
+            <param name="mapFrame"></param>
         </member>
         <member name="T:EM.GIS.Controls.IMap">
             <summary>

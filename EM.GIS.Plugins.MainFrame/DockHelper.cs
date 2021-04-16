@@ -1,6 +1,7 @@
 ﻿using AvalonDock;
 using AvalonDock.Layout;
 using AvalonDock.Themes;
+using EM.GIS.Controls;
 using EM.GIS.WPFControls;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace EM.GIS.Plugins.MainFrame
             LayoutAnchorable layoutAnchorable = new LayoutAnchorable()
             {
                 Title = "图例",
-                CanHide = false
+                CanHide = false,
+                Content = AppManager.Legend
             };
             layoutAnchorablePane.Children.Add(layoutAnchorable);
             layoutAnchorablePaneGroup.Children.Add(layoutAnchorablePane);
@@ -37,8 +39,13 @@ namespace EM.GIS.Plugins.MainFrame
         private LayoutDocumentPaneGroup GetFillLayoutDocumentPaneGroup()
         {
             LayoutDocumentPaneGroup layoutDocumentPaneGroup = new LayoutDocumentPaneGroup();
-            Map map = new Map();
+            ILegend legend = new Legend();
+            IMap map = new Map()
+            {
+                Legend = legend
+            };
             AppManager.Map = map;
+            AppManager.Legend = legend;
             LayoutDocument layoutDocument = new LayoutDocument()
             {
                 Title = "地图",
@@ -57,8 +64,8 @@ namespace EM.GIS.Plugins.MainFrame
             {
                 Orientation = System.Windows.Controls.Orientation.Horizontal
             };
-            layoutPanel.Children.Add(GetLeftLayoutAnchorablePaneGroup());
             layoutPanel.Children.Add(GetFillLayoutDocumentPaneGroup());
+            layoutPanel.Children.Add(GetLeftLayoutAnchorablePaneGroup());
             LayoutRoot layoutRoot = new LayoutRoot()
             {
                 RootPanel = layoutPanel

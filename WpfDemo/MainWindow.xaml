@@ -10,7 +10,7 @@
         Title="易图" Height="759" Width="1440" Icon="/EM.GIS.Resources;Component/Images/LogoIco24.ico">
     <fluent:RibbonWindow.Resources>
         <!--防止72dpi图片变形-->
-        <Style TargetType="{x:Type Image}" >
+        <Style TargetType="{x:Type Image}">
             <Setter Property="Stretch" Value="Fill"/>
             <Setter Property="Width" Value="{Binding Source.PixelWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
             <Setter Property="Height" Value="{Binding Source.PixelHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
