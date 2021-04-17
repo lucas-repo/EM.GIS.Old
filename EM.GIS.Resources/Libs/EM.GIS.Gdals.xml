@@ -167,6 +167,11 @@
             空间参考
             </summary>
         </member>
+        <member name="P:EM.GIS.Gdals.GdalProjectionInfo.SpatialReferenceDisposable">
+            <summary>
+            空间参考是否可释放
+            </summary>
+        </member>
         <member name="T:EM.GIS.Gdals.GdalRasterSet`1">
             <summary>
             A GDAL raster.

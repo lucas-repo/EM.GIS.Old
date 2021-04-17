@@ -991,10 +991,20 @@
         </member>
         <member name="P:EM.GIS.Symbology.ILegendItem.ContextMenuItems">
             <summary>
-            Gets or sets a list of menu items that should appear for this layer.
-            These are in addition to any that are supported by default.
-            Handlers should be added to this list before it is retrieved.
+            右键菜单项
             </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.ILegendItem.LegendSymbolMode">
+            <summary>
+            图例类型
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.ILegendItem.DrawLegend(System.Drawing.Graphics,System.Drawing.Rectangle)">
+            <summary>
+            绘制图例
+            </summary>
+            <param name="graphics">画布</param>
+            <param name="rectangle">矩形</param>
         </member>
         <member name="T:EM.GIS.Symbology.ILineCategory">
             <summary>
@@ -1679,7 +1689,7 @@
             <param name="rectangle"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.ILayer.Draw(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Geometries.IExtent,System.Boolean,System.Threading.CancellationTokenSource)">
+        <member name="M:EM.GIS.Symbology.ILayer.Draw(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Geometries.IExtent,System.Boolean,System.Func{System.Boolean})">
             <summary>
             绘制图层到画布
             </summary>
@@ -1687,7 +1697,7 @@
             <param name="rectangle"></param>
             <param name="extent"></param>
             <param name="selected"></param>
-            <param name="cancellationTokenSource"></param>
+            <param name="cancelFunc"></param>
         </member>
         <member name="P:EM.GIS.Symbology.ILineLayer.Categories">
             <summary>
@@ -1742,6 +1752,11 @@
         <member name="T:EM.GIS.Symbology.Layer">
             <summary>
             图层
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.Layer.IsDisposed">
+            <summary>
+            是否已释放
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.LegendItem">

@@ -27,6 +27,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\EM.GIS.Resources\EM.GIS.Resources.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="EM.GIS">
 			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
 			<Private>false</Private>

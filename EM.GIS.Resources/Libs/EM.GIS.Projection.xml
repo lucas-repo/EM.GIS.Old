@@ -308,6 +308,11 @@
             投影信息
             </summary>
         </member>
+        <member name="P:EM.GIS.Projection.ProjectionInfo.IsDisposed">
+            <summary>
+            是否已释放
+            </summary>
+        </member>
         <member name="P:EM.GIS.Projection.ProjectionInfo.Authority">
             <summary>
               Gets or sets the athority, for example EPSG

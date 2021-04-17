@@ -5,6 +5,7 @@ using EM.GIS.Symbology;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,7 @@ namespace EM.GIS.WPFControls
             };
             MapFrame.BufferChanged += MapFrame_BufferChanged;
             MapFrame.ViewBoundChanged += MapFrame_ViewBoundChanged;
+            MapFrame.Layers.CollectionChanged += LegendItems_CollectionChanged;
             var pan = new MapToolPan(this);
             var zoom = new MapToolZoom(this);
             ITool[] mapTools = { pan, zoom };
@@ -164,11 +166,75 @@ namespace EM.GIS.WPFControls
             }
             base.OnRender(drawingContext);
         }
+        private void Layer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ILegendItem.IsVisible):
+                    MapFrame.ResetBuffer();
+                    break;
+            }
+        }
+        private void LegendItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (ILegendItem item in e.NewItems)
+                    {
+                        AddLayerEvent(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (ILegendItem item in e.OldItems)
+                    {
+                        RemoveLayerEvent(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (ILegendItem item in e.OldItems)
+                    {
+                        RemoveLayerEvent(item);
+                    }
+                    foreach (ILegendItem item in e.NewItems)
+                    {
+                        AddLayerEvent(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (ILegendItem item in e.OldItems)
+                    {
+                        RemoveLayerEvent(item);
+                    }
+                    break;
+
+            }
+        }
+
+        private void AddLayerEvent(ILegendItem layer)
+        {
+            if (layer != null)
+            {
+                layer.PropertyChanged += Layer_PropertyChanged;
+                layer.LegendItems.CollectionChanged += LegendItems_CollectionChanged;
+            }
+        }
+
+        private void RemoveLayerEvent(ILegendItem layer)
+        {
+            if (layer != null)
+            {
+                layer.PropertyChanged -= Layer_PropertyChanged;
+                layer.LegendItems.CollectionChanged -= LegendItems_CollectionChanged;
+            }
+        }
+
         public ILayer AddLayer()
         {
             try
             {
-                return Layers.AddLayer(DataFactory.Default.DriverFactory.OpenFile());
+                var layer = Layers.AddLayer(DataFactory.Default.DriverFactory.OpenFile());
+                return layer;
             }
             catch (Exception ex)
             {
@@ -211,7 +277,6 @@ namespace EM.GIS.WPFControls
                 if (test > 0) f.Deactivate();
             }
             function.Activate();
-
         }
 
         public void DeactivateAllMapTools()

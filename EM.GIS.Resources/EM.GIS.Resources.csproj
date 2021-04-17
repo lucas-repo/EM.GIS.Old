@@ -32,6 +32,7 @@
 	  <None Remove="Images\Home32.png" />
 	  <None Remove="Images\Identify16.png" />
 	  <None Remove="Images\Identify32.png" />
+	  <None Remove="Images\Layers16.png" />
 	  <None Remove="Images\LogoIco128.ico" />
 	  <None Remove="Images\LogoIco16.ico" />
 	  <None Remove="Images\LogoIco24.ico" />
@@ -105,6 +106,7 @@
 	  <Resource Include="Images\Identify32.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Resource Include="Images\Layers16.png" />
 	  <Resource Include="Images\LogoIco128.ico">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>

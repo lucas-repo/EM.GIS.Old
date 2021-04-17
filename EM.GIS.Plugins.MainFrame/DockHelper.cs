@@ -39,17 +39,10 @@ namespace EM.GIS.Plugins.MainFrame
         private LayoutDocumentPaneGroup GetFillLayoutDocumentPaneGroup()
         {
             LayoutDocumentPaneGroup layoutDocumentPaneGroup = new LayoutDocumentPaneGroup();
-            ILegend legend = new Legend();
-            IMap map = new Map()
-            {
-                Legend = legend
-            };
-            AppManager.Map = map;
-            AppManager.Legend = legend;
             LayoutDocument layoutDocument = new LayoutDocument()
             {
                 Title = "地图",
-                Content = map,
+                Content = AppManager.Map,
                 CanClose = false
             };
             LayoutDocumentPane layoutDocumentPane = new LayoutDocumentPane();
@@ -60,12 +53,19 @@ namespace EM.GIS.Plugins.MainFrame
 
         public DockingManager GetDockingManager()
         {
+            ILegend legend = new Legend();
+            IMap map = new Map()
+            {
+                Legend = legend
+            };
+            AppManager.Map = map;
+            AppManager.Legend = legend;
             LayoutPanel layoutPanel = new LayoutPanel()
             {
                 Orientation = System.Windows.Controls.Orientation.Horizontal
             };
-            layoutPanel.Children.Add(GetFillLayoutDocumentPaneGroup());
             layoutPanel.Children.Add(GetLeftLayoutAnchorablePaneGroup());
+            layoutPanel.Children.Add(GetFillLayoutDocumentPaneGroup());
             LayoutRoot layoutRoot = new LayoutRoot()
             {
                 RootPanel = layoutPanel
