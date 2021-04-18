@@ -22,7 +22,20 @@ namespace EM.GIS.WPFControls
     /// </summary>
     public partial class Map : UserControl, IMap
     {
-        public IFrame MapFrame { get; set; }
+        private IFrame _mapFrame;
+
+        public IFrame MapFrame
+        {
+            get { return _mapFrame; }
+            set
+            {
+                if (_mapFrame != value)
+                {
+                    _mapFrame = value;
+                }
+            }
+        }
+
         public bool IsBusy { get; set; }
         private ILegend _legend;
 
@@ -44,6 +57,11 @@ namespace EM.GIS.WPFControls
         public List<ITool> MapTools { get; }
         public IExtent Extent { get => (MapFrame as IProj).Extent; set => (MapFrame as IProj).Extent = value; }
         public Rectangle Bound { get => MapFrame.Bound; set => MapFrame.Bound = value; }
+        public IProgressHandler ProgressHandler
+        {
+            get => MapFrame.ProgressHandler;
+            set => MapFrame.ProgressHandler = value;
+        }
 
         public event EventHandler<IGeoMouseEventArgs> GeoMouseMove;
         public Map()
@@ -51,7 +69,7 @@ namespace EM.GIS.WPFControls
             InitializeComponent();
             MapFrame = new Symbology.Frame((int)ActualWidth, (int)ActualHeight)
             {
-                Text="地图框"
+                Text = "地图框"
             };
             MapFrame.BufferChanged += MapFrame_BufferChanged;
             MapFrame.ViewBoundChanged += MapFrame_ViewBoundChanged;
@@ -122,18 +140,13 @@ namespace EM.GIS.WPFControls
             return layers;
         }
 
-        public void Invalidate(IExtent extent)
+        public void Invalidate(RectangleF rectangle)
         {
             Invalidate();
         }
-
         public void Invalidate()
         {
-            var action = new Action(() =>
-            {
-                InvalidateVisual();
-                //UpdateLayout();
-            });
+            Action action = () => InvalidateVisual();
             Dispatcher.BeginInvoke(action);
         }
         public void ZoomToMaxExtent()
@@ -392,6 +405,7 @@ namespace EM.GIS.WPFControls
             }
             base.OnKeyDown(e);
         }
+
         #endregion
     }
 }

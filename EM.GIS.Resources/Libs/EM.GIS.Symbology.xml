@@ -198,11 +198,6 @@
             父元素
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.ILayerCollection.ProgressHandler">
-            <summary>
-            进度
-            </summary>
-        </member>
         <member name="M:EM.GIS.Symbology.ILayerCollection.AddLayer(System.String,System.Boolean)">
             <summary>
             添加图层
@@ -238,6 +233,11 @@
         <member name="T:EM.GIS.Symbology.ILegendItemCollection">
             <summary>
             图例元素集合
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.ILegendItemCollection.ProgressHandler">
+            <summary>
+            进度
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.ILineCategoryCollection">
@@ -355,6 +355,26 @@
             <summary>
             栅格分类集合
             </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.DuplicationPreventer">
+            <summary>
+            Contains methods to remove duplicates.
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.DuplicationPreventer.Clean(System.Collections.Generic.IEnumerable{System.Drawing.PointF})">
+            <summary>
+            Cycles through the PointF points, where necessary and removes duplicate points
+            that are found at the integer level.
+            </summary>
+            <param name="points">The enumerable that gets cleaned.</param>
+            <returns>The cleaned enumerable.</returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.DuplicationPreventer.Clean(System.Collections.Generic.IEnumerable{System.Double[]})">
+            <summary>
+            Cleans the enumerable of points by removing duplicates
+            </summary>
+            <param name="points">The enumerable that gets cleaned.</param>
+            <returns>The cleaned enumerable.</returns>
         </member>
         <member name="M:EM.GIS.Symbology.FeatureEditorSettings.#ctor">
             <summary>
@@ -999,6 +1019,11 @@
             图例类型
             </summary>
         </member>
+        <member name="P:EM.GIS.Symbology.ILegendItem.ProgressHandler">
+            <summary>
+            进度处理
+            </summary>
+        </member>
         <member name="M:EM.GIS.Symbology.ILegendItem.DrawLegend(System.Drawing.Graphics,System.Drawing.Rectangle)">
             <summary>
             绘制图例
@@ -1304,6 +1329,12 @@
             包含图层操作的框架
             </summary>
         </member>
+        <member name="M:EM.GIS.Symbology.Frame.CancellationPending">
+            <summary>
+            是否取消绘制
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:EM.GIS.Symbology.Frame.ParentToView(System.Drawing.Rectangle)">
             <summary>
             通过将当前视图矩形与父控件的大小进行比较，获得相对于背景图像的矩形
@@ -1353,6 +1384,11 @@
         <member name="P:EM.GIS.Symbology.IFeatureLayer.DefaultCategory">
             <summary>
             默认分类
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFeatureLayer.FidCategoryDic">
+            <summary>
+            要素Id和分类缓存字典
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.IFeatureSelection">
@@ -1656,11 +1692,6 @@
             数据集
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.ILayer.ProgressHandler">
-            <summary>
-            进度处理
-            </summary>
-        </member>
         <member name="P:EM.GIS.Symbology.ILayer.Extent">
             <summary>
             范围
@@ -1689,15 +1720,16 @@
             <param name="rectangle"></param>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.ILayer.Draw(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Geometries.IExtent,System.Boolean,System.Func{System.Boolean})">
+        <member name="M:EM.GIS.Symbology.ILayer.Draw(System.Drawing.Graphics,System.Drawing.Rectangle,EM.GIS.Geometries.IExtent,System.Boolean,System.Func{System.Boolean},System.Action)">
             <summary>
             绘制图层到画布
             </summary>
-            <param name="graphics"></param>
-            <param name="rectangle"></param>
-            <param name="extent"></param>
-            <param name="selected"></param>
-            <param name="cancelFunc"></param>
+            <param name="graphics">画布</param>
+            <param name="rectangle">屏幕范围</param>
+            <param name="extent">世界范围</param>
+            <param name="selected">是否选择</param>
+            <param name="cancelFunc">取消绘制委托</param>
+            <param name="invalidateMapFrameAction">使地图框无效委托（重绘）</param>
         </member>
         <member name="P:EM.GIS.Symbology.ILineLayer.Categories">
             <summary>
@@ -1752,6 +1784,11 @@
         <member name="T:EM.GIS.Symbology.Layer">
             <summary>
             图层
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.Layer.ProgressMessage">
+            <summary>
+            进度消息文字
             </summary>
         </member>
         <member name="P:EM.GIS.Symbology.Layer.IsDisposed">

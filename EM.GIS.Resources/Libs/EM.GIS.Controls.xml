@@ -170,11 +170,16 @@
             图例
             </summary>
         </member>
-        <member name="M:EM.GIS.Controls.IMap.Invalidate(EM.GIS.Geometries.IExtent)">
+        <member name="P:EM.GIS.Controls.IMap.ProgressHandler">
             <summary>
-            重绘指定范围
+            进度管理
             </summary>
-            <param name="extent"></param>
+        </member>
+        <member name="M:EM.GIS.Controls.IMap.Invalidate(System.Drawing.RectangleF)">
+            <summary>
+            重绘指定区域
+            </summary>
+            <param name="rectangle"></param>
         </member>
         <member name="M:EM.GIS.Controls.IMap.Invalidate">
             <summary>

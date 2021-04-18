@@ -941,22 +941,72 @@
             Gets or sets the coefficient used for ExtendBuffer. This coefficient should not be modified.
             </summary>
         </member>
-        <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Drawing.Point)">
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToXY(System.Double,System.Double,System.Double,System.Double,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Converts a single point location into an equivalent geographic coordinate
+            像素坐标转世界坐标
             </summary>
-            <param name="self">This IProj</param>
-            <param name="position">The client coordinate relative to the map control</param>
-            <returns>The geographic ICoordinate interface</returns>
+            <param name="minWorldX"></param>
+            <param name="maxWorldY"></param>
+            <param name="worldWidth"></param>
+            <param name="worldHeight"></param>
+            <param name="pixelX"></param>
+            <param name="pixelY"></param>
+            <param name="pixelWidth"></param>
+            <param name="pixelHeight"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
         </member>
-        <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Drawing.Rectangle)">
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToXY(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle,System.Single,System.Single)">
             <summary>
-            Converts a rectangle in pixel coordinates relative to the map control into
-            a geographic envelope.
+            像素坐标转世界坐标
             </summary>
-            <param name="self">This IProj</param>
-            <param name="rect">The rectangle to convert</param>
-            <returns>An IEnvelope interface</returns>
+            <param name="extent"></param>
+            <param name="rectangle"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToXY(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle,System.Drawing.PointF)">
+            <summary>
+            像素坐标转世界坐标
+            </summary>
+            <param name="extent"></param>
+            <param name="rectangle"></param>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToXY(EM.GIS.Data.IProj,System.Single,System.Single)">
+            <summary>
+            像素坐标转世界坐标
+            </summary>
+            <param name="self"></param>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToXY(EM.GIS.Data.IProj,System.Drawing.PointF)">
+            <summary>
+            像素坐标转世界坐标
+            </summary>
+            <param name="self"></param>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.PointFToCoordinate(EM.GIS.Data.IProj,System.Drawing.PointF)">
+            <summary>
+            像素坐标转世界坐标
+            </summary>
+            <param name="self"></param>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.RectangleFToExtent(EM.GIS.Data.IProj,System.Drawing.RectangleF)">
+            <summary>
+            像素范围转为世界范围
+            </summary>
+            <param name="self"></param>
+            <param name="rect"></param>
+            <returns></returns>
         </member>
         <member name="M:EM.GIS.Data.IProjExtensions.PixelToProj(EM.GIS.Data.IProj,System.Collections.Generic.List{System.Drawing.Rectangle})">
             <summary>
@@ -966,29 +1016,73 @@
             <param name="clipRects">The clip rectangles</param>
             <returns>A List of IEnvelope geographic bounds that correspond to the specified clip rectangles.</returns>
         </member>
-        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixelPoint(EM.GIS.Data.IProj,System.Double[])">
+        <member name="M:EM.GIS.Data.IProjExtensions.CoordinateToPointF(EM.GIS.Data.IProj,EM.GIS.Geometries.ICoordinate)">
             <summary>
-            Converts a single geographic location into the equivalent point on the screen relative to the top left corner of the map.
+            世界坐标转像素坐标
             </summary>
-            <param name="self">This IProj</param>
-            <param name="location">The geographic position to transform</param>
-            <returns>A Point with the new location.</returns>
+            <param name="self"></param>
+            <param name="coordinate"></param>
+            <returns></returns>
         </member>
-        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixelPointF(EM.GIS.Data.IProj,System.Double[])">
+        <member name="M:EM.GIS.Data.IProjExtensions.CoordinateToPointF(EM.GIS.Data.IProj,System.Double,System.Double)">
             <summary>
-            Converts a single geographic location into the equivalent point on the screen relative to the top left corner of the map.
+            世界坐标转像素坐标
             </summary>
-            <param name="self">This IProj</param>
-            <param name="location">The geographic position to transform</param>
-            <returns>A Point with the new location.</returns>
+            <param name="self"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
         </member>
-        <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixel(EM.GIS.Data.IProj,EM.GIS.Geometries.IExtent)">
+        <member name="M:EM.GIS.Data.IProjExtensions.CoordinateToPointF(EM.GIS.Geometries.IExtent,System.Drawing.RectangleF,EM.GIS.Geometries.ICoordinate)">
             <summary>
-            Converts a single geographic envelope into an equivalent Rectangle as it would be drawn on the screen.
+            世界坐标转像素坐标
             </summary>
-            <param name="self">This IProj</param>
-            <param name="env">The geographic IEnvelope</param>
-            <returns>A Rectangle</returns>
+            <param name="extent"></param>
+            <param name="rectangle"></param>
+            <param name="coordinate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.CoordinateToPointF(EM.GIS.Geometries.IExtent,System.Drawing.RectangleF,System.Double,System.Double)">
+            <summary>
+            世界坐标转像素坐标
+            </summary>
+            <param name="extent"></param>
+            <param name="rectangle"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.CoordinateToPointF(System.Double,System.Double,System.Double,System.Double,System.Single,System.Single,System.Single,System.Single,System.Double,System.Double)">
+            <summary>
+            世界坐标转像素坐标
+            </summary>
+            <param name="minWorldX">世界范围最小X</param>
+            <param name="maxWorldY">世界范围最大Y</param>
+            <param name="worldWidth">世界范围宽度</param>
+            <param name="worldHeight">世界范围高度</param>
+            <param name="pixelX">像素范围X</param>
+            <param name="pixelY">像素范围Y</param>
+            <param name="pixelWidth">像素范围宽度</param>
+            <param name="pixelHeight">像素范围高度</param>
+            <param name="x">世界坐标X</param>
+            <param name="y">世界坐标Y</param>
+            <returns>像素坐标</returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ExtentToRectangleF(EM.GIS.Data.IProj,EM.GIS.Geometries.IExtent)">
+            <summary>
+            将世界范围转为像素范围
+            </summary>
+            <param name="self"></param>
+            <param name="extent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Data.IProjExtensions.ExtentToRectangle(EM.GIS.Data.IProj,EM.GIS.Geometries.IExtent)">
+            <summary>
+            将世界范围转为像素范围
+            </summary>
+            <param name="self"></param>
+            <param name="extent"></param>
+            <returns></returns>
         </member>
         <member name="M:EM.GIS.Data.IProjExtensions.ProjToPixel(EM.GIS.Data.IProj,System.Collections.Generic.List{EM.GIS.Geometries.IExtent})">
             <summary>
