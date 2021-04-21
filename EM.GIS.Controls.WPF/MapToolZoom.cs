@@ -191,7 +191,7 @@ namespace EM.GIS.WPFControls
         private void Configure()
         {
             MapToolMode = MapToolMode.Middle;
-            _timerInterval = 100;
+            _timerInterval = 500;
             _zoomTimer = new Timer
             {
                 Interval = _timerInterval

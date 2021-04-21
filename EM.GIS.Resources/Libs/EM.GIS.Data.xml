@@ -409,11 +409,6 @@
             投影
             </summary>
         </member>
-        <member name="P:EM.GIS.Data.IDataSet.ProgressHandler">
-            <summary>
-            进度
-            </summary>
-        </member>
         <member name="M:EM.GIS.Data.IDataSet.Save">
             <summary>
             保存
@@ -844,23 +839,24 @@
             <summary>
             获取图片
             </summary>
-            <returns></returns>
+            <returns>图片</returns>
         </member>
         <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Size)">
             <summary>
             获取图片
             </summary>
-            <param name="envelope"></param>
-            <param name="size"></param>
-            <returns></returns>
+            <param name="envelope">世界范围</param>
+            <param name="size">图片大小</param>
+            <returns>图片</returns>
         </member>
-        <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle)">
+        <member name="M:EM.GIS.Data.IGetBitmap.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle,System.Action{System.Int32})">
             <summary>
             获取图片
             </summary>
-            <param name="envelope"></param>
-            <param name="window"></param>
-            <returns></returns>
+            <param name="extent">世界范围</param>
+            <param name="rectangle">屏幕范围</param>
+            <param name="progressAction">进度委托</param>
+            <returns>图片</returns>
         </member>
         <member name="T:EM.GIS.Data.IGetField">
             <summary>
@@ -1313,6 +1309,11 @@
         <member name="T:EM.GIS.Data.IVectorDriver">
             <summary>
             矢量数据接口
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Data.ProgressHandler">
+            <summary>
+            进度处理类
             </summary>
         </member>
         <member name="M:EM.GIS.Data.ProjectionExtensions.TransformCoordinate(EM.GIS.Projection.ITransformation,EM.GIS.Geometries.ICoordinate)">

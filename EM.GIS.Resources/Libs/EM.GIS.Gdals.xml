@@ -210,15 +210,6 @@
             Gets or sets the NoDataValue.
             </summary>
         </member>
-        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GetBitmap(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle)">
-            <summary>
-            This needs to return the actual image and override the base
-            behavior that handles the internal variables only.
-            </summary>
-            <param name="envelope">The envelope to grab image data for.</param>
-            <param name="window">A Rectangle</param>
-            <returns>The image.</returns>
-        </member>
         <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GetBitmap(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Gets a block of data directly, converted into a bitmap.  This always writes
@@ -246,15 +237,6 @@
             <summary>
             Gets the mean, standard deviation, minimum and maximum
             </summary>
-        </member>
-        <member name="M:EM.GIS.Gdals.GdalRasterSet`1.GdalProgressFunc(System.Double,System.IntPtr,System.IntPtr)">
-            <summary>
-            Handles the callback progress content.
-            </summary>
-            <param name="complete">Percent of completeness.</param>
-            <param name="message">Message is not used.</param>
-            <param name="data">Data is not used.</param>
-            <returns>0</returns>
         </member>
         <member name="T:EM.GIS.Gdals.GdalVectorDriver">
             <summary>
