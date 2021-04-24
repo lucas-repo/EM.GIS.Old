@@ -4,6 +4,11 @@
         <name>EM.GIS.Symbology</name>
     </assembly>
     <members>
+        <member name="T:EM.GIS.Symbology.BaseCommand">
+            <summary>
+            命令基类
+            </summary>
+        </member>
         <member name="M:EM.GIS.Symbology.Break.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:EM.GIS.Symbology.Break"/> class.
@@ -229,6 +234,13 @@
             <param name="raster"></param>
             <param name="isVisible"></param>
             <returns></returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.ILayerCollection.AddGroup(System.String)">
+            <summary>
+            添加分组
+            </summary>
+            <param name="groupName">分组名</param>
+            <returns>分组</returns>
         </member>
         <member name="T:EM.GIS.Symbology.ILegendItemCollection">
             <summary>
@@ -466,6 +478,36 @@
         <member name="T:EM.GIS.Symbology.FeatureSymbol">
             <summary>
             要素符号
+            </summary>
+        </member>
+        <member name="T:EM.GIS.Symbology.IBaseCommand">
+            <summary>
+            命令
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IBaseCommand.Header">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IBaseCommand.Name">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IBaseCommand.ToolTip">
+            <summary>
+            提示
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IBaseCommand.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.IBaseCommand.LargeIcon">
+            <summary>
+            大图标
             </summary>
         </member>
         <member name="T:EM.GIS.Symbology.ICategory">
@@ -1009,9 +1051,9 @@
             子元素集合
             </summary>
         </member>
-        <member name="P:EM.GIS.Symbology.ILegendItem.ContextMenuItems">
+        <member name="P:EM.GIS.Symbology.ILegendItem.ContextCommands">
             <summary>
-            右键菜单项
+            右键菜单命令集合
             </summary>
         </member>
         <member name="P:EM.GIS.Symbology.ILegendItem.LegendSymbolMode">

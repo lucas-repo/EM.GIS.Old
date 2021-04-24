@@ -28,6 +28,8 @@
 	  <None Remove="Images\Folder32.png" />
 	  <None Remove="Images\Global16.png" />
 	  <None Remove="Images\Global32.png" />
+	  <None Remove="Images\Group16.png" />
+	  <None Remove="Images\Group32.png" />
 	  <None Remove="Images\Home16.png" />
 	  <None Remove="Images\Home32.png" />
 	  <None Remove="Images\Identify16.png" />
@@ -94,6 +96,12 @@
 	  <Resource Include="Images\Global32.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Resource Include="Images\Group16.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Images\Group32.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Images\Home16.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
@@ -106,7 +114,9 @@
 	  <Resource Include="Images\Identify32.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="Images\Layers16.png" />
+	  <Resource Include="Images\Layers16.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Images\LogoIco128.ico">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>

@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,8 @@ namespace EM.GIS.WPFControls
         }
 
         public event EventHandler<IGeoMouseEventArgs> GeoMouseMove;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Map()
         {
             InitializeComponent();
@@ -404,6 +407,11 @@ namespace EM.GIS.WPFControls
                 if (e.Handled) break;
             }
             base.OnKeyDown(e);
+        }
+
+        public IGroup AddGroup(string groupName = null)
+        {
+            return Layers.AddGroup(groupName);
         }
 
         #endregion

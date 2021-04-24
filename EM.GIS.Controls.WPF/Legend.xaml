@@ -6,6 +6,9 @@
              x:Class="EM.GIS.WPFControls.Legend"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="450" ItemTemplateSelector="{DynamicResource legendItemTemplateSelector}">
+    <TreeView.ContextMenu>
+        <ContextMenu ItemsSource="{Binding SelectedItem.ContextCommands}" ItemTemplate="{DynamicResource contextMenuItemTemplate}"/>
+    </TreeView.ContextMenu>
     <TreeView.Resources>
         <local:CategoryToImage x:Key="categoryToImage"/>
         <local:LegendItemTemplateSelector x:Key="legendItemTemplateSelector">
@@ -38,5 +41,8 @@
             <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
         </Style>
+        <DataTemplate x:Key="contextMenuItemTemplate">
+            <MenuItem Header="{Binding Header}" Name="{Binding Name}" ToolTip="{Binding ToolTip}" Command="{Binding}"/>
+        </DataTemplate>
     </TreeView.Resources>
 </TreeView>

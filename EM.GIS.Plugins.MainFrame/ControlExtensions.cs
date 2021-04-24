@@ -1,4 +1,5 @@
 ﻿using EM.GIS.Controls;
+using EM.GIS.Symbology;
 using Fluent;
 using System;
 using System.Collections.Generic;

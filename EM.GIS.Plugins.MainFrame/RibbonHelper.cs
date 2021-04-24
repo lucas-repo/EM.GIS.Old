@@ -146,7 +146,7 @@ namespace EM.GIS.Plugins.MainFrame
             {
                 Header = "图层"
             };
-            var command = AppManager.CommandFactory.GetAddLayersCommand(Map);
+            var command = AppManager.CommandFactory.GetAddLayersCommand(Map, Map.Layers);
             AddButton(command, ribbonGroupBox.Items);
             command = AppManager.CommandFactory.GetRemoveSelectedLayersCommand(Map);
             AddButton(command, ribbonGroupBox.Items);

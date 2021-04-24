@@ -2,6 +2,7 @@
 using EM.GIS.Resources;
 using EM.GIS.Symbology;
 using EM.GIS.WPFControls;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,14 @@ namespace EM.GIS.Plugins.MainFrame
 {
     public static class ConmandExtensions
     {
-        public static IBaseCommand GetAddLayersCommand(this ICommandFactory commandFactory, IMap map)
+        /// <summary>
+        /// 添加图层工具
+        /// </summary>
+        /// <param name="commandFactory"></param>
+        /// <param name="map"></param>
+        /// <param name="layerCollection"></param>
+        /// <returns></returns>
+        public static IBaseCommand GetAddLayersCommand(this ICommandFactory commandFactory, IMap map, ILayerCollection layerCollection)
         {
             IBaseCommand command = null;
             if (commandFactory != null && map != null)
@@ -26,7 +34,7 @@ namespace EM.GIS.Plugins.MainFrame
                     {
                         Header = "添加",
                         Name = name,
-                        ExecuteCommand = (obj) => map.AddLayers(),
+                        ExecuteCommand = (obj) => AddLayers(map, layerCollection),
                         Icon = ResourcesHelper.GetBitmapImage("Add16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Add32.png"),
                         ToolTip = "添加图层"
@@ -36,6 +44,57 @@ namespace EM.GIS.Plugins.MainFrame
             }
             return command;
         }
+        public static IList<ILayer> AddLayers(IMap map,ILayerCollection layerCollection)
+        {
+            var layers = new List<ILayer>();
+            OpenFileDialog dg = new OpenFileDialog()
+            {
+                Filter = "*.img,*.shp|*.img;*.shp",
+                Multiselect = true
+            };
+            if (dg.ShowDialog(Window.GetWindow(map as DependencyObject)).HasValue)
+            {
+                foreach (var fileName in dg.FileNames)
+                {
+                    var layer = layerCollection.AddLayer(fileName);
+                    if (layer != null)
+                    {
+                        layers.Add(layer);
+                    }
+                }
+            }
+            return layers;
+        }
+        /// <summary>
+        /// 添加图层组工具
+        /// </summary>
+        /// <param name="commandFactory"></param>
+        /// <param name="layers"></param>
+        /// <returns></returns>
+        public static IBaseCommand GetAddGroupCommand(this ICommandFactory commandFactory, ILayerCollection layers)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && layers != null)
+            {
+                string name = "addGroup";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "添加分组",
+                        Name = name,
+                        ExecuteCommand = (obj) =>layers.AddGroup(),
+                        Icon = ResourcesHelper.GetBitmapImage("Group16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Group32.png"),
+                        ToolTip = "添加分组"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+
         public static IBaseCommand GetRemoveSelectedLayersCommand(this ICommandFactory commandFactory, IMap map)
         {
             IBaseCommand command = null;
@@ -59,6 +118,38 @@ namespace EM.GIS.Plugins.MainFrame
             }
             return command;
         }
+        public static IBaseCommand GetRemoveLayerCommand(this ICommandFactory commandFactory, ILayer layer)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && layer != null)
+            {
+                string name = "removeLayer";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "移除",
+                        Name = name,
+                        ExecuteCommand = (obj) => RemoveLayer(layer),
+                        Icon = ResourcesHelper.GetBitmapImage("Remove16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Remove32.png"),
+                        ToolTip = "移除图层"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+
+        private static void RemoveLayer(ILayer layer)
+        {
+            if (layer?.Parent != null)
+            {
+                layer.Parent.LegendItems.Remove(layer);
+            }
+        }
+
         public static IBaseCommand GetActivePanToolCommand(this ICommandFactory commandFactory, IMap map)
         {
             IBaseCommand command = null;
@@ -284,7 +375,7 @@ namespace EM.GIS.Plugins.MainFrame
                     {
                         Header = "打开",
                         Name = name,
-                        ExecuteCommand = (obj) =>OpenProject(map),
+                        ExecuteCommand = (obj) => OpenProject(map),
                         Icon = ResourcesHelper.GetBitmapImage("Open16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Open32.png"),
                         ToolTip = "打开工程"

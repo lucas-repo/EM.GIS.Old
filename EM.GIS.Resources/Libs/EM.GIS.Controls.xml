@@ -69,11 +69,6 @@
             Gets the type of the referenced class.
             </summary>
         </member>
-        <member name="T:EM.GIS.Controls.BaseCommand">
-            <summary>
-            命令基类
-            </summary>
-        </member>
         <member name="T:EM.GIS.Controls.CommandFactory">
             <summary>
             命令工厂
@@ -122,36 +117,6 @@
         <member name="M:EM.GIS.Controls.IAppManager.LoadPlugins">
             <summary>
             读取插件
-            </summary>
-        </member>
-        <member name="T:EM.GIS.Controls.IBaseCommand">
-            <summary>
-            命令
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Controls.IBaseCommand.Header">
-            <summary>
-            标题
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Controls.IBaseCommand.Name">
-            <summary>
-            标题
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Controls.IBaseCommand.ToolTip">
-            <summary>
-            提示
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Controls.IBaseCommand.Icon">
-            <summary>
-            图标
-            </summary>
-        </member>
-        <member name="P:EM.GIS.Controls.IBaseCommand.LargeIcon">
-            <summary>
-            大图标
             </summary>
         </member>
         <member name="T:EM.GIS.Controls.ICommandFactory">
@@ -263,6 +228,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:EM.GIS.Controls.IMap.AddGroup(System.String)">
+            <summary>
+            添加分组
+            </summary>
+            <param name="groupName">分组名</param>
+            <returns>分组</returns>
+        </member>
         <member name="P:EM.GIS.Controls.IMap.Layers">
             <summary>
             图层
@@ -273,17 +245,11 @@
             地图方法
             </summary>
         </member>
-        <member name="M:EM.GIS.Controls.IMap.ActivateMapTool(EM.GIS.Controls.ITool)">
+        <member name="M:EM.GIS.Controls.IMap.ActivateMapToolWithZoom(EM.GIS.Controls.ITool)">
             <summary>
             激活工具
             </summary>
-            <param name="tool">工具</param>
-        </member>
-        <member name="M:EM.GIS.Controls.IMap.ActivateMapToolWithZoom(EM.GIS.Controls.ITool)">
-            <summary>
-            激活带有缩放的工具
-            </summary>
-            <param name="tool">工具</param>
+            <param name="tool">工具</param>  
         </member>
         <member name="M:EM.GIS.Controls.IMap.DeactivateAllMapTools">
             <summary>
