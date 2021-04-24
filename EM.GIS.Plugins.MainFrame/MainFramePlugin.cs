@@ -24,6 +24,21 @@ namespace EM.GIS.Plugins.MainFrame
                 grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
                 grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
+                //初始化AppManager
+                if (App.Legend == null)
+                {
+                    ILegend legend = new Legend();
+                    App.Legend = legend;
+                }
+                if (App.Map == null)
+                {
+                    App.Map = new Map();
+                }
+                if (App.Map.Legend != App.Legend)
+                {
+                    App.Map.Legend = App.Legend;
+                }
+
                 //添加ribbon
                 RibbonHelper ribbonHelper = new RibbonHelper(App);
                 DockHelper dockHelper = new DockHelper(App);

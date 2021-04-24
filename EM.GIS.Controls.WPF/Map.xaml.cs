@@ -83,7 +83,7 @@ namespace EM.GIS.WPFControls
             {
                 mapTool.Activated += MapTool_Activated;
             }
-            ActivateMapFunctionWithZoom(pan);
+            ActivateMapToolWithZoom(pan);
         }
 
         private void MapFrame_ViewBoundChanged(object? sender, EventArgs e)
@@ -256,40 +256,40 @@ namespace EM.GIS.WPFControls
 
             return null;
         }
-        public void ActivateMapFunctionWithZoom(IMapTool function)
+        public void ActivateMapToolWithZoom(ITool tool)
         {
-            if (function == null)
+            if (tool == null)
             {
                 return;
             }
-            if (!(function is MapToolZoom))
+            if (!(tool is MapToolZoom))
             {
                 var mapToolZoom = MapTools.FirstOrDefault(x => x is MapToolZoom);
                 if (mapToolZoom != null)
                 {
-                    ActivateMapFunction(mapToolZoom);
+                    ActivateMapTool(mapToolZoom);
                 }
             }
-            ActivateMapFunction(function);
+            ActivateMapTool(tool);
         }
-        public void ActivateMapFunction(ITool function)
+        public void ActivateMapTool(ITool tool)
         {
-            if (function == null)
+            if (tool == null)
             {
                 return;
             }
-            if (!MapTools.Contains(function))
+            if (!MapTools.Contains(tool))
             {
-                MapTools.Add(function);
+                MapTools.Add(tool);
             }
 
             foreach (var f in MapTools)
             {
                 if ((f.MapToolMode & MapToolMode.AlwaysOn) == MapToolMode.AlwaysOn) continue;
-                int test = (int)(f.MapToolMode & function.MapToolMode);
+                int test = (int)(f.MapToolMode & tool.MapToolMode);
                 if (test > 0) f.Deactivate();
             }
-            function.Activate();
+            tool.Activate();
         }
 
         public void DeactivateAllMapTools()

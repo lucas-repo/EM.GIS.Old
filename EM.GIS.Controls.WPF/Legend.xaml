@@ -36,6 +36,7 @@
         </local:LegendItemTemplateSelector>
         <Style x:Key="TreeViewItemContainerStyle1" TargetType="{x:Type TreeViewItem}">
             <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
         </Style>
     </TreeView.Resources>
 </TreeView>

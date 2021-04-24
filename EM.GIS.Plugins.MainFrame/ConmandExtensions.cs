@@ -1,0 +1,451 @@
+﻿using EM.GIS.Controls;
+using EM.GIS.Resources;
+using EM.GIS.Symbology;
+using EM.GIS.WPFControls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+
+namespace EM.GIS.Plugins.MainFrame
+{
+    public static class ConmandExtensions
+    {
+        public static IBaseCommand GetAddLayersCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "addLayers";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "添加",
+                        Name = name,
+                        ExecuteCommand = (obj) => map.AddLayers(),
+                        Icon = ResourcesHelper.GetBitmapImage("Add16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Add32.png"),
+                        ToolTip = "添加图层"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetRemoveSelectedLayersCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "removeSelectedLayers";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "移除",
+                        Name = name,
+                        ExecuteCommand = (obj) => RemoveSelectedLayers(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Remove16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Remove32.png"),
+                        ToolTip = "移除图层"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetActivePanToolCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "activePanTool";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "平移",
+                        Name = name,
+                        ExecuteCommand = (obj) => ActivePanTool(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Pan16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Pan32.png"),
+                        ToolTip = "平移工具"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetZoomToMaxExtentCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "zoomToMaxExtent";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "全图",
+                        Name = name,
+                        ExecuteCommand = (obj) => map?.ZoomToMaxExtent(),
+                        Icon = ResourcesHelper.GetBitmapImage("Global16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Global32.png"),
+                        ToolTip = "缩放至全图"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetActiveZoomInToolCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "activeZoomInTool";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "放大",
+                        Name = name,
+                        ExecuteCommand = (obj) => ActiveZoomInTool(map),
+                        Icon = ResourcesHelper.GetBitmapImage("ZoomIn16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("ZoomIn32.png"),
+                        ToolTip = "放大工具"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetZoomToPreviousViewCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "zoomToPreviousView";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "后退",
+                        Name = name,
+                        ExecuteCommand = (obj) => ZoomToPreviousView(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Pre16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Pre32.png"),
+                        ToolTip = "后退至前一视图"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetActiveIdentifyToolCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "activeIdentifyTool";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "识别",
+                        Name = name,
+                        ExecuteCommand = (obj) => ActiveIdentifyTool(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Identify16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Identify32.png"),
+                        ToolTip = "识别工具"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetActiveZoomOutToolCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "activeZoomOutTool";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "缩小",
+                        Name = name,
+                        ExecuteCommand = (obj) => ActiveZoomOutTool(map),
+                        Icon = ResourcesHelper.GetBitmapImage("ZoomOut16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("ZoomOut32.png"),
+                        ToolTip = "缩小工具"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetZoomToNextViewCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "zoomToNextView";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "前进",
+                        Name = name,
+                        ExecuteCommand = (obj) => ZoomToNextView(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Next16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Next32.png"),
+                        ToolTip = "前进至后一视图"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetSaveProjectCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "saveProject";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "保存",
+                        Name = name,
+                        ExecuteCommand = (obj) => SaveProject(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Save16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Save32.png"),
+                        ToolTip = "保存工程"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetNewProjectCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "newProject";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "新建",
+                        Name = name,
+                        ExecuteCommand = (obj) => NewProject(map),
+                        Icon = ResourcesHelper.GetBitmapImage("New16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("New32.png"),
+                        ToolTip = "新建工程"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+
+        private static void NewProject(IMap map)
+        {
+        }
+
+        public static IBaseCommand GetOpenProjectCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "openProject";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "打开",
+                        Name = name,
+                        ExecuteCommand = (obj) =>OpenProject(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Open16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Open32.png"),
+                        ToolTip = "打开工程"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+
+        private static void OpenProject(IMap map)
+        {
+        }
+
+        public static IBaseCommand GetUndoCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "undo";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "撤销",
+                        Name = name,
+                        ExecuteCommand = (obj) => Undo(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Undo16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Undo32.png"),
+                        ToolTip = "撤销"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+        public static IBaseCommand GetRedoCommand(this ICommandFactory commandFactory, IMap map)
+        {
+            IBaseCommand command = null;
+            if (commandFactory != null && map != null)
+            {
+                string name = "redo";
+                command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
+                if (command == null)
+                {
+                    command = new BaseCommand()
+                    {
+                        Header = "重做",
+                        Name = name,
+                        ExecuteCommand = (obj) => Redo(map),
+                        Icon = ResourcesHelper.GetBitmapImage("Redo16.png"),
+                        LargeIcon = ResourcesHelper.GetBitmapImage("Redo32.png"),
+                        ToolTip = "重做"
+                    };
+                    commandFactory.Commands.Add(command);
+                }
+            }
+            return command;
+        }
+
+        private static void Redo(IMap map)
+        {
+        }
+
+        private static void Undo(IMap map)
+        {
+        }
+
+        private static void SaveProject(IMap map)
+        {
+        }
+
+        private static void ZoomToNextView(IMap map)
+        {
+        }
+
+        private static void ActiveZoomOutTool(IMap map)
+        {
+        }
+
+        private static void ActiveIdentifyTool(IMap map)
+        {
+        }
+
+        private static void ZoomToPreviousView(IMap map)
+        {
+        }
+
+        private static void ActiveZoomInTool(IMap map)
+        {
+            //var panTool = map.MapTools.FirstOrDefault(x => x is MapToolZoom);
+            //if (panTool != null)
+            //{
+            //    map.ActivateMapToolWithZoom(panTool);
+            //}
+        }
+
+        private static void ActivePanTool(IMap map)
+        {
+            var panTool = map.MapTools.FirstOrDefault(x => x is MapToolPan);
+            if (panTool != null)
+            {
+                map.ActivateMapToolWithZoom(panTool);
+            }
+        }
+
+        private static bool IsLegendItemSelected(ILegendItemCollection legendItems)
+        {
+            bool ret = false;
+            if (legendItems != null)
+            {
+                foreach (ILegendItem item in legendItems)
+                {
+                    if (item.IsSelected)
+                    {
+                        ret = true;
+                    }
+                    else
+                    {
+                        ret = IsLegendItemSelected(item.LegendItems);
+                    }
+                    if (ret)
+                    {
+                        break;
+                    }
+                }
+            }
+            return ret;
+        }
+        private static void RemoveSelectedLegendItems(ILegendItemCollection legendItems)
+        {
+            if (legendItems == null)
+            {
+                return;
+            }
+            for (int i = legendItems.Count - 1; i >= 0; i--)
+            {
+                if (legendItems[i].IsSelected)
+                {
+                    legendItems.RemoveAt(i);
+                }
+                else
+                {
+                    RemoveSelectedLegendItems(legendItems[i].LegendItems);
+                }
+            }
+        }
+        private static void RemoveSelectedLayers(IMap map)
+        {
+            if (map.MapFrame != null)
+            {
+                bool isSelected = IsLegendItemSelected(map.MapFrame.LegendItems);
+                if (isSelected)
+                {
+                    if (MessageBox.Show(Window.GetWindow(map as DependencyObject), "是否移除选择的图层？", "删除确认", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        RemoveSelectedLegendItems(map.MapFrame.LegendItems);
+                    }
+                }
+            }
+        }
+    }
+}

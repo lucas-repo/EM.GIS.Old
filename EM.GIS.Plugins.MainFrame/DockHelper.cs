@@ -53,13 +53,6 @@ namespace EM.GIS.Plugins.MainFrame
 
         public DockingManager GetDockingManager()
         {
-            ILegend legend = new Legend();
-            IMap map = new Map()
-            {
-                Legend = legend
-            };
-            AppManager.Map = map;
-            AppManager.Legend = legend;
             LayoutPanel layoutPanel = new LayoutPanel()
             {
                 Orientation = System.Windows.Controls.Orientation.Horizontal
