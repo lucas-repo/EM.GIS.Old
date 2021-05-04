@@ -35,10 +35,15 @@ namespace EM.GIS.WPFControls
         public Legend()
         {
             InitializeComponent();
-            LegendItems = new LayerCollection();
-            LegendItems.CollectionChanged += LegendItems_CollectionChanged;
+            LegendItems = new LayerCollection(null);
+            LegendItems.CollectionChanged += LegendItems_CollectionChanged; 
             DataContext = this;
             ItemsSource = LegendItems; 
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            SelectedItem = e.NewValue as ILegendItem;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -110,25 +115,25 @@ namespace EM.GIS.WPFControls
 
         private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender is ILegendItem legendItem)
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(ILegendItem.IsSelected):
-                        if (legendItem.IsSelected)
-                        {
-                            SelectedItem = legendItem;
-                        }
-                        else
-                        {
-                            if (!SelectedItem.IsSelected)
-                            {
-                                SelectedItem = null;
-                            }
-                        }
-                        break;
-                }
-            }
+            //if (sender is ILegendItem legendItem)
+            //{
+            //    switch (e.PropertyName)
+            //    {
+            //        case nameof(ILegendItem.IsSelected):
+            //            if (legendItem.IsSelected)
+            //            {
+            //                SelectedItem = legendItem;
+            //            }
+            //            else
+            //            {
+            //                if (SelectedItem == legendItem)
+            //                {
+            //                    SelectedItem = null;
+            //                }
+            //            }
+            //            break;
+            //    }
+            //}
         }
 
         private void LegendItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

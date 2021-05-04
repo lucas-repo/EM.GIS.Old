@@ -724,6 +724,17 @@
             符号集合
             </summary>
         </member>
+        <member name="T:EM.GIS.Symbology.IFrameItem`1">
+            <summary>
+            带框架的元素接口
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:EM.GIS.Symbology.IFrameItem`1.Frame">
+            <summary>
+            框架
+            </summary>
+        </member>
         <member name="T:EM.GIS.Symbology.IImageSymbolizer">
             <summary>
             Interface for ImageSymbolizer.
@@ -1377,12 +1388,28 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:EM.GIS.Symbology.Frame.ParentToView(System.Drawing.Rectangle)">
+        <member name="M:EM.GIS.Symbology.Frame.GetRectangleToView(System.Drawing.Rectangle)">
             <summary>
-            通过将当前视图矩形与父控件的大小进行比较，获得相对于背景图像的矩形
+            获得相对于背景图像的矩形范围
             </summary>
-            <param name="clip"></param>
-            <returns></returns>
+            <param name="rectangle">矩形范围</param>
+            <returns>相对于背景图像的矩形范围</returns>
+        </member>
+        <member name="M:EM.GIS.Symbology.Frame.ResumeExtentChanged">
+            <summary>
+            恢复ViewExtentsChanged
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.Frame.SuspendExtentChanged">
+            <summary>
+            暂停触发ViewExtentsChanged
+            </summary>
+        </member>
+        <member name="M:EM.GIS.Symbology.Frame.OnViewExtentsChanged(EM.GIS.Geometries.IExtent)">
+            <summary>
+            触发视图范围改变事件
+            </summary>
+            <param name="ext"></param>
         </member>
         <member name="T:EM.GIS.Symbology.Group">
             <summary>
@@ -1534,10 +1561,10 @@
         </member>
         <member name="M:EM.GIS.Symbology.IFrame.Draw(System.Drawing.Graphics,System.Drawing.Rectangle)">
             <summary>
-            打印
+            绘制背景图至指定画板的指定范围
             </summary>
-            <param name="g"></param>
-            <param name="rectangle"></param>
+            <param name="g">画板</param>
+            <param name="rectangle">范围</param>
         </member>
         <member name="M:EM.GIS.Symbology.IFrame.ResetViewExtent">
             <summary>
@@ -1752,6 +1779,11 @@
         <member name="P:EM.GIS.Symbology.ILayer.Selection">
             <summary>
             选择器
+            </summary>
+        </member>
+        <member name="P:EM.GIS.Symbology.ILayer.Parent">
+            <summary>
+            父图层组
             </summary>
         </member>
         <member name="M:EM.GIS.Symbology.ILayer.GetVisible(EM.GIS.Geometries.IExtent,System.Drawing.Rectangle)">

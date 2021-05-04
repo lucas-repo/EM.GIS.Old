@@ -44,7 +44,7 @@ namespace EM.GIS.Plugins.MainFrame
             }
             return command;
         }
-        public static IList<ILayer> AddLayers(IMap map,ILayerCollection layerCollection)
+        public static IList<ILayer> AddLayers(IMap map, ILayerCollection layerCollection)
         {
             var layers = new List<ILayer>();
             OpenFileDialog dg = new OpenFileDialog()
@@ -84,7 +84,7 @@ namespace EM.GIS.Plugins.MainFrame
                     {
                         Header = "添加分组",
                         Name = name,
-                        ExecuteCommand = (obj) =>layers.AddGroup(),
+                        ExecuteCommand = (obj) => layers.AddGroup(),
                         Icon = ResourcesHelper.GetBitmapImage("Group16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Group32.png"),
                         ToolTip = "添加分组"
