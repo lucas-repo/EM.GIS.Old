@@ -79,11 +79,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => layers.AddGroup())
                     {
                         Header = "添加分组",
                         Name = name,
-                        ExecuteCommand = (obj) => layers.AddGroup(),
                         Icon = ResourcesHelper.GetBitmapImage("Group16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Group32.png"),
                         ToolTip = "添加分组"
@@ -103,11 +102,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => RemoveSelectedLayers(map))
                     {
                         Header = "移除",
                         Name = name,
-                        ExecuteCommand = (obj) => RemoveSelectedLayers(map),
                         Icon = ResourcesHelper.GetBitmapImage("Remove16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Remove32.png"),
                         ToolTip = "移除图层"
@@ -126,11 +124,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => RemoveLayer(layer))
                     {
                         Header = "移除",
                         Name = name,
-                        ExecuteCommand = (obj) => RemoveLayer(layer),
                         Icon = ResourcesHelper.GetBitmapImage("Remove16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Remove32.png"),
                         ToolTip = "移除图层"
@@ -158,11 +155,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ActivePanTool(map))
                     {
                         Header = "平移",
                         Name = name,
-                        ExecuteCommand = (obj) => ActivePanTool(map),
                         Icon = ResourcesHelper.GetBitmapImage("Pan16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Pan32.png"),
                         ToolTip = "平移工具"
@@ -181,11 +177,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => map?.ZoomToMaxExtent())
                     {
                         Header = "全图",
                         Name = name,
-                        ExecuteCommand = (obj) => map?.ZoomToMaxExtent(),
                         Icon = ResourcesHelper.GetBitmapImage("Global16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Global32.png"),
                         ToolTip = "缩放至全图"
@@ -204,11 +199,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ActiveZoomInTool(map))
                     {
                         Header = "放大",
                         Name = name,
-                        ExecuteCommand = (obj) => ActiveZoomInTool(map),
                         Icon = ResourcesHelper.GetBitmapImage("ZoomIn16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("ZoomIn32.png"),
                         ToolTip = "放大工具"
@@ -227,11 +221,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ZoomToPreviousView(map))
                     {
                         Header = "后退",
                         Name = name,
-                        ExecuteCommand = (obj) => ZoomToPreviousView(map),
                         Icon = ResourcesHelper.GetBitmapImage("Pre16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Pre32.png"),
                         ToolTip = "后退至前一视图"
@@ -250,11 +243,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ActiveIdentifyTool(map))
                     {
                         Header = "识别",
                         Name = name,
-                        ExecuteCommand = (obj) => ActiveIdentifyTool(map),
                         Icon = ResourcesHelper.GetBitmapImage("Identify16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Identify32.png"),
                         ToolTip = "识别工具"
@@ -273,11 +265,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ActiveZoomOutTool(map))
                     {
                         Header = "缩小",
                         Name = name,
-                        ExecuteCommand = (obj) => ActiveZoomOutTool(map),
                         Icon = ResourcesHelper.GetBitmapImage("ZoomOut16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("ZoomOut32.png"),
                         ToolTip = "缩小工具"
@@ -296,11 +287,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => ZoomToNextView(map))
                     {
                         Header = "前进",
                         Name = name,
-                        ExecuteCommand = (obj) => ZoomToNextView(map),
                         Icon = ResourcesHelper.GetBitmapImage("Next16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Next32.png"),
                         ToolTip = "前进至后一视图"
@@ -319,11 +309,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => SaveProject(map))
                     {
                         Header = "保存",
                         Name = name,
-                        ExecuteCommand = (obj) => SaveProject(map),
                         Icon = ResourcesHelper.GetBitmapImage("Save16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Save32.png"),
                         ToolTip = "保存工程"
@@ -342,11 +331,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => NewProject(map))
                     {
                         Header = "新建",
                         Name = name,
-                        ExecuteCommand = (obj) => NewProject(map),
                         Icon = ResourcesHelper.GetBitmapImage("New16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("New32.png"),
                         ToolTip = "新建工程"
@@ -370,11 +358,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => OpenProject(map))
                     {
                         Header = "打开",
                         Name = name,
-                        ExecuteCommand = (obj) => OpenProject(map),
                         Icon = ResourcesHelper.GetBitmapImage("Open16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Open32.png"),
                         ToolTip = "打开工程"
@@ -398,11 +385,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => Undo(map))
                     {
                         Header = "撤销",
                         Name = name,
-                        ExecuteCommand = (obj) => Undo(map),
                         Icon = ResourcesHelper.GetBitmapImage("Undo16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Undo32.png"),
                         ToolTip = "撤销"
@@ -421,11 +407,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand(() => Redo(map))
                     {
                         Header = "重做",
                         Name = name,
-                        ExecuteCommand = (obj) => Redo(map),
                         Icon = ResourcesHelper.GetBitmapImage("Redo16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Redo32.png"),
                         ToolTip = "重做"
