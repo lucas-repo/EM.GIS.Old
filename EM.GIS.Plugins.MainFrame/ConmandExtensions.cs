@@ -30,11 +30,10 @@ namespace EM.GIS.Plugins.MainFrame
                 command = commandFactory.Commands?.FirstOrDefault(x => x.Name == name);
                 if (command == null)
                 {
-                    command = new BaseCommand()
+                    command = new BaseCommand((obj) => AddLayers(map, layerCollection))
                     {
                         Header = "添加",
                         Name = name,
-                        ExecuteCommand = (obj) => AddLayers(map, layerCollection),
                         Icon = ResourcesHelper.GetBitmapImage("Add16.png"),
                         LargeIcon = ResourcesHelper.GetBitmapImage("Add32.png"),
                         ToolTip = "添加图层"

@@ -28,27 +28,4 @@
 	  </ProjectReference>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Reference Include="EM.GIS">
-	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
-	    <Private>false</Private>
-	  </Reference>
-	  <Reference Include="EM.GIS.Controls">
-	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
-	    <Private>false</Private>
-	  </Reference>
-	  <Reference Include="EM.GIS.Data">
-	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
-	    <Private>false</Private>
-	  </Reference>
-	  <Reference Include="EM.GIS.Geometries">
-	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
-	    <Private>false</Private>
-	  </Reference>
-	  <Reference Include="EM.GIS.Symbology">
-	    <HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
-	    <Private>false</Private>
-	  </Reference>
-	</ItemGroup>
-
 </Project>

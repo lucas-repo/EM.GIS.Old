@@ -56,8 +56,8 @@ namespace EM.GIS.WPFControls
 
         public Rectangle ViewBound { get => MapFrame.ViewBound; set => MapFrame.ViewBound = value; }
         public List<ITool> MapTools { get; }
-        public IExtent Extent { get => (MapFrame as IProj).Extent; set => (MapFrame as IProj).Extent = value; }
-        public Rectangle Bound { get => MapFrame.Bound; set => MapFrame.Bound = value; }
+        public IExtent Extent { get => (MapFrame as IProj).Extent; }
+        public Rectangle Bound { get => MapFrame.Bound;  }
         public IProgressHandler ProgressHandler
         {
             get => MapFrame.ProgressHandler;

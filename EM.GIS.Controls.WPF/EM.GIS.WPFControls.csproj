@@ -22,35 +22,17 @@
 	<ItemGroup>
 		<PackageReference Include="Dirkster.AvalonDock" Version="4.50.3" />
 		<PackageReference Include="Dirkster.AvalonDock.Themes.Metro" Version="4.50.3" />
+		<PackageReference Include="EM.GIS" Version="1.0.0-alpha0004" />
+		<PackageReference Include="EM.GIS.Controls" Version="1.0.0" />
+		<PackageReference Include="EM.GIS.Data" Version="1.0.0-alpha0001" />
+		<PackageReference Include="EM.GIS.Geometries" Version="1.0.0" />
+		<PackageReference Include="EM.GIS.Symbology" Version="1.0.0-alpha0003" />
 		<PackageReference Include="Fluent.Ribbon" Version="8.0.2" />
 		<PackageReference Include="System.Drawing.Common" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\EM.GIS.Resources\EM.GIS.Resources.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="EM.GIS">
-			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="EM.GIS.Controls">
-			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Controls.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="EM.GIS.Data">
-			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Data.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="EM.GIS.Geometries">
-			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Geometries.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="EM.GIS.Symbology">
-			<HintPath>..\EM.GIS.Resources\Libs\EM.GIS.Symbology.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
 	</ItemGroup>
 
 </Project>
