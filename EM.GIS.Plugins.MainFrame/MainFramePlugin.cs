@@ -15,6 +15,9 @@ using System.Windows.Media.Imaging;
 
 namespace EM.GIS.Plugins.MainFrame
 {
+    /// <summary>
+    /// 主框架扩展
+    /// </summary>
     public class MainFramePlugin : WpfPlugin
     {
         public override int Priority => -1000;

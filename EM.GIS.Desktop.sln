@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDemo", "WpfDemo\WpfDemo.csproj", "{56148898-2D99-4BDB-BC4E-40CAC6F40EBE}"
 EndProject
@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C939
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Plugins.MainFrame", "EM.GIS.Plugins.MainFrame\EM.GIS.Plugins.MainFrame.csproj", "{3BF4E6ED-6CAB-4430-A7BD-800FE63FDA27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.GIS.Resources", "EM.GIS.Resources\EM.GIS.Resources.csproj", "{53CE955B-6551-4159-9809-F07D0122238E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.GIS.Resources", "EM.GIS.Resources\EM.GIS.Resources.csproj", "{53CE955B-6551-4159-9809-F07D0122238E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.GIS.Plugins.WebMaps", "EM.GIS.Plugins.WebMaps\EM.GIS.Plugins.WebMaps.csproj", "{A5C61F50-2C1B-4809-915C-9E800AACCF68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +43,17 @@ Global
 		{53CE955B-6551-4159-9809-F07D0122238E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53CE955B-6551-4159-9809-F07D0122238E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53CE955B-6551-4159-9809-F07D0122238E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5C61F50-2C1B-4809-915C-9E800AACCF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5C61F50-2C1B-4809-915C-9E800AACCF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5C61F50-2C1B-4809-915C-9E800AACCF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5C61F50-2C1B-4809-915C-9E800AACCF68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3BF4E6ED-6CAB-4430-A7BD-800FE63FDA27} = {C939FA00-FD8A-4D05-ADD5-D5596CACD783}
+		{A5C61F50-2C1B-4809-915C-9E800AACCF68} = {C939FA00-FD8A-4D05-ADD5-D5596CACD783}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {267256E8-360B-4063-9720-11ECE7A1F6CC}
