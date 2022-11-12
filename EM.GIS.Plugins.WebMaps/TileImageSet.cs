@@ -20,7 +20,7 @@ namespace EM.GIS.Plugins.WebMaps
         /// 瓦片集合
         /// </summary>
         public Dictionary<TileIndex, ImageSet> Tiles { get; }
-        public override IExtent Extent 
+        public override IExtent Extent
         {
             get
             {
@@ -35,7 +35,7 @@ namespace EM.GIS.Plugins.WebMaps
                 return extent;
             }
         }
-        
+
         public TileImageSet()
         {
             Tiles = new Dictionary<TileIndex, ImageSet>();
@@ -56,13 +56,9 @@ namespace EM.GIS.Plugins.WebMaps
             {
                 bitmap = new Bitmap(window.Width, window.Height);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                if (bitmap!=null)
-                {
-                    bitmap.Dispose();
-                    bitmap=null;
-                }
+                Console.WriteLine(e);
             }
             if (bitmap==null)
             {
